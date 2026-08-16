@@ -1,0 +1,45 @@
+{
+  "k": 6,
+  "states": 96909120,
+  "diameter": 8,
+  "seconds": 1314.5301859378815,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 39
+    },
+    {
+      "depth": 2,
+      "count": 995
+    },
+    {
+      "depth": 3,
+      "count": 22021
+    },
+    {
+      "depth": 4,
+      "count": 413827
+    },
+    {
+      "depth": 5,
+      "count": 5983339
+    },
+    {
+      "depth": 6,
+      "count": 44649075
+    },
+    {
+      "depth": 7,
+      "count": 45608389
+    },
+    {
+      "depth": 8,
+      "count": 231434
+    }
+  ],
+  "mean_distance": 6.40439970974868
+}

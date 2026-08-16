@@ -1,0 +1,13 @@
+\begin{tabular}{llrrr}
+\toprule
+noise family & tails & $n$ & measured & forward \\
+\midrule
+uniform & lighter than normal & 6 & 0.0042 & 0.0065 \\
+gaussian & normal (the assumption) & 6 & 0.0046 & 0.0079 \\
+laplace & heavier, finite variance & 6 & 0.0123 & 0.0458 \\
+\textbf{cauchy} & \textbf{no finite variance} & 6 & \textbf{0.1654} & \emph{undefined} \\
+\midrule
+\multicolumn{5}{l}{Mean absolute error of Equation~\ref{eq:law}, over $\lambda \in \{0.25, 0.5, 1.0, 2.0, 4.0, 8.0\}$ in units of the} \\
+\multicolumn{5}{l}{unperturbed within-shell spread. \emph{Forward} uses only the $\lambda\!=\!0$ moments.} \\
+\bottomrule
+\end{tabular}

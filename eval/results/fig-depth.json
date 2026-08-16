@@ -1,0 +1,115 @@
+{
+  "states": 255024,
+  "steps": 12000,
+  "seeds": 10,
+  "kmax": 30,
+  "rows": [
+    {
+      "moveset": "all",
+      "diameter": 6,
+      "states": 255024,
+      "n_seeds": 10,
+      "rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_rate": 1.0,
+      "min_rate": 1.0,
+      "max_rate": 1.0,
+      "n_deadlocked": 0,
+      "mean_rate_excl_deadlock": 1.0
+    },
+    {
+      "moveset": "oi-q",
+      "diameter": 8,
+      "states": 255024,
+      "n_seeds": 10,
+      "rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_rate": 1.0,
+      "min_rate": 1.0,
+      "max_rate": 1.0,
+      "n_deadlocked": 0,
+      "mean_rate_excl_deadlock": 1.0
+    },
+    {
+      "moveset": "oi-q4",
+      "diameter": 10,
+      "states": 255024,
+      "n_seeds": 10,
+      "rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_rate": 1.0,
+      "min_rate": 1.0,
+      "max_rate": 1.0,
+      "n_deadlocked": 0,
+      "mean_rate_excl_deadlock": 1.0
+    },
+    {
+      "moveset": "oi-q3",
+      "diameter": 12,
+      "states": 255024,
+      "n_seeds": 10,
+      "rates": [
+        0.735,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_rate": 0.9734999999999999,
+      "min_rate": 0.735,
+      "max_rate": 1.0,
+      "n_deadlocked": 1,
+      "mean_rate_excl_deadlock": 1.0
+    }
+  ],
+  "deadlock": {
+    "table": [
+      [
+        1,
+        9
+      ],
+      [
+        0,
+        30
+      ]
+    ],
+    "fisher_p": 0.25000000000000006,
+    "n_deadlocked_total": 1,
+    "n_runs_total": 40
+  }
+}

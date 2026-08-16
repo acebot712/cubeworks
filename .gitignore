@@ -1,0 +1,28 @@
+# Dependencies and build output
+node_modules/
+dist/
+.venv-mlx/
+__pycache__/
+*.pyc
+
+# Regenerable research artefacts. These are large (~23 GB together) and every
+# one of them is reproducible from a documented command in REPRODUCE.md:
+#   *.npy   exact distance tables from exact.py  (191 MB at k=6 alone)
+#   *.npz   network + optimiser checkpoints from davi.py
+# The JSON in eval/results/ is what the paper actually reads, and that IS tracked.
+mlx-solver/*.npy
+mlx-solver/*.npz
+
+# Run logs. Local paths and timings only; nothing the paper depends on.
+mlx-solver/*.log
+mlx-solver/log_*.txt
+mlx-solver/*.pid
+
+# LaTeX intermediates
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.out
+paper/*.log
+
+.DS_Store

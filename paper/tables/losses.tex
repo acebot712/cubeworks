@@ -1,0 +1,14 @@
+\begin{tabular}{lrrrr}
+\toprule
+objective & solve rate & decay & beam width & curriculum \\
+\midrule
+\textbf{squared error (baseline)} & \textbf{100.0\%} & \textbf{0.219} & \textbf{24.0} & \textbf{40} \\
+pairwise rank, uniform pairs & 59.8\% & 0.354 & 302.2 & 33 \\
+pairwise rank, adjacent pairs only & 44.3\% & 0.145 & 131.3 & 37 \\
+\midrule
+\quad $+$ variance penalty, $\lambda=1$ & 100.0\% & 0.223 & 21.8 & 40 \\
+\quad $\lambda=3$ & 100.0\% & 0.247 & 18.3 & 25 \\
+\quad $\lambda=10$ & 99.5\% & 0.417 & 49.2 & 7 \\
+\quad $\lambda=30$ & 92.0\% & 0.471 & 79.2 & 10 \\
+\bottomrule
+\end{tabular}

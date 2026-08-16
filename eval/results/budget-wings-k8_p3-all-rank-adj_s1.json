@@ -1,0 +1,124 @@
+{
+  "task": "wings-k8",
+  "tag": "_p3-all-rank-adj_s1",
+  "moves": "all",
+  "k": 8,
+  "states": 29654190720,
+  "step": 12000,
+  "kmax": 30,
+  "n": 120,
+  "curve": [
+    {
+      "width": 1,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 0.03938223123550415
+    },
+    {
+      "width": 2,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 0.043928617238998414
+    },
+    {
+      "width": 5,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 0.06950698296229045
+    },
+    {
+      "width": 10,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 0.10536672472953797
+    },
+    {
+      "width": 25,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 0.24823125203450522
+    },
+    {
+      "width": 50,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 0.5132437070210775
+    },
+    {
+      "width": 100,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 1.096935550371806
+    },
+    {
+      "width": 250,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 2.729996840159098
+    },
+    {
+      "width": 600,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 6.7865455905596415
+    },
+    {
+      "width": 1500,
+      "solved": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.031020271055929513
+      ],
+      "mean_len": null,
+      "sec_per_state": 18.107790325085322
+    }
+  ],
+  "w50": null,
+  "w90": null
+}

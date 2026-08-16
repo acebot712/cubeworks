@@ -1,0 +1,202 @@
+{
+  "generated": "exact BFS via mlx-solver/exact.py",
+  "fits": {
+    "diameter": {
+      "slope": 1.0,
+      "intercept": 2.0,
+      "r2": 1.0
+    },
+    "mean_distance": {
+      "slope": 0.864,
+      "intercept": 1.242,
+      "r2": 0.99988
+    }
+  },
+  "rungs": [
+    {
+      "k": 2,
+      "states": 552,
+      "diameter": 4,
+      "mean_distance": 2.9619565217391304,
+      "histogram": [
+        {
+          "depth": 0,
+          "count": 1
+        },
+        {
+          "depth": 1,
+          "count": 15
+        },
+        {
+          "depth": 2,
+          "count": 100
+        },
+        {
+          "depth": 3,
+          "count": 324
+        },
+        {
+          "depth": 4,
+          "count": 112
+        }
+      ],
+      "seconds": 0.0015740394592285156
+    },
+    {
+      "k": 3,
+      "states": 12144,
+      "diameter": 5,
+      "mean_distance": 3.827569169960474,
+      "histogram": [
+        {
+          "depth": 0,
+          "count": 1
+        },
+        {
+          "depth": 1,
+          "count": 27
+        },
+        {
+          "depth": 2,
+          "count": 364
+        },
+        {
+          "depth": 3,
+          "count": 2700
+        },
+        {
+          "depth": 4,
+          "count": 7633
+        },
+        {
+          "depth": 5,
+          "count": 1419
+        }
+      ],
+      "seconds": 0.03914976119995117
+    },
+    {
+      "k": 4,
+      "states": 255024,
+      "diameter": 6,
+      "mean_distance": 4.706623690319343,
+      "histogram": [
+        {
+          "depth": 0,
+          "count": 1
+        },
+        {
+          "depth": 1,
+          "count": 33
+        },
+        {
+          "depth": 2,
+          "count": 654
+        },
+        {
+          "depth": 3,
+          "count": 8693
+        },
+        {
+          "depth": 4,
+          "count": 69329
+        },
+        {
+          "depth": 5,
+          "count": 162318
+        },
+        {
+          "depth": 6,
+          "count": 13996
+        }
+      ],
+      "seconds": 2.48103404045105
+    },
+    {
+      "k": 5,
+      "states": 5100480,
+      "diameter": 7,
+      "mean_distance": 5.578159702616224,
+      "histogram": [
+        {
+          "depth": 0,
+          "count": 1
+        },
+        {
+          "depth": 1,
+          "count": 39
+        },
+        {
+          "depth": 2,
+          "count": 917
+        },
+        {
+          "depth": 3,
+          "count": 16740
+        },
+        {
+          "depth": 4,
+          "count": 224090
+        },
+        {
+          "depth": 5,
+          "count": 1747156
+        },
+        {
+          "depth": 6,
+          "count": 3013700
+        },
+        {
+          "depth": 7,
+          "count": 97837
+        }
+      ],
+      "seconds": 55.66797399520874
+    },
+    {
+      "k": 6,
+      "states": 96909120,
+      "diameter": 8,
+      "mean_distance": 6.40439970974868,
+      "histogram": [
+        {
+          "depth": 0,
+          "count": 1
+        },
+        {
+          "depth": 1,
+          "count": 39
+        },
+        {
+          "depth": 2,
+          "count": 995
+        },
+        {
+          "depth": 3,
+          "count": 22021
+        },
+        {
+          "depth": 4,
+          "count": 413827
+        },
+        {
+          "depth": 5,
+          "count": 5983339
+        },
+        {
+          "depth": 6,
+          "count": 44649075
+        },
+        {
+          "depth": 7,
+          "count": 45608389
+        },
+        {
+          "depth": 8,
+          "count": 231434
+        }
+      ],
+      "seconds": 1314.5301859378815
+    }
+  ]
+}

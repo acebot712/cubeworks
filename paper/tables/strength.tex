@@ -1,0 +1,14 @@
+\begin{tabular}{lrrr}
+\toprule
+heuristic class & $n$ & mean GDRC & mean decay \\
+\midrule
+random & 5 & +0.003 & +0.004\,$\pm$\,0.015 \\
+PDB & 12 & +0.741 & +0.124\,$\pm$\,0.094 \\
+learned & 22 & +0.860 & +0.171\,$\pm$\,0.087 \\
+\midrule
+\multicolumn{4}{l}{decay vs.\ strength: $r = +0.588$ over 39 observations ($p = 8.3\!\times\!10^{-5}$)} \\
+\multicolumn{4}{l}{residual about that fit: learned $+0.0061$, PDB $-0.0164$; Welch $t = +0.72$, $p = 0.48$} \\
+\multicolumn{4}{l}{\quad difference $+0.0225$, 95\% CI $[-0.039, +0.084]$} \\
+\multicolumn{4}{l}{matched on identical states: PDB decays more in 13 of 18 pairs} \\
+\bottomrule
+\end{tabular}

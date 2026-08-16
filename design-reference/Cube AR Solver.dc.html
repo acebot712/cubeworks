@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #08090B; }
+  * { box-sizing: border-box; }
+  a { color: #4FE3C1; text-decoration: none; }
+  a:hover { color: #7CF0D8; }
+  @keyframes cw-pulse { 0%, 100% { opacity: .4; transform: scale(1); } 50% { opacity: 1; transform: scale(1.07); } }
+  @keyframes cw-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(9px); } }
+  @keyframes cw-blink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+  @keyframes cw-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes cw-ring { 0%, 100% { box-shadow: 0 0 0 2px rgba(232,64,42,.9); } 50% { box-shadow: 0 0 0 4px rgba(232,64,42,.35); } }
+</style>
+</helmet>
+<div style="height: 100vh; min-height: 800px; display: flex; flex-direction: column; background: #08090B; color: #E8EAED; font-family: 'Space Grotesk', system-ui, sans-serif; overflow: hidden;">
+  <canvas ref="{{ attachCanvas }}" style="display: none;"></canvas>
+
+  <div style="height: 52px; flex: none; display: flex; align-items: center; gap: 22px; padding: 0 18px; background: #0E1013; border-bottom: 1px solid rgba(255,255,255,0.07);">
+    <div style="display: flex; align-items: center; gap: 9px;">
+      <div style="width: 18px; height: 18px; border-radius: 4px; background: linear-gradient(135deg, #4FE3C1 0%, #2C6BE8 100%);"></div>
+      <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.14em;">CUBEWORKS</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6E7681; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 2px 6px;">4×4×4</div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <div onClick="{{ onGoScan }}" style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12.5px; font-weight: 500; background: {{ tabScanBg }}; color: {{ tabScanFg }};">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; opacity: .6;">01</span>Scan
+      </div>
+      <div style="width: 14px; height: 1px; background: rgba(255,255,255,0.14);"></div>
+      <div onClick="{{ onGoReview }}" style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12.5px; font-weight: 500; background: {{ tabReviewBg }}; color: {{ tabReviewFg }};">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; opacity: .6;">02</span>Confirm
+      </div>
+      <div style="width: 14px; height: 1px; background: rgba(255,255,255,0.14);"></div>
+      <div onClick="{{ onGoSolve }}" style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12.5px; font-weight: 500; background: {{ tabSolveBg }}; color: {{ tabSolveFg }};">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; opacity: .6;">03</span>Solve
+      </div>
+    </div>
+
+    <div style="flex: 1;"></div>
+
+    <div onClick="{{ onLabels }}" style="display: flex; align-items: center; gap: 7px; padding: 6px 10px; border-radius: 7px; font-size: 12px; cursor: pointer; background: {{ labelsBg }}; color: {{ labelsFg }};">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px;">Aa</span>Color labels
+    </div>
+    <div onClick="{{ onReset }}" style="padding: 6px 10px; border-radius: 7px; font-size: 12px; color: {{ resetFg }}; border: 1px solid {{ resetBorder }}; cursor: pointer;">{{ resetLabel }}</div>
+  </div>
+
+  <sc-if value="{{ showResume }}" hint-placeholder-val="{{ false }}">
+    <div style="flex: none; display: flex; align-items: center; gap: 14px; padding: 11px 18px; background: rgba(79,227,193,0.08); border-bottom: 1px solid rgba(79,227,193,0.2); animation: cw-fade .3s ease;">
+      <div style="font-size: 12.5px; color: #B6F2E5;">{{ resumeMsg }}</div>
+      <div style="flex: 1;"></div>
+      <div onClick="{{ onDismissResume }}" style="padding: 5px 12px; border-radius: 7px; font-size: 12px; font-weight: 600; background: #4FE3C1; color: #05201A; cursor: pointer;">Continue</div>
+      <div onClick="{{ onHardReset }}" style="padding: 5px 12px; border-radius: 7px; font-size: 12px; color: #9AA2AC; border: 1px solid rgba(255,255,255,0.12); cursor: pointer;">Start over</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isScan }}" hint-placeholder-val="{{ true }}">
+  <div style="flex: 1; display: flex; min-height: 0;">
+
+    <div ref="{{ attachStage }}" style="flex: 1; position: relative; background: #0A0B0D; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+      <video ref="{{ attachVideo }}" autoplay="" muted="" playsinline="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: 0.95;"></video>
+      <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(8,9,11,0) 26%, rgba(8,9,11,0.86) 100%);"></div>
+
+      <sc-if value="{{ cameraError }}" hint-placeholder-val="{{ false }}">
+        <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: #0A0B0D; z-index: 6;">
+          <div style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #6E7681;">◉</div>
+          <div style="font-size: 15px; font-weight: 600;">{{ cameraTitle }}</div>
+          <div style="font-size: 12.5px; color: #7A828C; max-width: 320px; text-align: center; line-height: 1.55;">{{ cameraMsg }}</div>
+          <div style="display: flex; gap: 8px;">
+            <div onClick="{{ onRetryCamera }}" style="padding: 8px 14px; border-radius: 8px; font-size: 12.5px; border: 1px solid rgba(255,255,255,0.14); cursor: pointer;">Enable camera</div>
+            <div onClick="{{ onSampleScan }}" style="padding: 8px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; background: #4FE3C1; color: #05201A; cursor: pointer;">Use sample cube</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="position: absolute; top: 16px; left: 18px; display: flex; align-items: center; gap: 10px; z-index: 3;">
+        <div style="display: flex; align-items: center; gap: 7px; padding: 5px 10px; border-radius: 20px; background: rgba(10,11,13,0.72); border: 1px solid rgba(255,255,255,0.1);">
+          <div style="width: 6px; height: 6px; border-radius: 50%; background: #E8402A; animation: cw-blink 1.6s ease-in-out infinite;"></div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em;">LIVE</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 5px 10px; border-radius: 20px; background: rgba(10,11,13,0.72); border: 1px solid rgba(255,255,255,0.1);">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #8A929C;">LIGHT</div>
+          <div style="width: 46px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.14); overflow: hidden;">
+            <div style="height: 100%; width: {{ lightingPct }}; background: {{ lightingColor }};"></div>
+          </div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: {{ lightingColor }};">{{ lightingLabel }}</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 5px 10px; border-radius: 20px; background: rgba(10,11,13,0.72); border: 1px solid rgba(255,255,255,0.1);">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #8A929C;">STEADY</div>
+          <div style="width: 46px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.14); overflow: hidden;">
+            <div style="height: 100%; width: {{ steadyPct }}; background: {{ steadyColor }};"></div>
+          </div>
+        </div>
+      </div>
+
+      <div ref="{{ attachFrame }}" style="position: relative; width: 360px; height: 360px; z-index: 3;">
+        <div style="position: absolute; inset: 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 4px; padding: 4px; border-radius: 8px;">
+          <sc-for list="{{ gridCells }}" as="cell" hint-placeholder-count="16">
+            <div style="position: relative; border: 1px solid rgba(255,255,255,0.16); border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+              <div style="width: 26px; height: 26px; border-radius: 50%; background: {{ cell.color }}; opacity: {{ cell.opacity }}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.55);">{{ cell.label }}</div>
+              <div style="position: absolute; inset: 5px; border-radius: 50%; border: 1.5px solid {{ cell.ringColor }}; opacity: {{ cell.ring }};"></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="position: absolute; top: -9px; left: -9px; width: 26px; height: 26px; border-top: 2px solid {{ frameColor }}; border-left: 2px solid {{ frameColor }}; border-radius: 4px 0 0 0;"></div>
+        <div style="position: absolute; top: -9px; right: -9px; width: 26px; height: 26px; border-top: 2px solid {{ frameColor }}; border-right: 2px solid {{ frameColor }}; border-radius: 0 4px 0 0;"></div>
+        <div style="position: absolute; bottom: -9px; left: -9px; width: 26px; height: 26px; border-bottom: 2px solid {{ frameColor }}; border-left: 2px solid {{ frameColor }}; border-radius: 0 0 0 4px;"></div>
+        <div style="position: absolute; bottom: -9px; right: -9px; width: 26px; height: 26px; border-bottom: 2px solid {{ frameColor }}; border-right: 2px solid {{ frameColor }}; border-radius: 0 0 4px 0;"></div>
+      </div>
+
+      <sc-if value="{{ scanGuided }}" hint-placeholder-val="{{ true }}">
+        <div style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 3;">
+          <div style="font-size: 46px; color: #4FE3C1; animation: cw-pulse 1.5s ease-in-out infinite;">{{ stepGlyph }}</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: #8A929C; writing-mode: vertical-rl;">{{ stepAxis }}</div>
+        </div>
+      </sc-if>
+
+      <div style="position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 13px; padding: 12px 16px; border-radius: 14px; background: rgba(14,16,19,0.92); border: 1px solid {{ hintBorder }}; z-index: 4; min-width: 460px;">
+        <div style="position: relative; width: 34px; height: 34px; flex: none; border-radius: 9px; background: {{ hintChipBg }}; display: flex; align-items: center; justify-content: center; font-size: 15px; color: {{ hintChipFg }};">{{ hintIcon }}</div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: {{ hintFg }};">{{ hintTitle }}</div>
+          <div style="font-size: 11.5px; color: #8A929C; margin-top: 2px;">{{ hintSub }}</div>
+        </div>
+        <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.1);"></div>
+        <div onClick="{{ onCapture }}" style="position: relative; padding: 9px 16px; border-radius: 9px; font-size: 12.5px; font-weight: 600; background: {{ captureBg }}; color: {{ captureFg }}; cursor: pointer; overflow: hidden; flex: none;">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: {{ dwellPct }}; background: rgba(255,255,255,0.4);"></div>
+          <div style="position: relative;">{{ captureLabel }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width: 330px; flex: none; background: #0E1013; border-left: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column;">
+      <div style="padding: 16px 16px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.16em; color: #6E7681; margin-bottom: 9px;">GUIDANCE</div>
+        <div style="display: flex; padding: 3px; border-radius: 9px; background: #16191E; border: 1px solid rgba(255,255,255,0.06);">
+          <div onClick="{{ onModeGuided }}" style="flex: 1; padding: 7px; text-align: center; border-radius: 6px; font-size: 12px; cursor: pointer; background: {{ modeGuidedBg }}; color: {{ modeGuidedFg }};">Guided sequence</div>
+          <div onClick="{{ onModeFree }}" style="flex: 1; padding: 7px; text-align: center; border-radius: 6px; font-size: 12px; cursor: pointer; background: {{ modeFreeBg }}; color: {{ modeFreeFg }};">Free rotate</div>
+        </div>
+        <div style="font-size: 11px; color: #5C636D; margin-top: 8px; line-height: 1.5;">{{ modeHelp }}</div>
+      </div>
+
+      <div style="padding: 14px 16px 10px;">
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <div style="font-size: 32px; font-weight: 700; letter-spacing: -0.03em;">{{ capturedCount }}<span style="font-size: 16px; color: #5C636D;">/6</span></div>
+          <div style="font-size: 12px; color: #8A929C;">faces locked</div>
+        </div>
+      </div>
+
+      <div style="flex: 1; overflow-y: auto; padding: 0 10px;">
+        <sc-for list="{{ faceRows }}" as="row" hint-placeholder-count="6">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 10px; background: {{ row.bg }}; margin-bottom: 4px;">
+            <div style="width: 34px; height: 34px; flex: none; border-radius: 7px; overflow: hidden; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.06); opacity: {{ row.chipOpacity }};">
+              <sc-for list="{{ row.thumb }}" as="t" hint-placeholder-count="16">
+                <div style="background: {{ t.color }};"></div>
+              </sc-for>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="font-size: 12.5px; font-weight: 500;">{{ row.name }}</div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: #6E7681;">{{ row.key }}</div>
+              </div>
+              <div style="font-size: 11px; color: {{ row.barColor }}; margin-top: 3px;">{{ row.statusText }}</div>
+            </div>
+            <div onClick="{{ row.onRescan }}" style="flex: none; font-size: 11px; padding: 4px 8px; border-radius: 6px; color: {{ row.actionFg }}; border: 1px solid {{ row.actionBorder }}; cursor: pointer;">{{ row.action }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ lowLight }}" hint-placeholder-val="{{ false }}">
+        <div style="margin: 10px 14px; padding: 12px; border-radius: 10px; background: rgba(255,122,26,0.1); border: 1px solid rgba(255,122,26,0.3);">
+          <div style="font-size: 12px; font-weight: 600; color: #FF9E52;">Too dark to separate red from orange</div>
+          <div style="font-size: 11.5px; color: #B08260; margin-top: 4px; line-height: 1.5;">Face a window or add light. I'll keep reading, but expect more stickers to need confirming.</div>
+        </div>
+      </sc-if>
+
+      <div style="padding: 14px; border-top: 1px solid rgba(255,255,255,0.07);">
+        <div onClick="{{ onGoReview }}" style="padding: 12px; border-radius: 10px; text-align: center; font-size: 13px; font-weight: 600; background: {{ nextBg }}; color: {{ nextFg }}; cursor: pointer;">{{ nextLabel }}</div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+  <div style="flex: 1; display: flex; min-height: 0;">
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 24px; overflow: auto; background: radial-gradient(ellipse at 50% 0%, #101318 0%, #08090B 70%);">
+
+      <sc-if value="{{ hasQuestion }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 22px; animation: cw-fade .25s ease;">
+          <div style="text-align: center;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: #6E7681;">{{ qProgress }}</div>
+            <div style="font-size: 21px; font-weight: 600; letter-spacing: -0.02em; margin-top: 8px;">{{ qTitle }}</div>
+            <div style="font-size: 12.5px; color: #8A929C; margin-top: 5px;">Only the stickers I'm unsure about — everything else is settled.</div>
+          </div>
+
+          <div style="position: relative; padding: 6px; border-radius: 10px; background: #14171C; border: 1px solid rgba(255,255,255,0.08);">
+            <div style="display: grid; grid-template-columns: repeat(4, 46px); grid-template-rows: repeat(4, 46px); gap: 3px;">
+              <sc-for list="{{ qCells }}" as="c" hint-placeholder-count="16">
+                <div style="border-radius: 4px; background: {{ c.color }}; box-shadow: {{ c.shadow }}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: rgba(0,0,0,0.5);">{{ c.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="2">
+              <div onClick="{{ o.onPick }}" style="display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 12px; cursor: pointer; background: {{ o.bg }}; border: 1px solid {{ o.border }};">
+                <div style="width: 30px; height: 30px; border-radius: 7px; background: {{ o.color }}; border: 1px solid rgba(255,255,255,0.16);"></div>
+                <div>
+                  <div style="font-size: 14px; font-weight: 600;">{{ o.name }}</div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #7A828C; margin-top: 1px;">{{ o.note }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display: flex; gap: 14px; font-size: 12px;">
+            <div onClick="{{ onQSkip }}" style="color: #7A828C; cursor: pointer;">Skip this one</div>
+            <div onClick="{{ onQAll }}" style="color: #4FE3C1; cursor: pointer;">Show all 96 stickers instead</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showNet }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 22px; animation: cw-fade .25s ease;">
+          <div style="text-align: center;">
+            <div style="font-size: 19px; font-weight: 600; letter-spacing: -0.02em;">{{ netTitle }}</div>
+            <div style="font-size: 12.5px; color: #8A929C; margin-top: 5px;">{{ netSub }}</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, 112px); grid-template-rows: repeat(3, 112px); gap: 8px;">
+            <sc-for list="{{ netFaces }}" as="f" hint-placeholder-count="6">
+              <div style="grid-column: {{ f.col }}; grid-row: {{ f.row }}; position: relative; padding: 5px; border-radius: 8px; background: #14171C; border: 1px solid rgba(255,255,255,0.08);">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 3px; height: 100%;">
+                  <sc-for list="{{ f.cells }}" as="c" hint-placeholder-count="16">
+                    <div onClick="{{ c.onPick }}" style="border-radius: 3px; background: {{ c.color }}; cursor: pointer; box-shadow: {{ c.shadow }}; animation: {{ c.anim }}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: rgba(0,0,0,0.5);">{{ c.label }}</div>
+                  </sc-for>
+                </div>
+                <div style="position: absolute; top: -8px; left: 6px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.14em; color: #6E7681; background: #08090B; padding: 0 4px;">{{ f.key }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: #14171C; border: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.14em; color: #6E7681;">SET TO</div>
+            <sc-for list="{{ palette }}" as="p" hint-placeholder-count="6">
+              <div onClick="{{ p.onSet }}" style="width: 30px; height: 30px; border-radius: 7px; background: {{ p.color }}; cursor: pointer; border: 2px solid {{ p.border }};"></div>
+            </sc-for>
+            <div style="width: 1px; height: 22px; background: rgba(255,255,255,0.1);"></div>
+            <div style="font-size: 11.5px; color: #8A929C;">{{ selectedLabel }}</div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="width: 330px; flex: none; background: #0E1013; border-left: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; padding: 18px 16px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.16em; color: #6E7681;">STATE VALIDATION</div>
+      <div style="margin-top: 12px; padding: 14px; border-radius: 11px; background: {{ validBg }}; border: 1px solid {{ validBorder }};">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 18px; height: 18px; border-radius: 50%; background: {{ validColor }}; color: #08090B; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">{{ validMark }}</div>
+          <div style="font-size: 13px; font-weight: 600; color: {{ validColor }};">{{ validTitle }}</div>
+        </div>
+        <div style="font-size: 11.5px; color: #9AA2AC; margin-top: 8px; line-height: 1.55;">{{ validMsg }}</div>
+      </div>
+
+      <div style="margin-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.16em; color: #6E7681;">STICKER COUNT · 16 EACH</div>
+      <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 7px;">
+        <sc-for list="{{ counts }}" as="ct" hint-placeholder-count="6">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 16px; height: 16px; border-radius: 4px; background: {{ ct.color }}; border: 1px solid rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; color: rgba(0,0,0,0.5);">{{ ct.label2 }}</div>
+            <div style="flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden;">
+              <div style="height: 100%; width: {{ ct.pct }}; background: {{ ct.barColor }};"></div>
+            </div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: {{ ct.barColor }}; width: 32px; text-align: right;">{{ ct.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="flex: 1;"></div>
+      <div onClick="{{ onGoScan }}" style="padding: 11px; border-radius: 10px; text-align: center; font-size: 12.5px; color: #9AA2AC; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; margin-bottom: 8px;">Re-scan a face</div>
+      <div onClick="{{ onSolveNow }}" style="padding: 13px; border-radius: 10px; text-align: center; font-size: 13px; font-weight: 600; background: {{ solveBtnBg }}; color: {{ solveBtnFg }}; cursor: pointer;">{{ solveBtnLabel }}</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isSolve }}" hint-placeholder-val="{{ false }}">
+  <div style="flex: 1; display: flex; min-height: 0;">
+    <div style="flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(ellipse at 50% 12%, #12161C 0%, #08090B 68%); overflow: hidden;">
+
+      <sc-if value="{{ solveAr }}" hint-placeholder-val="{{ false }}">
+        <video ref="{{ attachVideo }}" autoplay="" muted="" playsinline="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: 0.45;"></video>
+      </sc-if>
+
+      <div style="position: absolute; top: 16px; left: 20px; display: flex; align-items: center; gap: 12px; z-index: 4;">
+        <div style="display: flex; align-items: center; gap: 9px; padding: 8px 12px; border-radius: 10px; background: rgba(14,16,19,0.9); border: 1px solid rgba(255,255,255,0.09);">
+          <div style="position: relative; width: 26px; height: 26px;">
+            <div style="position: absolute; left: 0; top: 6px; width: 20px; height: 20px; border-radius: 3px; background: #23B15A;"></div>
+            <div style="position: absolute; left: 5px; top: 0; width: 20px; height: 8px; border-radius: 2px; background: #F2F3F5; transform: skewX(-38deg);"></div>
+          </div>
+          <div>
+            <div style="font-size: 12px; font-weight: 600;">{{ gripTitle }}</div>
+            <div style="font-size: 10.5px; color: #8A929C;">Every move below is relative to this grip</div>
+          </div>
+        </div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.16em; color: #4FE3C1;">{{ phaseName }}</div>
+      </div>
+
+      <div style="perspective: 1400px; width: 300px; height: 300px; position: relative; z-index: 2;">
+        <div style="position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(-22deg) rotateY({{ cubeYaw }}); transition: transform 650ms cubic-bezier(.4,0,.2,1);">
+          <div style="position: absolute; inset: 0; transform: translateZ(150px); background: #0B0C0E; border-radius: 6px; padding: 5px;">
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 4px; height: 100%;">
+              <sc-for list="{{ faceF }}" as="s" hint-placeholder-count="16">
+                <div style="border-radius: 4px; background: {{ s.color }}; box-shadow: {{ s.glow }}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.5);">{{ s.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="position: absolute; inset: 0; transform: rotateY(90deg) translateZ(150px); background: #0B0C0E; border-radius: 6px; padding: 5px;">
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 4px; height: 100%;">
+              <sc-for list="{{ faceR }}" as="s" hint-placeholder-count="16">
+                <div style="border-radius: 4px; background: {{ s.color }}; box-shadow: {{ s.glow }};"></div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="position: absolute; inset: 0; transform: rotateX(90deg) translateZ(150px); background: #0B0C0E; border-radius: 6px; padding: 5px;">
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 4px; height: 100%;">
+              <sc-for list="{{ faceU }}" as="s" hint-placeholder-count="16">
+                <div style="border-radius: 4px; background: {{ s.color }}; box-shadow: {{ s.glow }};"></div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="position: absolute; inset: 0; transform: rotateY(-90deg) translateZ(150px); background: #0B0C0E; border-radius: 6px;"></div>
+          <div style="position: absolute; inset: 0; transform: rotateX(-90deg) translateZ(150px); background: #0B0C0E; border-radius: 6px;"></div>
+          <div style="position: absolute; inset: 0; transform: rotateY(180deg) translateZ(150px); background: #0B0C0E; border-radius: 6px;"></div>
+        </div>
+      </div>
+
+      <div style="position: relative; z-index: 3; margin-top: 30px; display: flex; align-items: center; gap: 18px; padding: 13px 22px; border-radius: 16px; background: rgba(14,16,19,0.92); border: 1px solid rgba(255,255,255,0.09);">
+        <div style="font-size: 38px; color: #4FE3C1; animation: cw-nudge 1.4s ease-in-out infinite;">{{ arrowGlyph }}</div>
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700;">{{ moveToken }}</div>
+          <div style="font-size: 13px; color: #9AA2AC; margin-top: 3px;">{{ movePlain }}</div>
+        </div>
+      </div>
+
+      <div style="position: relative; z-index: 3; margin-top: 20px; display: flex; align-items: center; gap: 7px;">
+        <sc-for list="{{ strip }}" as="m" hint-placeholder-count="8">
+          <div onClick="{{ m.onJump }}" style="min-width: 42px; padding: 8px; border-radius: 8px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; cursor: pointer; background: {{ m.bg }}; color: {{ m.fg }}; border: 1px solid {{ m.border }}; opacity: {{ m.opacity }};">{{ m.token }}</div>
+        </sc-for>
+      </div>
+
+      <div style="position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 9px; z-index: 4;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div onClick="{{ onPrev }}" style="width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #16191E; border: 1px solid rgba(255,255,255,0.09); cursor: pointer; color: #C7CDD4;">◀</div>
+          <div onClick="{{ onPlay }}" style="height: 44px; padding: 0 22px; border-radius: 12px; display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; background: {{ playBg }}; color: {{ playFg }}; cursor: pointer;">{{ playLabel }}</div>
+          <div onClick="{{ onNext }}" style="width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #16191E; border: 1px solid rgba(255,255,255,0.09); cursor: pointer; color: #C7CDD4;">▶</div>
+        </div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; color: #5C636D;">{{ transportHint }}</div>
+      </div>
+    </div>
+
+    <div style="width: 330px; flex: none; background: #0E1013; border-left: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column;">
+      <div style="padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.07);">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.16em; color: #6E7681;">SOLUTION</div>
+        <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 7px;">
+          <div style="font-size: 32px; font-weight: 700; letter-spacing: -0.03em;">{{ totalMoves }}</div>
+          <div style="font-size: 12px; color: #8A929C;">moves · reduction method</div>
+        </div>
+        <div style="margin-top: 11px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.09); overflow: hidden;">
+          <div style="height: 100%; width: {{ progressPct }}; background: #4FE3C1; transition: width 250ms ease;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 7px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #6E7681;">
+          <div>MOVE {{ moveNumber }}</div>
+          <div>{{ remainingLabel }}</div>
+        </div>
+      </div>
+
+      <div style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="flex: 1;">
+            <div style="font-size: 12.5px; font-weight: 500;">Advance on detected turn</div>
+            <div style="font-size: 11px; color: #7A828C; margin-top: 2px;">Hands stay on the cube</div>
+          </div>
+          <div onClick="{{ onTurnAdvance }}" style="width: 38px; height: 22px; border-radius: 11px; padding: 2px; background: {{ taBg }}; cursor: pointer; display: flex; justify-content: {{ taJustify }};">
+            <div style="width: 18px; height: 18px; border-radius: 50%; background: #FFFFFF;"></div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: #6E7681;">MOTION</div>
+          <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.09); overflow: hidden;">
+            <div style="height: 100%; width: {{ motionPct }}; background: {{ motionColor }};"></div>
+          </div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: {{ motionColor }};">{{ motionLabel }}</div>
+        </div>
+      </div>
+
+      <div style="flex: 1; overflow-y: auto; padding: 12px;">
+        <sc-for list="{{ phases }}" as="ph" hint-placeholder-count="3">
+          <div style="margin-bottom: 14px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ ph.dot }};"></div>
+              <div style="font-size: 12px; font-weight: 600; color: {{ ph.fg }};">{{ ph.name }}</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #5C636D;">{{ ph.count }}</div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px; padding-left: 14px;">
+              <sc-for list="{{ ph.moves }}" as="mm" hint-placeholder-count="8">
+                <div onClick="{{ mm.onJump }}" style="min-width: 34px; padding: 5px 6px; border-radius: 6px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; cursor: pointer; background: {{ mm.bg }}; color: {{ mm.fg }};">{{ mm.token }}</div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="padding: 14px; border-top: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #8A929C;">
+          <div>Playback speed</div>
+          <div style="display: flex; gap: 4px;">
+            <sc-for list="{{ speeds }}" as="sp" hint-placeholder-count="3">
+              <div onClick="{{ sp.onSet }}" style="padding: 4px 9px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; cursor: pointer; background: {{ sp.bg }}; color: {{ sp.fg }};">{{ sp.label }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display: flex; padding: 3px; border-radius: 9px; background: #16191E; border: 1px solid rgba(255,255,255,0.06);">
+          <div onClick="{{ onView3d }}" style="flex: 1; padding: 7px; text-align: center; border-radius: 6px; font-size: 12px; cursor: pointer; background: {{ view3dBg }}; color: {{ view3dFg }};">3D guide</div>
+          <div onClick="{{ onViewAr }}" style="flex: 1; padding: 7px; text-align: center; border-radius: 6px; font-size: 12px; cursor: pointer; background: {{ viewArBg }}; color: {{ viewArFg }};">Camera overlay</div>
+        </div>
+        <div onClick="{{ onLostIt }}" style="padding: 10px; border-radius: 9px; text-align: center; font-size: 12.5px; color: #FF9E52; border: 1px solid rgba(255,122,26,0.3); cursor: pointer;">I turned the wrong way — re-scan</div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#4FE3C1&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#4FE3C1&quot;,&quot;#FFD028&quot;,&quot;#2C6BE8&quot;,&quot;#23B15A&quot;],&quot;section&quot;:&quot;Look&quot;},&quot;labelsDefault&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Accessibility&quot;},&quot;notation&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;both&quot;,&quot;options&quot;:[&quot;both&quot;,&quot;wca&quot;,&quot;plain&quot;],&quot;tsType&quot;:&quot;'both' | 'wca' | 'plain'&quot;,&quot;section&quot;:&quot;Behaviour&quot;},&quot;cameraEnabled&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behaviour&quot;},&quot;demoInvalid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo states&quot;}}">
+const COLORS = { W: '#F2F3F5', Y: '#FFD028', G: '#23B15A', B: '#2C6BE8', R: '#E8402A', O: '#FF7A1A' };
+const NAMES = { W: 'White', Y: 'Yellow', G: 'Green', B: 'Blue', R: 'Red', O: 'Orange' };
+const HUES = { R: 4, O: 27, Y: 52, G: 132, B: 218 };
+const FACES = [
+  { key: 'U', name: 'Up face', c: 'W' }, { key: 'F', name: 'Front face', c: 'G' },
+  { key: 'D', name: 'Down face', c: 'Y' }, { key: 'B', name: 'Back face', c: 'B' },
+  { key: 'R', name: 'Right face', c: 'R' }, { key: 'L', name: 'Left face', c: 'O' }
+];
+const STEPS = [
+  { key: 'U', instr: 'Show the top face', sub: 'Hold the cube flat, fill the frame', glyph: '⬒', axis: 'START' },
+  { key: 'F', instr: 'Tilt the cube toward you', sub: 'The face that was at the front comes up', glyph: '↓', axis: 'TILT' },
+  { key: 'D', instr: 'Tilt toward you again', sub: 'Keep the same grip', glyph: '↓', axis: 'TILT' },
+  { key: 'B', instr: 'One more tilt toward you', sub: 'Fourth face in this loop', glyph: '↓', axis: 'TILT' },
+  { key: 'R', instr: 'Back upright, then rotate left', sub: 'Brings the right-hand face into view', glyph: '↺', axis: 'YAW' },
+  { key: 'L', instr: 'Rotate left twice more', sub: 'Last face', glyph: '↺', axis: 'YAW' }
+];
+const MOVES = [
+  ['Centers', [["Uw'", 'Top two layers, left'], ['F', 'Front face, clockwise'], ['Rw', 'Right two layers, up'],
+    ['U', 'Top layer, left'], ["Rw'", 'Right two layers, down'], ["F'", 'Front face, counter-clockwise'],
+    ['Dw', 'Bottom two layers, right'], ['R', 'Right face, up']]],
+  ['Edge pairing', [['Rw', 'Right two layers, up'], ['U2', 'Top layer, half turn'], ["Rw'", 'Right two layers, down'],
+    ['F2', 'Front face, half turn'], ['Uw', 'Top two layers, right'], ['R', 'Right face, up'],
+    ["U'", 'Top layer, right'], ["R'", 'Right face, down'], ["Uw'", 'Top two layers, left'],
+    ['L', 'Left face, down'], ['U2', 'Top layer, half turn'], ["L'", 'Left face, up']]],
+  ['3×3 stage', [['R', 'Right face, up'], ['U', 'Top layer, left'], ["R'", 'Right face, down'], ["U'", 'Top layer, right'],
+    ['F', 'Front face, clockwise'], ['R', 'Right face, up'], ['U', 'Top layer, left'], ["R'", 'Right face, down'],
+    ["U'", 'Top layer, right'], ["F'", 'Front, counter-clockwise'], ['U2', 'Top layer, half turn'], ["R'", 'Right face, down']]]
+];
+const FLAT = MOVES.reduce((a, p) => a.concat(p[1].map(m => ({ token: m[0], plain: m[1], phase: p[0] }))), []);
+const KEY = 'cw4-progress-v2';
+
+function rgb2hsv(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+  let h = 0;
+  if (d > 0) {
+    if (mx === r) h = 60 * (((g - b) / d) % 6);
+    else if (mx === g) h = 60 * ((b - r) / d + 2);
+    else h = 60 * ((r - g) / d + 4);
+  }
+  if (h < 0) h += 360;
+  return [h, mx === 0 ? 0 : d / mx, mx];
+}
+function hueDist(a, b) { const d = Math.abs(a - b) % 360; return d > 180 ? 360 - d : d; }
+
+function classify(r, g, b) {
+  const hsv = rgb2hsv(r, g, b), h = hsv[0], s = hsv[1], v = hsv[2];
+  if (v < 0.10) return { key: 'W', conf: 0, alt: 'Y' };
+  const scored = Object.keys(HUES).map(k => ({ k: k, d: hueDist(h, HUES[k]) })).sort((a, b2) => a.d - b2.d);
+  const whiteScore = Math.max(0, 1 - s / 0.24) * Math.min(1, v / 0.55);
+  const chromaScore = Math.min(1, s / 0.38) * Math.min(1, v / 0.30);
+  if (whiteScore > chromaScore) return { key: 'W', conf: Math.min(1, whiteScore), alt: scored[0].k };
+  const margin = (scored[1].d - scored[0].d) / (scored[1].d + scored[0].d + 1);
+  const conf = Math.max(0, Math.min(1, margin * 1.25)) * chromaScore * (1 - whiteScore * 0.5);
+  return { key: scored[0].k, conf: conf, alt: scored[1].k };
+}
+
+function scramble(seed) {
+  const pool = [];
+  Object.keys(COLORS).forEach(k => { for (let i = 0; i < 16; i++) pool.push(k); });
+  let s = seed;
+  for (let i = pool.length - 1; i > 0; i--) {
+    s = (s * 1103515245 + 12345) % 2147483648;
+    const j = s % (i + 1); const t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+  }
+  const out = {};
+  FACES.forEach((f, i) => { out[f.key] = pool.slice(i * 16, i * 16 + 16); });
+  return out;
+}
+
+class Component extends DCLogic {
+  state = {
+    screen: 'scan', scanMode: 'guided', solveMode: '3d',
+    stepIdx: 0, dwell: 0, awaitingTurn: false, turnFlash: 0,
+    live: null, liveConf: null, motion: 0, steady: 0, lighting: 0.6,
+    cube: null, cellConf: {}, queue: [], queueIdx: 0, showAll: false, selected: null,
+    moveIdx: 0, playing: false, speed: 1, turnAdvance: true,
+    cameraError: false, cameraDenied: false, labels: false,
+    confirmReset: false, showResume: false
+  };
+
+  componentDidMount() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (p && p.cube) this.setState({ screen: p.screen || 'scan', stepIdx: p.stepIdx || 0, cube: p.cube, cellConf: p.cellConf || {}, moveIdx: p.moveIdx || 0, showResume: true, queue: p.queue || [], queueIdx: p.queueIdx || 0 });
+      }
+    } catch (e) {}
+    if (this.props.labelsDefault === true) this.setState({ labels: true });
+    this.startCamera();
+    this.tick = setInterval(() => this.onTick(), 100);
+    this.onKey = (e) => {
+      if (this.state.screen !== 'solve') return;
+      if (e.code === 'Space') { e.preventDefault(); this.setState(s => ({ playing: !s.playing })); }
+      if (e.key === 'ArrowRight') this.next();
+      if (e.key === 'ArrowLeft') this.prev();
+    };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() {
+    clearInterval(this.tick);
+    window.removeEventListener('keydown', this.onKey);
+    if (this.stream) this.stream.getTracks().forEach(t => t.stop());
+  }
+  componentDidUpdate() {
+    const s = this.state;
+    try { localStorage.setItem(KEY, JSON.stringify({ screen: s.screen, stepIdx: s.stepIdx, cube: s.cube, cellConf: s.cellConf, moveIdx: s.moveIdx, queue: s.queue, queueIdx: s.queueIdx })); } catch (e) {}
+  }
+
+  startCamera() {
+    if (this.props.cameraEnabled === false) { this.setState({ cameraError: true, cameraDenied: false }); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { this.setState({ cameraError: true, cameraDenied: false }); return; }
+    navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } })
+      .then(st => { this.stream = st; this.setState({ cameraError: false }); this.attachVideo(this.videoEl); })
+      .catch(() => this.setState({ cameraError: true, cameraDenied: true }));
+  }
+  attachVideo = (el) => {
+    this.videoEl = el;
+    if (el && this.stream && el.srcObject !== this.stream) { el.srcObject = this.stream; const p = el.play(); if (p && p.catch) p.catch(() => {}); }
+  };
+  attachCanvas = (el) => { this.canvasEl = el; };
+  attachStage = (el) => { this.stageEl = el; };
+  attachFrame = (el) => { this.frameEl = el; };
+
+  sample() {
+    const v = this.videoEl, c = this.canvasEl, st = this.stageEl, fr = this.frameEl;
+    if (!v || !c || !st || !fr || !v.videoWidth) return null;
+    const sr = st.getBoundingClientRect(), qr = fr.getBoundingClientRect();
+    const vw = v.videoWidth, vh = v.videoHeight;
+    const scale = Math.max(sr.width / vw, sr.height / vh);
+    const offX = (vw * scale - sr.width) / 2, offY = (vh * scale - sr.height) / 2;
+    const x0 = (qr.left - sr.left + offX) / scale, y0 = (qr.top - sr.top + offY) / scale;
+    const w = qr.width / scale, h = qr.height / scale;
+    const N = 64;
+    c.width = N; c.height = N;
+    const ctx = c.getContext('2d', { willReadFrequently: true });
+    try { ctx.drawImage(v, x0, y0, w, h, 0, 0, N, N); } catch (e) { return null; }
+    const data = ctx.getImageData(0, 0, N, N).data;
+    const cells = [], confs = [];
+    let sumV = 0;
+    for (let row = 0; row < 4; row++) {
+      const rowCells = [], rowConfs = [];
+      for (let col = 0; col < 4; col++) {
+        let r = 0, g = 0, b = 0, n = 0;
+        const cx = col * 16 + 8, cy = row * 16 + 8;
+        for (let dy = -4; dy <= 4; dy += 2) for (let dx = -4; dx <= 4; dx += 2) {
+          const i = ((cy + dy) * N + (cx + dx)) * 4;
+          r += data[i]; g += data[i + 1]; b += data[i + 2]; n++;
+        }
+        r /= n; g /= n; b /= n;
+        sumV += Math.max(r, g, b) / 255;
+        const cl = classify(r, g, b);
+        rowCells.push(cl.key); rowConfs.push(cl.conf);
+      }
+      cells.push(rowCells.slice().reverse());
+      confs.push(rowConfs.slice().reverse());
+    }
+    let motion = 0;
+    const gray = new Float32Array(256);
+    for (let i = 0; i < 256; i++) {
+      const px = ((Math.floor(i / 16) * 4) * N + (i % 16) * 4) * 4;
+      gray[i] = (data[px] + data[px + 1] + data[px + 2]) / 3;
+    }
+    if (this.prevGray) { let d = 0; for (let i = 0; i < 256; i++) d += Math.abs(gray[i] - this.prevGray[i]); motion = Math.min(1, d / 256 / 26); }
+    this.prevGray = gray;
+    return { cells: [].concat.apply([], cells), confs: [].concat.apply([], confs), lighting: sumV / 16, motion: motion };
+  }
+
+  onTick() {
+    const s = this.state;
+    if (s.screen === 'solve' && s.playing) {
+      this.frames = (this.frames || 0) + 1;
+      if (this.frames >= Math.max(3, Math.round(16 / s.speed))) { this.frames = 0; this.next(); }
+    } else this.frames = 0;
+    if (s.cameraError) return;
+    const r = this.sample();
+    if (!r) return;
+
+    const moving = r.motion > 0.10;
+    const steady = Math.max(0, Math.min(1, 1 - r.motion / 0.14));
+    if (this.wasMoving && !moving) this.turnEvent = true;
+    this.wasMoving = moving;
+
+    const patch = { live: r.cells, liveConf: r.confs, motion: r.motion, steady: steady, lighting: r.lighting };
+
+    if (s.screen === 'solve') {
+      if (this.turnEvent && s.turnAdvance && r.motion < 0.06) { this.turnEvent = false; this.setState(patch); this.next(); return; }
+      this.setState(patch); return;
+    }
+
+    if (s.screen !== 'scan') { this.setState(patch); return; }
+
+    const done = FACES.every(f => s.cellConf[f.key]);
+    if (done) { patch.dwell = 0; this.setState(patch); return; }
+
+    if (s.awaitingTurn) {
+      if (this.turnEvent) { this.turnEvent = false; patch.awaitingTurn = false; patch.dwell = 0; patch.turnFlash = 6; }
+      else patch.dwell = 0;
+      if (s.turnFlash > 0) patch.turnFlash = s.turnFlash - 1;
+      this.setState(patch); return;
+    }
+    if (s.turnFlash > 0) patch.turnFlash = s.turnFlash - 1;
+
+    const mean = r.confs.reduce((a, b) => a + b, 0) / 16;
+    const same = this.prevCells && this.prevCells.join('') === r.cells.join('');
+    this.prevCells = r.cells;
+
+    if (moving || mean < 0.34 || !same) patch.dwell = Math.max(0, s.dwell - 9);
+    else patch.dwell = Math.min(100, s.dwell + 13);
+
+    if (patch.dwell >= 100) { this.setState(patch); this.lockFace(r); return; }
+    this.setState(patch);
+  }
+
+  lockFace(r) {
+    const s = this.state;
+    const key = this.currentStep().key;
+    const cube = Object.assign({}, s.cube || {});
+    const cellConf = Object.assign({}, s.cellConf);
+    cube[key] = r ? r.cells.slice() : (s.cube ? s.cube[key] : new Array(16).fill('W'));
+    cellConf[key] = r ? r.confs.slice() : new Array(16).fill(0.9);
+    const remaining = STEPS.map((st, i) => i).filter(i => !cellConf[STEPS[i].key]);
+    const nextIdx = remaining.filter(i => i > s.stepIdx)[0];
+    this.setState({
+      cube: cube, cellConf: cellConf, dwell: 0,
+      awaitingTurn: remaining.length > 0,
+      stepIdx: nextIdx !== undefined ? nextIdx : (remaining[0] !== undefined ? remaining[0] : s.stepIdx)
+    });
+  }
+
+  currentStep() { return STEPS[this.state.stepIdx] || STEPS[0]; }
+
+  rescan = (key) => {
+    const cellConf = Object.assign({}, this.state.cellConf); delete cellConf[key];
+    this.setState({ cellConf: cellConf, screen: 'scan', dwell: 0, awaitingTurn: false, stepIdx: STEPS.map(s => s.key).indexOf(key) });
+  };
+
+  sampleScan = () => {
+    const cube = scramble(this.props.demoInvalid === true ? 7 : 42);
+    const cellConf = {};
+    FACES.forEach((f, fi) => { cellConf[f.key] = cube[f.key].map((k, i) => ((fi * 7 + i * 13) % 10 < 2 ? 0.42 + (i % 3) * 0.05 : 0.86 + (i % 5) * 0.02)); });
+    this.setState({ cube: cube, cellConf: cellConf, screen: 'scan', stepIdx: 5, dwell: 0, awaitingTurn: false });
+  };
+
+  buildQueue(cube, cellConf) {
+    const q = [];
+    FACES.forEach(f => {
+      const conf = cellConf[f.key] || [];
+      conf.forEach((c, i) => { if (c < 0.62) q.push({ f: f.key, i: i, c: c }); });
+    });
+    q.sort((a, b) => a.c - b.c);
+    return q.slice(0, 14);
+  }
+
+  goReview = () => {
+    const s = this.state;
+    let cube = s.cube, cellConf = s.cellConf;
+    if (!cube || Object.keys(cellConf).length < 6) {
+      cube = cube || scramble(this.props.demoInvalid === true ? 7 : 42);
+      cellConf = Object.assign({}, cellConf);
+      FACES.forEach((f, fi) => {
+        if (!cube[f.key]) cube[f.key] = scramble(11 + fi)[f.key];
+        if (!cellConf[f.key]) cellConf[f.key] = cube[f.key].map((k, i) => (i % 7 === 0 ? 0.45 : 0.88));
+      });
+    }
+    this.setState({ screen: 'review', cube: cube, cellConf: cellConf, queue: this.buildQueue(cube, cellConf), queueIdx: 0, showAll: false });
+  };
+
+  answer = (k) => {
+    const s = this.state, q = s.queue[s.queueIdx];
+    if (!q) return;
+    const cube = JSON.parse(JSON.stringify(s.cube));
+    const cellConf = JSON.parse(JSON.stringify(s.cellConf));
+    cube[q.f][q.i] = k;
+    cellConf[q.f][q.i] = 1;
+    this.setState({ cube: cube, cellConf: cellConf, queueIdx: s.queueIdx + 1 });
+  };
+
+  counts() {
+    const cube = this.state.cube, c = {};
+    Object.keys(COLORS).forEach(k => c[k] = 0);
+    if (cube) Object.keys(cube).forEach(f => (cube[f] || []).forEach(k => { c[k] = (c[k] || 0) + 1; }));
+    return c;
+  }
+
+  next = () => this.setState(s => ({ moveIdx: Math.min(FLAT.length - 1, s.moveIdx + 1), playing: s.moveIdx + 1 >= FLAT.length - 1 ? false : s.playing }));
+  prev = () => this.setState(s => ({ moveIdx: Math.max(0, s.moveIdx - 1) }));
+
+  renderVals() {
+    const s = this.state, cube = s.cube;
+    const accent = this.props.accent || '#4FE3C1';
+    const labels = s.labels;
+    const step = this.currentStep();
+    const stepFace = FACES.filter(f => f.key === step.key)[0];
+    const captured = FACES.filter(f => s.cellConf[f.key]).length;
+    const all = captured === 6;
+    const lowLight = s.lighting < 0.26 && !s.cameraError;
+    const isScan = s.screen === 'scan';
+
+    const tab = (n) => ({ bg: s.screen === n ? 'rgba(79,227,193,0.12)' : 'transparent', fg: s.screen === n ? accent : '#8A929C' });
+    const tS = tab('scan'), tR = tab('review'), tV = tab('solve');
+
+    const liveCells = s.live || new Array(16).fill(null);
+    const liveConf = s.liveConf || new Array(16).fill(0);
+    const gridCells = liveCells.map((k, i) => {
+      const c = liveConf[i] || 0;
+      return {
+        color: k ? COLORS[k] : '#2A2F36',
+        label: labels && k ? k : '',
+        opacity: (0.2 + Math.min(1, c * 1.2) * 0.8).toFixed(2),
+        ring: Math.min(1, c * 1.3).toFixed(2),
+        ringColor: c < 0.4 ? '#FF7A1A' : accent
+      };
+    });
+
+    const faceRows = FACES.map(f => {
+      const conf = s.cellConf[f.key];
+      const done = !!conf;
+      const weakN = done ? conf.filter(c => c < 0.62).length : 0;
+      const bar = !done ? '#3A4048' : weakN > 3 ? '#FF7A1A' : accent;
+      return {
+        key: f.key, name: f.name,
+        thumb: (cube && cube[f.key] ? cube[f.key] : new Array(16).fill(null)).map(k => ({ color: k ? COLORS[k] : 'rgba(255,255,255,0.05)' })),
+        chipOpacity: done ? '1' : '0.3',
+        bg: f.key === step.key && !done && isScan ? 'rgba(79,227,193,0.07)' : 'transparent',
+        statusText: !done ? (f.key === step.key ? 'Reading now…' : 'Waiting') : weakN > 0 ? weakN + ' sticker' + (weakN > 1 ? 's' : '') + ' to confirm' : 'Clean read',
+        barColor: bar,
+        action: done ? 'Re-scan' : '—',
+        actionFg: done ? '#C7CDD4' : '#4A5058',
+        actionBorder: done ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.05)',
+        onRescan: () => this.rescan(f.key)
+      };
+    });
+
+    let hintTitle = step.instr, hintSub = step.sub, hintIcon = '⬒', hintFg = '#E8EAED', hintChipBg = 'rgba(79,227,193,0.14)', hintChipFg = accent, hintBorder = 'rgba(255,255,255,0.09)';
+    if (all) { hintTitle = 'All six faces captured'; hintSub = 'Move on to confirm the read'; hintIcon = '✓'; }
+    else if (s.awaitingTurn) { hintTitle = 'Locked — now turn the cube'; hintSub = s.scanMode === 'guided' ? step.instr : 'Any unseen face next'; hintIcon = '↻'; hintChipBg = 'rgba(44,107,232,0.18)'; hintChipFg = '#7FA8F5'; }
+    else if (s.turnFlash > 0) { hintTitle = 'Turn detected'; hintSub = 'Hold steady for the next read'; hintIcon = '✓'; }
+    else if (lowLight) { hintTitle = 'Too dark to read colors'; hintSub = 'Add light, or move toward a window'; hintIcon = '☾'; hintFg = '#FF9E52'; hintChipBg = 'rgba(255,122,26,0.16)'; hintChipFg = '#FF9E52'; hintBorder = 'rgba(255,122,26,0.3)'; }
+    else if (s.motion > 0.10) { hintTitle = 'Hold still'; hintSub = 'I need a steady frame to lock this face'; hintIcon = '⇢'; hintChipBg = 'rgba(255,122,26,0.16)'; hintChipFg = '#FF9E52'; }
+    else if (s.dwell > 5) { hintTitle = 'Reading…'; hintSub = 'Keep the face flat and filling the frame'; hintIcon = '◉'; }
+
+    const cnt = this.counts();
+    const bad = Object.keys(cnt).filter(k => cnt[k] !== 16);
+    const ok = !!cube && bad.length === 0;
+    const badSet = {};
+    bad.forEach(k => badSet[k] = true);
+
+    const q = s.queue[s.queueIdx];
+    const hasQ = s.screen === 'review' && !!q && !s.showAll;
+    const qFaceCells = q && cube ? cube[q.f].map((k, i) => ({
+      color: COLORS[k], label: labels ? k : '',
+      shadow: i === q.i ? '0 0 0 3px ' + accent + ', 0 0 20px rgba(79,227,193,.5)' : 'inset 0 0 0 1px rgba(0,0,0,0.28)'
+    })) : [];
+    const qAlt = q && cube ? (function (self) {
+      const cl = cube[q.f][q.i];
+      const near = { R: 'O', O: 'R', Y: 'W', W: 'Y', G: 'B', B: 'G' };
+      return near[cl] || 'W';
+    })(this) : 'W';
+    const qOptions = q && cube ? [
+      { k: cube[q.f][q.i], note: 'MY READ · ' + Math.round(q.c * 100) + '%' },
+      { k: qAlt, note: 'LIKELY MIX-UP' }
+    ].map(o => ({
+      color: COLORS[o.k], name: NAMES[o.k], note: o.note,
+      bg: '#16191E', border: 'rgba(255,255,255,0.1)',
+      onPick: () => this.answer(o.k)
+    })) : [];
+
+    const netPos = { U: [2, 1], L: [1, 2], F: [2, 2], R: [3, 2], B: [4, 2], D: [2, 3] };
+    const netFaces = cube ? FACES.map(f => ({
+      key: f.key, col: String(netPos[f.key][0]), row: String(netPos[f.key][1]),
+      cells: (cube[f.key] || []).map((k, i) => ({
+        color: COLORS[k], label: labels ? k : '',
+        anim: badSet[k] ? 'cw-ring 1.4s ease-in-out infinite' : 'none',
+        shadow: s.selected && s.selected.f === f.key && s.selected.i === i ? '0 0 0 3px ' + accent : 'inset 0 0 0 1px rgba(0,0,0,0.25)',
+        onPick: () => this.setState({ selected: { f: f.key, i: i } })
+      }))
+    })) : [];
+
+    const palette = Object.keys(COLORS).map(k => ({
+      color: COLORS[k],
+      border: s.selected && cube && cube[s.selected.f][s.selected.i] === k ? '#FFFFFF' : 'rgba(255,255,255,0.14)',
+      onSet: () => {
+        if (!s.selected || !cube) return;
+        const nc = JSON.parse(JSON.stringify(cube)); nc[s.selected.f][s.selected.i] = k;
+        this.setState({ cube: nc });
+      }
+    }));
+
+    const mv = FLAT[s.moveIdx] || FLAT[0];
+    const target = mv.token.replace(/['2w]/g, '');
+    const wide = mv.token.indexOf('w') >= 0;
+    const solvedFallback = { U: 'W', F: 'G', R: 'R' };
+    const faceOf = (key) => {
+      const arr = cube && cube[key] ? cube[key] : new Array(16).fill(solvedFallback[key]);
+      return arr.map((k, i) => {
+        let hit = false;
+        if (target === key) hit = true;
+        else if (key === 'U' && (target === 'R' || target === 'L')) hit = wide ? (target === 'R' ? i % 4 > 1 : i % 4 < 2) : (target === 'R' ? i % 4 === 3 : i % 4 === 0);
+        else if (key === 'F' && (target === 'U' || target === 'D')) hit = wide ? (target === 'U' ? i < 8 : i > 7) : (target === 'U' ? i < 4 : i > 11);
+        else if (key === 'R' && (target === 'U' || target === 'D')) hit = wide ? (target === 'U' ? i < 8 : i > 7) : (target === 'U' ? i < 4 : i > 11);
+        else if (key === 'F' && target === 'R') hit = wide ? i % 4 > 1 : i % 4 === 3;
+        else if (key === 'R' && target === 'F') hit = wide ? i % 4 < 2 : i % 4 === 0;
+        return {
+          color: COLORS[k], label: labels ? k : '',
+          glow: hit ? '0 0 0 2px ' + accent + ', 0 0 14px rgba(79,227,193,0.45)' : 'inset 0 0 0 1px rgba(0,0,0,0.28)'
+        };
+      });
+    };
+
+    const arrowMap = { U: '↺', "U'": '↻', U2: '⇄', R: '↑', "R'": '↓', R2: '⇅', F: '↻', "F'": '↺', F2: '⇄', D: '↻', "D'": '↺', L: '↓', "L'": '↑' };
+    const strip = [];
+    for (let i = s.moveIdx - 3; i <= s.moveIdx + 4; i++) {
+      if (i < 0 || i >= FLAT.length) continue;
+      const cur = i === s.moveIdx, past = i < s.moveIdx, gi = i;
+      strip.push({
+        token: FLAT[i].token,
+        bg: cur ? accent : past ? 'transparent' : '#16191E',
+        fg: cur ? '#05201A' : past ? '#4A5058' : '#C7CDD4',
+        border: cur ? accent : 'rgba(255,255,255,0.08)',
+        opacity: cur ? '1' : past ? '0.5' : '0.9',
+        onJump: () => this.setState({ moveIdx: gi, playing: false })
+      });
+    }
+
+    let base = 0;
+    const phases = MOVES.map(p => {
+      const start = base; base += p[1].length;
+      const active = mv.phase === p[0];
+      return {
+        name: p[0], count: p[1].length + ' moves',
+        dot: active ? accent : '#3A4048', fg: active ? '#E8EAED' : '#7A828C',
+        moves: p[1].map((m, j) => {
+          const gi = start + j;
+          return {
+            token: m[0],
+            bg: gi === s.moveIdx ? accent : gi < s.moveIdx ? 'rgba(255,255,255,0.04)' : '#16191E',
+            fg: gi === s.moveIdx ? '#05201A' : gi < s.moveIdx ? '#4A5058' : '#C7CDD4',
+            onJump: () => this.setState({ moveIdx: gi, playing: false })
+          };
+        })
+      };
+    });
+
+    const notation = this.props.notation || 'both';
+    const weakTotal = FACES.reduce((a, f) => a + ((s.cellConf[f.key] || []).filter(c => c < 0.62).length), 0);
+
+    return {
+      isScan: isScan, isReview: s.screen === 'review', isSolve: s.screen === 'solve',
+      scanGuided: isScan && s.scanMode === 'guided',
+      solveAr: s.screen === 'solve' && s.solveMode === 'ar',
+      tabScanBg: tS.bg, tabScanFg: tS.fg, tabReviewBg: tR.bg, tabReviewFg: tR.fg, tabSolveBg: tV.bg, tabSolveFg: tV.fg,
+      onGoScan: () => this.setState({ screen: 'scan' }),
+      onGoReview: this.goReview,
+      onGoSolve: () => this.setState({ screen: 'solve' }),
+      onSolveNow: () => { if (ok) this.setState({ screen: 'solve', moveIdx: 0, playing: false }); },
+      labelsBg: labels ? 'rgba(79,227,193,0.12)' : 'transparent',
+      labelsFg: labels ? accent : '#8A929C',
+      onLabels: () => this.setState({ labels: !labels }),
+      resetLabel: s.confirmReset ? 'Tap again to erase scan' : 'Reset',
+      resetFg: s.confirmReset ? '#FF9E52' : '#8A929C',
+      resetBorder: s.confirmReset ? 'rgba(255,122,26,0.4)' : 'rgba(255,255,255,0.08)',
+      onReset: () => {
+        if (!s.confirmReset) { this.setState({ confirmReset: true }); setTimeout(() => this.setState({ confirmReset: false }), 3000); return; }
+        this.setState({ screen: 'scan', cube: null, cellConf: {}, stepIdx: 0, dwell: 0, awaitingTurn: false, moveIdx: 0, playing: false, selected: null, queue: [], queueIdx: 0, confirmReset: false, showResume: false });
+      },
+      showResume: s.showResume,
+      resumeMsg: 'Picking up where you left off — ' + captured + ' of 6 faces already scanned.',
+      onDismissResume: () => this.setState({ showResume: false }),
+      onHardReset: () => this.setState({ screen: 'scan', cube: null, cellConf: {}, stepIdx: 0, moveIdx: 0, queue: [], queueIdx: 0, showResume: false }),
+
+      attachVideo: this.attachVideo, attachCanvas: this.attachCanvas, attachStage: this.attachStage, attachFrame: this.attachFrame,
+      cameraError: s.cameraError,
+      cameraTitle: s.cameraDenied ? 'Camera access blocked' : 'Camera off',
+      cameraMsg: s.cameraDenied ? 'Allow camera in your browser settings and try again — scanning reads real sticker colors from the video frame.' : 'Turn the camera on to scan your cube, or load a sample cube to walk the rest of the flow.',
+      onRetryCamera: () => this.startCamera(),
+      onSampleScan: this.sampleScan,
+      lightingPct: Math.round(Math.min(1, s.lighting * 1.4) * 100) + '%',
+      lightingLabel: lowLight ? 'LOW' : 'OK',
+      lightingColor: lowLight ? '#FF7A1A' : accent,
+      steadyPct: Math.round(s.steady * 100) + '%',
+      steadyColor: s.steady > 0.6 ? accent : '#FF7A1A',
+      frameColor: s.awaitingTurn ? '#7FA8F5' : s.dwell > 40 ? accent : 'rgba(255,255,255,0.4)',
+      lowLight: lowLight,
+      gridCells: gridCells,
+      stepGlyph: s.awaitingTurn ? step.glyph : '◉', stepAxis: step.axis,
+      hintTitle: hintTitle, hintSub: hintSub, hintIcon: hintIcon, hintFg: hintFg,
+      hintChipBg: hintChipBg, hintChipFg: hintChipFg, hintBorder: hintBorder,
+      dwellPct: s.dwell + '%',
+      captureLabel: all ? 'Done' : s.awaitingTurn ? 'Waiting for turn' : 'Lock now',
+      captureBg: all || s.awaitingTurn ? '#1A1D22' : accent,
+      captureFg: all || s.awaitingTurn ? '#6E7681' : '#05201A',
+      onCapture: () => { if (!all && !s.awaitingTurn) this.lockFace(this.sample()); },
+      faceRows: faceRows, capturedCount: String(captured),
+      modeGuidedBg: s.scanMode === 'guided' ? '#242A31' : 'transparent',
+      modeGuidedFg: s.scanMode === 'guided' ? '#E8EAED' : '#7A828C',
+      modeFreeBg: s.scanMode === 'free' ? '#242A31' : 'transparent',
+      modeFreeFg: s.scanMode === 'free' ? '#E8EAED' : '#7A828C',
+      onModeGuided: () => this.setState({ scanMode: 'guided' }),
+      onModeFree: () => this.setState({ scanMode: 'free' }),
+      modeHelp: s.scanMode === 'guided' ? 'I name each turn in a fixed six-face loop. Best if you have not scanned before.' : 'Turn however you like — I lock any steady face and require a real turn before reading again.',
+      nextLabel: all ? 'Confirm ' + (weakTotal > 0 ? weakTotal + ' uncertain sticker' + (weakTotal > 1 ? 's' : '') : 'the read') : 'Confirm what I have so far',
+      nextBg: all ? accent : 'transparent',
+      nextFg: all ? '#05201A' : '#9AA2AC',
+
+      hasQuestion: hasQ,
+      showNet: s.screen === 'review' && !hasQ,
+      qProgress: 'STICKER ' + (s.queueIdx + 1) + ' OF ' + s.queue.length,
+      qTitle: q ? 'Which color is this?' : '',
+      qCells: qFaceCells, qOptions: qOptions,
+      onQSkip: () => this.setState({ queueIdx: s.queueIdx + 1 }),
+      onQAll: () => this.setState({ showAll: true }),
+      netTitle: s.queue.length && s.queueIdx >= s.queue.length ? 'Every uncertain sticker confirmed' : 'Captured state',
+      netSub: 'Tap any sticker to change it. Flagged stickers pulse red.',
+      netFaces: netFaces, palette: palette, counts: Object.keys(COLORS).map(k => ({
+        color: COLORS[k], label2: labels ? k : '',
+        pct: Math.min(100, (cnt[k] / 16) * 100) + '%',
+        barColor: cnt[k] === 16 ? accent : '#E8402A',
+        label: cnt[k] + '/16'
+      })),
+      selectedLabel: s.selected ? s.selected.f + ' · sticker ' + (s.selected.i + 1) : 'No sticker selected',
+      validMark: ok ? '✓' : '!',
+      validColor: ok ? accent : '#E8402A',
+      validTitle: ok ? 'Valid cube state' : 'Impossible cube state',
+      validBg: ok ? 'rgba(79,227,193,0.08)' : 'rgba(232,64,42,0.1)',
+      validBorder: ok ? 'rgba(79,227,193,0.28)' : 'rgba(232,64,42,0.32)',
+      validMsg: ok ? 'All six colors appear exactly 16 times. Solver is ready.'
+        : 'Wrong sticker counts: ' + bad.map(k => NAMES[k] + ' ' + cnt[k]).join(', ') + '. Those stickers are pulsing red in the net — fix them to unlock the solve.',
+      solveBtnLabel: ok ? 'Solve — shortest route' : 'Fix flagged stickers to solve',
+      solveBtnBg: ok ? accent : '#1A1D22',
+      solveBtnFg: ok ? '#05201A' : '#5C636D',
+
+      faceU: faceOf('U'), faceF: faceOf('F'), faceR: faceOf('R'),
+      cubeYaw: (-34 + (s.moveIdx % 6) * 4) + 'deg',
+      gripTitle: 'Hold it like this: green front, white up',
+      arrowGlyph: arrowMap[mv.token.replace('w', '')] || '↻',
+      moveToken: notation === 'plain' ? mv.plain : mv.token,
+      movePlain: notation === 'wca' ? mv.phase : mv.plain,
+      phaseName: mv.phase, strip: strip, phases: phases,
+      speeds: [0.5, 1, 2].map(v => ({
+        label: v + '×', onSet: () => this.setState({ speed: v }),
+        bg: s.speed === v ? '#242A31' : 'transparent', fg: s.speed === v ? '#E8EAED' : '#7A828C'
+      })),
+      totalMoves: String(FLAT.length),
+      moveNumber: (s.moveIdx + 1) + ' / ' + FLAT.length,
+      remainingLabel: (FLAT.length - s.moveIdx - 1) + ' LEFT',
+      progressPct: Math.round(((s.moveIdx + 1) / FLAT.length) * 100) + '%',
+      playLabel: s.playing ? '❙❙  Pause' : '▶  Play along',
+      playBg: s.playing ? '#242A31' : accent,
+      playFg: s.playing ? '#E8EAED' : '#05201A',
+      transportHint: s.turnAdvance ? 'SPACE PLAY · ← → STEP · OR JUST TURN THE CUBE' : 'SPACE PLAY · ← → STEP',
+      onPlay: () => this.setState({ playing: !s.playing }),
+      onNext: this.next, onPrev: this.prev,
+      onTurnAdvance: () => this.setState({ turnAdvance: !s.turnAdvance }),
+      taBg: s.turnAdvance ? accent : '#2A2F36',
+      taJustify: s.turnAdvance ? 'flex-end' : 'flex-start',
+      motionPct: Math.round(Math.min(1, s.motion * 3) * 100) + '%',
+      motionColor: s.motion > 0.10 ? '#FF9E52' : '#5C636D',
+      motionLabel: s.motion > 0.10 ? 'TURNING' : 'STILL',
+      onView3d: () => this.setState({ solveMode: '3d' }),
+      onViewAr: () => this.setState({ solveMode: 'ar' }),
+      view3dBg: s.solveMode === '3d' ? '#242A31' : 'transparent',
+      view3dFg: s.solveMode === '3d' ? '#E8EAED' : '#7A828C',
+      viewArBg: s.solveMode === 'ar' ? '#242A31' : 'transparent',
+      viewArFg: s.solveMode === 'ar' ? '#E8EAED' : '#7A828C',
+      onLostIt: () => this.setState({ screen: 'scan', cellConf: {}, cube: null, stepIdx: 0, dwell: 0, awaitingTurn: false, playing: false })
+    };
+  }
+}
+
+</script>
+</body>
+</html>

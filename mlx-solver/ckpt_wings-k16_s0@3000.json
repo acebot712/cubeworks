@@ -1,0 +1,1 @@
+{"step": 3000, "task": "wings-k16", "k_cur": 12, "hidden": [4096, 2048, 1024], "kmax": 40, "snapshot": true}

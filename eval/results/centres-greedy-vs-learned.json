@@ -1,0 +1,301 @@
+{
+  "generated": "2026-07-29T19:50:09.898Z",
+  "n": 40,
+  "rows": [
+    {
+      "greedy": 35,
+      "learned": 18,
+      "greedyMs": 49.272417000000004,
+      "learnedMs": 5112.889875,
+      "width": 100
+    },
+    {
+      "greedy": 40,
+      "learned": 13,
+      "greedyMs": 179.4387910000005,
+      "learnedMs": 3348.882708,
+      "width": 100
+    },
+    {
+      "greedy": 38,
+      "learned": 14,
+      "greedyMs": 64.8072919999995,
+      "learnedMs": 3691.6111250000013,
+      "width": 100
+    },
+    {
+      "greedy": 32,
+      "learned": 14,
+      "greedyMs": 36.62091599999985,
+      "learnedMs": 3405.6234999999997,
+      "width": 100
+    },
+    {
+      "greedy": 42,
+      "learned": 15,
+      "greedyMs": 184.4194580000003,
+      "learnedMs": 4349.096375000001,
+      "width": 100
+    },
+    {
+      "greedy": 37,
+      "learned": 15,
+      "greedyMs": 137.67262499999924,
+      "learnedMs": 4776.542959000002,
+      "width": 100
+    },
+    {
+      "greedy": 41,
+      "learned": 15,
+      "greedyMs": 248.5922500000015,
+      "learnedMs": 5291.245999999999,
+      "width": 100
+    },
+    {
+      "greedy": 35,
+      "learned": 15,
+      "greedyMs": 239.36629200000243,
+      "learnedMs": 5172.892540999997,
+      "width": 100
+    },
+    {
+      "greedy": 39,
+      "learned": 16,
+      "greedyMs": 123.66191699999763,
+      "learnedMs": 5510.600999999995,
+      "width": 100
+    },
+    {
+      "greedy": 39,
+      "learned": 17,
+      "greedyMs": 145.36245800000324,
+      "learnedMs": 6184.572666,
+      "width": 100
+    },
+    {
+      "greedy": 37,
+      "learned": 15,
+      "greedyMs": 228.94800000000396,
+      "learnedMs": 4680.444125000002,
+      "width": 100
+    },
+    {
+      "greedy": 37,
+      "learned": 15,
+      "greedyMs": 155.23729199999798,
+      "learnedMs": 3848.4530830000003,
+      "width": 100
+    },
+    {
+      "greedy": 34,
+      "learned": 18,
+      "greedyMs": 114.11179200000333,
+      "learnedMs": 29484.756833,
+      "width": 300
+    },
+    {
+      "greedy": 41,
+      "learned": 16,
+      "greedyMs": 81.28387499999371,
+      "learnedMs": 5683.3503340000025,
+      "width": 100
+    },
+    {
+      "greedy": 42,
+      "learned": 16,
+      "greedyMs": 109.55391699999745,
+      "learnedMs": 5794.057417000004,
+      "width": 100
+    },
+    {
+      "greedy": 32,
+      "learned": 15,
+      "greedyMs": 174.18637500000477,
+      "learnedMs": 5291.476666000002,
+      "width": 100
+    },
+    {
+      "greedy": 42,
+      "learned": 18,
+      "greedyMs": 293.0016250000044,
+      "learnedMs": 6556.7908749999915,
+      "width": 100
+    },
+    {
+      "greedy": 39,
+      "learned": 18,
+      "greedyMs": 221.40991699999722,
+      "learnedMs": 6462.275915999999,
+      "width": 100
+    },
+    {
+      "greedy": 31,
+      "learned": 17,
+      "greedyMs": 198.5413750000007,
+      "learnedMs": 6231.087917000012,
+      "width": 100
+    },
+    {
+      "greedy": 32,
+      "learned": 14,
+      "greedyMs": 172.7489579999965,
+      "learnedMs": 5019.040624999994,
+      "width": 100
+    },
+    {
+      "greedy": 37,
+      "learned": 15,
+      "greedyMs": 334.27287500000966,
+      "learnedMs": 5494.953250000006,
+      "width": 100
+    },
+    {
+      "greedy": 41,
+      "learned": 14,
+      "greedyMs": 222.9033749999944,
+      "learnedMs": 4049.38833300001,
+      "width": 100
+    },
+    {
+      "greedy": 33,
+      "learned": 17,
+      "greedyMs": 77.74029200000223,
+      "learnedMs": 5112.612708000001,
+      "width": 100
+    },
+    {
+      "greedy": 38,
+      "learned": 17,
+      "greedyMs": 220.48279099998763,
+      "learnedMs": 5305.038084,
+      "width": 100
+    },
+    {
+      "greedy": 32,
+      "learned": 13,
+      "greedyMs": 101.50541599999997,
+      "learnedMs": 3544.055416999996,
+      "width": 100
+    },
+    {
+      "greedy": 31,
+      "learned": 16,
+      "greedyMs": 149.0409590000054,
+      "learnedMs": 4653.026249999995,
+      "width": 100
+    },
+    {
+      "greedy": 29,
+      "learned": 14,
+      "greedyMs": 62.516749999980675,
+      "learnedMs": 4060.2607920000155,
+      "width": 100
+    },
+    {
+      "greedy": 40,
+      "learned": 13,
+      "greedyMs": 199.1287500000035,
+      "learnedMs": 3334.1291669999773,
+      "width": 100
+    },
+    {
+      "greedy": 39,
+      "learned": 16,
+      "greedyMs": 89.99166699999478,
+      "learnedMs": 4749.276458999986,
+      "width": 100
+    },
+    {
+      "greedy": 34,
+      "learned": 16,
+      "greedyMs": 169.82804100000067,
+      "learnedMs": 4817.811791999993,
+      "width": 100
+    },
+    {
+      "greedy": 38,
+      "learned": 17,
+      "greedyMs": 170.01666600001045,
+      "learnedMs": 4381.8562499999825,
+      "width": 100
+    },
+    {
+      "greedy": 33,
+      "learned": 13,
+      "greedyMs": 30.173666999995476,
+      "learnedMs": 3301.560375000001,
+      "width": 100
+    },
+    {
+      "greedy": 39,
+      "learned": 19,
+      "greedyMs": 87.23687500000233,
+      "learnedMs": 4876.918208000017,
+      "width": 100
+    },
+    {
+      "greedy": 32,
+      "learned": 15,
+      "greedyMs": 182.48754199998803,
+      "learnedMs": 3581.957207999978,
+      "width": 100
+    },
+    {
+      "greedy": 31,
+      "learned": 17,
+      "greedyMs": 63.78500000000349,
+      "learnedMs": 4127.632417000015,
+      "width": 100
+    },
+    {
+      "greedy": 36,
+      "learned": 18,
+      "greedyMs": 149.3978749999951,
+      "learnedMs": 4096.712499999994,
+      "width": 100
+    },
+    {
+      "greedy": 35,
+      "learned": 14,
+      "greedyMs": 163.82587500000955,
+      "learnedMs": 3344.8212080000085,
+      "width": 100
+    },
+    {
+      "greedy": 28,
+      "learned": 13,
+      "greedyMs": 113.44566699999268,
+      "learnedMs": 2753.6311250000144,
+      "width": 100
+    },
+    {
+      "greedy": 39,
+      "learned": 16,
+      "greedyMs": 182.8833750000049,
+      "learnedMs": 3695.521999999997,
+      "width": 100
+    },
+    {
+      "greedy": 40,
+      "learned": 16,
+      "greedyMs": 125.60366699998849,
+      "learnedMs": 3126.166292000009,
+      "width": 100
+    }
+  ],
+  "summary": {
+    "greedy": {
+      "mean": 36.25,
+      "median": 37,
+      "max": 42,
+      "min": 28
+    },
+    "learned": {
+      "mean": 15.575,
+      "median": 16,
+      "max": 19,
+      "min": 13,
+      "solved": 40
+    }
+  }
+}

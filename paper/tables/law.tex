@@ -1,0 +1,14 @@
+\begin{tabular}{lrrrr}
+\toprule
+sample & $n$ & mean $|$error$|$ & noise floor & max $|$error$|$ \\
+\midrule
+exhaustive ground truth, $k\!\le\!6$ & 252 & 0.0117 & 0.0018 & 0.081 \\
+\quad \emph{same, moments and accuracy from one sample} & 252 & 0.0087 & 0.0018 & 0.050 \\
+\midrule
+\emph{held out}: probed ground truth, $k\!=\!8$ & 6 & 0.0078 & 0.0024 & 0.017 \\
+\emph{held out}: other training objectives & 152 & 0.0147 & 0.0022 & 0.094 \\
+\midrule
+\multicolumn{5}{l}{Two free parameters, $\Phi(d'/s + b)$, give mean $|$error$|$ 0.0082 at $s = 1.451$,} \\
+\multicolumn{5}{l}{\quad against 0.0087 at the parameter-free $s = \sqrt{2} = 1.414$} \\
+\bottomrule
+\end{tabular}

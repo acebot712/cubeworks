@@ -1,0 +1,49 @@
+{
+  "generated": "2026-07-30T04:37:06.769Z",
+  "size": 51482970,
+  "reached": 51482970,
+  "maxDepth": 9,
+  "seconds": 763.771,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 12
+    },
+    {
+      "depth": 2,
+      "count": 229
+    },
+    {
+      "depth": 3,
+      "count": 4302
+    },
+    {
+      "depth": 4,
+      "count": 64570
+    },
+    {
+      "depth": 5,
+      "count": 750140
+    },
+    {
+      "depth": 6,
+      "count": 6356320
+    },
+    {
+      "depth": 7,
+      "count": 25791392
+    },
+    {
+      "depth": 8,
+      "count": 18361188
+    },
+    {
+      "depth": 9,
+      "count": 154816
+    }
+  ]
+}

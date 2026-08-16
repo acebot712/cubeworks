@@ -1,0 +1,407 @@
+{
+  "generated": "2026-07-29T20:04:27.970Z",
+  "n": 25,
+  "rows": [
+    {
+      "off": 199,
+      "on": 109,
+      "offPhases": {
+        "Centers": 62,
+        "Edge pairing": 79,
+        "Parity": 34,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 22,
+        "Edge pairing": 56,
+        "Parity": 9,
+        "3×3 finish": 22
+      }
+    },
+    {
+      "off": 146,
+      "on": 131,
+      "offPhases": {
+        "Centers": 57,
+        "Edge pairing": 68,
+        "3×3 finish": 21
+      },
+      "onPhases": {
+        "Centers": 22,
+        "Edge pairing": 76,
+        "Parity": 9,
+        "3×3 finish": 24
+      }
+    },
+    {
+      "off": 176,
+      "on": 142,
+      "offPhases": {
+        "Centers": 55,
+        "Edge pairing": 90,
+        "Parity": 9,
+        "3×3 finish": 22
+      },
+      "onPhases": {
+        "Centers": 20,
+        "Edge pairing": 67,
+        "Parity": 34,
+        "3×3 finish": 21
+      }
+    },
+    {
+      "off": 164,
+      "on": 116,
+      "offPhases": {
+        "Centers": 51,
+        "Edge pairing": 57,
+        "Parity": 34,
+        "3×3 finish": 22
+      },
+      "onPhases": {
+        "Centers": 26,
+        "Edge pairing": 58,
+        "Parity": 9,
+        "3×3 finish": 23
+      }
+    },
+    {
+      "off": 184,
+      "on": 135,
+      "offPhases": {
+        "Centers": 52,
+        "Edge pairing": 108,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 19,
+        "Edge pairing": 58,
+        "Parity": 34,
+        "3×3 finish": 24
+      }
+    },
+    {
+      "off": 162,
+      "on": 128,
+      "offPhases": {
+        "Centers": 66,
+        "Edge pairing": 74,
+        "3×3 finish": 22
+      },
+      "onPhases": {
+        "Centers": 24,
+        "Edge pairing": 71,
+        "Parity": 9,
+        "3×3 finish": 24
+      }
+    },
+    {
+      "off": 194,
+      "on": 133,
+      "offPhases": {
+        "Centers": 59,
+        "Edge pairing": 79,
+        "Parity": 34,
+        "3×3 finish": 22
+      },
+      "onPhases": {
+        "Centers": 26,
+        "Edge pairing": 57,
+        "Parity": 27,
+        "3×3 finish": 23
+      }
+    },
+    {
+      "off": 146,
+      "on": 147,
+      "offPhases": {
+        "Centers": 44,
+        "Edge pairing": 78,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 28,
+        "Edge pairing": 62,
+        "Parity": 34,
+        "3×3 finish": 23
+      }
+    },
+    {
+      "off": 141,
+      "on": 136,
+      "offPhases": {
+        "Centers": 53,
+        "Edge pairing": 64,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 20,
+        "Edge pairing": 92,
+        "3×3 finish": 24
+      }
+    },
+    {
+      "off": 171,
+      "on": 116,
+      "offPhases": {
+        "Centers": 47,
+        "Edge pairing": 74,
+        "Parity": 27,
+        "3×3 finish": 23
+      },
+      "onPhases": {
+        "Centers": 20,
+        "Edge pairing": 66,
+        "Parity": 9,
+        "3×3 finish": 21
+      }
+    },
+    {
+      "off": 137,
+      "on": 138,
+      "offPhases": {
+        "Centers": 47,
+        "Edge pairing": 57,
+        "Parity": 9,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 25,
+        "Edge pairing": 63,
+        "Parity": 27,
+        "3×3 finish": 23
+      }
+    },
+    {
+      "off": 143,
+      "on": 132,
+      "offPhases": {
+        "Centers": 57,
+        "Edge pairing": 63,
+        "3×3 finish": 23
+      },
+      "onPhases": {
+        "Centers": 24,
+        "Edge pairing": 77,
+        "Parity": 9,
+        "3×3 finish": 22
+      }
+    },
+    {
+      "off": 218,
+      "on": 110,
+      "offPhases": {
+        "Centers": 57,
+        "Edge pairing": 103,
+        "Parity": 34,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 24,
+        "Edge pairing": 64,
+        "3×3 finish": 22
+      }
+    },
+    {
+      "off": 186,
+      "on": 160,
+      "offPhases": {
+        "Centers": 50,
+        "Edge pairing": 79,
+        "Parity": 34,
+        "3×3 finish": 23
+      },
+      "onPhases": {
+        "Centers": 22,
+        "Edge pairing": 81,
+        "Parity": 34,
+        "3×3 finish": 23
+      }
+    },
+    {
+      "off": 135,
+      "on": 162,
+      "offPhases": {
+        "Centers": 52,
+        "Edge pairing": 60,
+        "3×3 finish": 23
+      },
+      "onPhases": {
+        "Centers": 27,
+        "Edge pairing": 78,
+        "Parity": 34,
+        "3×3 finish": 23
+      }
+    },
+    {
+      "off": 159,
+      "on": 172,
+      "offPhases": {
+        "Centers": 44,
+        "Edge pairing": 59,
+        "Parity": 34,
+        "3×3 finish": 22
+      },
+      "onPhases": {
+        "Centers": 22,
+        "Edge pairing": 99,
+        "Parity": 27,
+        "3×3 finish": 24
+      }
+    },
+    {
+      "off": 164,
+      "on": 139,
+      "offPhases": {
+        "Centers": 55,
+        "Edge pairing": 85,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 21,
+        "Edge pairing": 86,
+        "Parity": 9,
+        "3×3 finish": 23
+      }
+    },
+    {
+      "off": 175,
+      "on": 154,
+      "offPhases": {
+        "Centers": 63,
+        "Edge pairing": 80,
+        "Parity": 9,
+        "3×3 finish": 23
+      },
+      "onPhases": {
+        "Centers": 25,
+        "Edge pairing": 71,
+        "Parity": 34,
+        "3×3 finish": 24
+      }
+    },
+    {
+      "off": 160,
+      "on": 133,
+      "offPhases": {
+        "Centers": 62,
+        "Edge pairing": 67,
+        "Parity": 9,
+        "3×3 finish": 22
+      },
+      "onPhases": {
+        "Centers": 28,
+        "Edge pairing": 72,
+        "Parity": 9,
+        "3×3 finish": 24
+      }
+    },
+    {
+      "off": 126,
+      "on": 122,
+      "offPhases": {
+        "Centers": 41,
+        "Edge pairing": 61,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 23,
+        "Edge pairing": 77,
+        "3×3 finish": 22
+      }
+    },
+    {
+      "off": 149,
+      "on": 126,
+      "offPhases": {
+        "Centers": 50,
+        "Edge pairing": 66,
+        "Parity": 9,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 24,
+        "Edge pairing": 79,
+        "3×3 finish": 23
+      }
+    },
+    {
+      "off": 145,
+      "on": 121,
+      "offPhases": {
+        "Centers": 46,
+        "Edge pairing": 77,
+        "3×3 finish": 22
+      },
+      "onPhases": {
+        "Centers": 27,
+        "Edge pairing": 71,
+        "3×3 finish": 23
+      }
+    },
+    {
+      "off": 141,
+      "on": 141,
+      "offPhases": {
+        "Centers": 48,
+        "Edge pairing": 69,
+        "3×3 finish": 24
+      },
+      "onPhases": {
+        "Centers": 23,
+        "Edge pairing": 69,
+        "Parity": 27,
+        "3×3 finish": 22
+      }
+    },
+    {
+      "off": 171,
+      "on": 165,
+      "offPhases": {
+        "Centers": 47,
+        "Edge pairing": 68,
+        "Parity": 34,
+        "3×3 finish": 22
+      },
+      "onPhases": {
+        "Centers": 27,
+        "Edge pairing": 80,
+        "Parity": 34,
+        "3×3 finish": 24
+      }
+    },
+    {
+      "off": 128,
+      "on": 149,
+      "offPhases": {
+        "Centers": 54,
+        "Edge pairing": 51,
+        "3×3 finish": 23
+      },
+      "onPhases": {
+        "Centers": 22,
+        "Edge pairing": 70,
+        "Parity": 34,
+        "3×3 finish": 23
+      }
+    }
+  ],
+  "summary": {
+    "off": 160.8,
+    "on": 136.68
+  },
+  "phases": {
+    "off": {
+      "Centers": 52.76,
+      "Edge pairing": 72.64,
+      "Parity": 12.4,
+      "3×3 finish": 23
+    },
+    "on": {
+      "Centers": 23.64,
+      "Edge pairing": 72,
+      "Parity": 18.08,
+      "3×3 finish": 22.96
+    }
+  }
+}

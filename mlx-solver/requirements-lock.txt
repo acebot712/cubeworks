@@ -1,0 +1,7 @@
+# Exact versions used for every measurement in the paper.
+# mlx-metal is pulled in by mlx on Apple silicon and pinned here so the GPU
+# backend cannot drift independently of the array library.
+mlx==0.32.0
+mlx-metal==0.32.0
+numpy==2.5.1
+scipy==1.18.0

@@ -1,0 +1,38 @@
+{
+  "k": 2,
+  "moves": "oi-q4",
+  "states": 552,
+  "diameter": 6,
+  "seconds": 0.0006530284881591797,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 6
+    },
+    {
+      "depth": 2,
+      "count": 23
+    },
+    {
+      "depth": 3,
+      "count": 98
+    },
+    {
+      "depth": 4,
+      "count": 228
+    },
+    {
+      "depth": 5,
+      "count": 184
+    },
+    {
+      "depth": 6,
+      "count": 12
+    }
+  ],
+  "mean_distance": 4.076086956521739
+}

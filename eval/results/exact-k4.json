@@ -1,0 +1,37 @@
+{
+  "k": 4,
+  "states": 255024,
+  "diameter": 6,
+  "seconds": 2.48103404045105,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 33
+    },
+    {
+      "depth": 2,
+      "count": 654
+    },
+    {
+      "depth": 3,
+      "count": 8693
+    },
+    {
+      "depth": 4,
+      "count": 69329
+    },
+    {
+      "depth": 5,
+      "count": 162318
+    },
+    {
+      "depth": 6,
+      "count": 13996
+    }
+  ],
+  "mean_distance": 4.706623690319343
+}

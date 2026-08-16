@@ -1,0 +1,9 @@
+CUBEWORKS pipeline — Sun Aug  9 18:53:22 IST 2026
+
+  E1 ladder training      24/24 runs at 40k steps
+  probed profiles         1 files
+  per-shell profiles      58 files
+  budget curves           66 files
+  E5 aggregate            present
+
+  running: yes
