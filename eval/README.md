@@ -75,5 +75,13 @@ Each sample has two files in `frames/`:
   (`detW × detH × 3`, row-major). The eval runner reads this directly, so it
   needs no image decoder and no dependencies.
 
-`frames/` is gitignored — it is your data, and it gets large. `labels.json` is
-small and worth keeping.
+`frames/` is gitignored and is **deliberately absent from the public repository**,
+including from any release archive. The captures are photographs of a person and
+a home interior, and note that excluding only the `.jpg` would achieve nothing:
+`<id>.bin` is the same picture as raw `detW × detH × 3` RGB and reconstructs in a
+few lines of numpy. Both are out, permanently.
+
+Nothing else depends on them — no result in the paper reads `frames/`, and the
+rest of the test suite passes without it. To run this eval, capture your own set
+with `capture.html`; `labels.json` is tracked so the format and the label schema
+are still there to follow.
