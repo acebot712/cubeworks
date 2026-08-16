@@ -26,3 +26,11 @@ paper/*.out
 paper/*.log
 
 .DS_Store
+
+# Camera frames from the detector eval. These are photographs of a person and a
+# home interior: the .jpg are obvious, but the .bin are the same images as raw
+# 640x360x3 RGB and reconstruct in three lines of numpy, so excluding only the
+# JPEGs would be pointless. Nothing in the paper depends on them. Capture your
+# own with capture.html (see eval/README.md) to run the detector eval.
+eval/frames/
+paper/supplementary-anonymous.zip
