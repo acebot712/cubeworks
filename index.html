@@ -18,6 +18,29 @@
     @keyframes cw-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     @keyframes cw-ring { 0%, 100% { box-shadow: 0 0 0 2px rgba(232,64,42,.9); } 50% { box-shadow: 0 0 0 4px rgba(232,64,42,.35); } }
     @keyframes cw-spin { to { transform: rotate(360deg); } }
+
+    /* The controls are divs with role="button" and tabindex, so keyboard focus
+       falls back to the browser's default ring — an orange that belongs to no
+       part of this palette. Use the accent instead, and only for :focus-visible
+       so a mouse click does not leave a ring behind. */
+    [role="button"]:focus-visible, a:focus-visible, button:focus-visible {
+      outline: 2px solid #4FE3C1;
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+
+    /* Six looping animations run in this app — the scan pulse, the turn nudge,
+       the blink, the parity ring and the solver spinner. Vestibular disorders
+       make sustained motion genuinely unpleasant, and none of these carries
+       information that the static state does not. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
