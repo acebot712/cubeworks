@@ -24,6 +24,7 @@ export default function ScanScreen({ camera, scan, loop, cube, step, stepIdx, aw
 
   return (
     <div className="cw-stage" style={stage}>
+      <h1 className="cw-sr-only">Step 1 of 3: scan the cube's six faces</h1>
       <CameraStage
         videoRef={camera.videoRef}
         camera={camera}
@@ -72,7 +73,7 @@ function FacePanel({ cube, colorOf, labels, stepIdx, step, scanning, rawCaptures
   return (
     <div className="cw-panel" style={sidePanel}>
       <div style={{ padding: '16px 16px 12px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div style={{ ...sectionLabel, marginBottom: 9 }}>GUIDANCE</div>
+        <h2 style={{ ...sectionLabel, margin: '0 0 9px' }}>GUIDANCE</h2>
         <div style={{ fontSize: 12.5, fontWeight: 600, color: INK }}>
           {cube.allCaptured ? 'All six faces captured' : `Next up: ${step.instr.toLowerCase()}`}
         </div>

@@ -18,14 +18,14 @@ const tabStyle = (active) => ({
 
 export default function AppHeader({ screen, solveReady, labels, onGo, onToggleLabels, onReset }) {
   return (
-    <div className="cw-header" style={{ height: 52, flex: 'none', display: 'flex', alignItems: 'center', gap: 22, padding: '0 18px', background: BG_PANEL, borderBottom: `1px solid ${LINE}` }}>
+    <header className="cw-header" style={{ height: 52, flex: 'none', display: 'flex', alignItems: 'center', gap: 22, padding: '0 18px', background: BG_PANEL, borderBottom: `1px solid ${LINE}` }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
         <div style={{ width: 18, height: 18, borderRadius: 4, background: 'linear-gradient(135deg, #4FE3C1 0%, #2C6BE8 100%)' }} />
         <div className="cw-hide-sm" style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.14em' }}>CUBEWORKS</div>
         <div className="cw-hide-sm" style={{ ...mono, fontSize: 11, color: INK_FAINT, border: '1px solid rgba(255,255,255,0.12)', borderRadius: 4, padding: '2px 6px' }}>4×4×4</div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <nav aria-label="Solve steps" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
         {TABS.map((tab, i) => {
           const locked = tab.screen === 'solve' && !solveReady;
           return (
@@ -43,7 +43,7 @@ export default function AppHeader({ screen, solveReady, labels, onGo, onToggleLa
             </React.Fragment>
           );
         })}
-      </div>
+      </nav>
 
       <div style={{ flex: 1 }} />
 
@@ -62,6 +62,6 @@ export default function AppHeader({ screen, solveReady, labels, onGo, onToggleLa
       >
         Reset
       </ConfirmBtn>
-    </div>
+    </header>
   );
 }

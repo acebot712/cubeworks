@@ -26,6 +26,14 @@
     @keyframes cw-ring { 0%, 100% { box-shadow: 0 0 0 2px rgba(232,64,42,.9); } 50% { box-shadow: 0 0 0 4px rgba(232,64,42,.35); } }
     @keyframes cw-spin { to { transform: rotate(360deg); } }
 
+    /* Visually hidden, still announced. Each screen carries an h1 naming the
+       step, because the visible design has no single title element — the largest
+       text on Solve is the move token, which is the wrong thing to open with. */
+    .cw-sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+
     /* The controls are divs with role="button" and tabindex, so keyboard focus
        falls back to the browser's default ring — an orange that belongs to no
        part of this palette. Use the accent instead, and only for :focus-visible

@@ -87,6 +87,7 @@ function SolutionView({ keepAlive, solver, playback, states, labels, colorOf, la
 
   return (
     <div className="cw-stage" style={stage}>
+      <h1 className="cw-sr-only">Step 3 of 3: follow the solution</h1>
       <div className="cw-solve-stage" style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(ellipse at 50% 12%, #12161C 0%, #08090B 68%)', overflow: 'hidden' }}>
         {keepAlive}
 
@@ -145,7 +146,7 @@ function SolutionView({ keepAlive, solver, playback, states, labels, colorOf, la
 
       <div className="cw-panel" style={sidePanel}>
         <div style={{ padding: 16, borderBottom: `1px solid ${LINE}` }}>
-          <div style={sectionLabel}>SOLUTION</div>
+          <h2 style={{ ...sectionLabel, margin: 0 }}>SOLUTION</h2>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 7 }}>
             <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: '-0.03em' }}>{total}</div>
             <div style={{ fontSize: 12, color: INK_MUTED }}>moves · reduction method</div>

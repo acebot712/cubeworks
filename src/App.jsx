@@ -192,6 +192,7 @@ export default function App() {
         />
       )}
 
+      <main style={{ flex: 1, display: 'flex', minHeight: 0 }}>
       {screen === 'scan' && (
         <ScanScreen
           camera={camera} scan={scan} loop={loop} cube={cube}
@@ -213,6 +214,7 @@ export default function App() {
           actions={actions}
         />
       )}
+      </main>
     </div>
   );
 }

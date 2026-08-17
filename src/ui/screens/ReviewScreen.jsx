@@ -70,6 +70,7 @@ export default function ReviewScreen({ cube, scan, labels, actions }) {
 
   return (
     <div className="cw-stage" style={stage}>
+      <h1 className="cw-sr-only">Step 2 of 3: confirm the scanned colours</h1>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24, padding: 24, overflow: 'auto', background: 'radial-gradient(ellipse at 50% 0%, #101318 0%, #08090B 70%)' }}>
         {current && !showAll ? (
           <QueueCard
@@ -242,7 +243,7 @@ function ValidationPanel({ cube, colorOf, labels, repair, flagged, actions }) {
 
   return (
     <div className="cw-panel" style={{ ...sidePanel, padding: '18px 16px' }}>
-      <div style={sectionLabel}>STATE VALIDATION</div>
+      <h2 style={{ ...sectionLabel, margin: 0 }}>STATE VALIDATION</h2>
       <div style={{ marginTop: 12, padding: 14, borderRadius: 11, background: ok ? 'rgba(79,227,193,0.08)' : 'rgba(232,64,42,0.1)', border: `1px solid ${ok ? 'rgba(79,227,193,0.28)' : 'rgba(232,64,42,0.32)'}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 18, height: 18, borderRadius: '50%', background: ok ? ACCENT : BAD, color: BG, fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{ok ? '✓' : '!'}</div>
@@ -300,7 +301,7 @@ function ValidationPanel({ cube, colorOf, labels, repair, flagged, actions }) {
         </div>
       )}
 
-      <div style={{ marginTop: 20, ...sectionLabel }}>STICKER COUNT · 16 EACH</div>
+      <h2 style={{ ...sectionLabel, margin: '20px 0 0' }}>STICKER COUNT · 16 EACH</h2>
       <div style={{ marginTop: 11, display: 'flex', flexDirection: 'column', gap: 7 }}>
         {COLOR_KEYS.map((key) => {
           const n = cube.counts[key];
