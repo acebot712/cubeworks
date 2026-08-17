@@ -13,8 +13,13 @@ export const INK_SOFT = '#C7CDD4';
 export const INK_DIM = '#9AA2AC';
 export const INK_MUTED = '#8A929C';
 export const INK_SUBTLE = '#7A828C';
-export const INK_FAINT = '#6E7681';
-export const INK_GHOST = '#5C636D';
+// The two faintest tiers that still carry reading text — section labels and the
+// hint paragraphs. Both sat under WCAG AA on the panel and card surfaces
+// (4.15/3.91 and 3.14/2.96 against a 4.5 floor), so the ramp compressed at the
+// bottom rather than staying legible. Raised to clear 4.5 on both; measure
+// against BG_PANEL #0E1013 and BG_CARD #14171C before lowering either again.
+export const INK_FAINT = '#7C858F';   // 5.09 panel / 4.80 card
+export const INK_GHOST = '#79828C';   // 4.89 panel / 4.61 card
 export const INK_DISABLED = '#4A5058';
 
 // Surfaces, darkest to lightest.
