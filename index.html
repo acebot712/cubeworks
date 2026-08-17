@@ -8,7 +8,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
-    html, body { margin: 0; padding: 0; background: #08090B; }
+    /* Every screen sets its own font inline, so nothing renders in the fallback
+       today — but with no family on body the inherited value is the UA default
+       serif, and any element that later forgets to set one lands in Times. Name
+       the display face once, here, so the fallback is the intended one. */
+    html, body {
+      margin: 0; padding: 0; background: #08090B;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+    }
     * { box-sizing: border-box; }
     a { color: #4FE3C1; text-decoration: none; }
     a:hover { color: #7CF0D8; }
