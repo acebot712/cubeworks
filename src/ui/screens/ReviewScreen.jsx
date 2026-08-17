@@ -69,7 +69,7 @@ export default function ReviewScreen({ cube, scan, labels, actions }) {
   const answer = (idx, color) => { scan.setManual(idx, color); actions.invalidateSolution(); };
 
   return (
-    <div style={stage}>
+    <div className="cw-stage" style={stage}>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24, padding: 24, overflow: 'auto', background: 'radial-gradient(ellipse at 50% 0%, #101318 0%, #08090B 70%)' }}>
         {current && !showAll ? (
           <QueueCard
@@ -241,7 +241,7 @@ function ValidationPanel({ cube, colorOf, labels, repair, flagged, actions }) {
   else explanation = `${describeProblems(problems).join(' · ')}. The stickers involved are pulsing in the net — tap one, then pick its real colour.`;
 
   return (
-    <div style={{ ...sidePanel, padding: '18px 16px' }}>
+    <div className="cw-panel" style={{ ...sidePanel, padding: '18px 16px' }}>
       <div style={sectionLabel}>STATE VALIDATION</div>
       <div style={{ marginTop: 12, padding: 14, borderRadius: 11, background: ok ? 'rgba(79,227,193,0.08)' : 'rgba(232,64,42,0.1)', border: `1px solid ${ok ? 'rgba(79,227,193,0.28)' : 'rgba(232,64,42,0.32)'}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

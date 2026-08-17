@@ -36,6 +36,65 @@
       border-radius: 8px;
     }
 
+    /* ---------------------------------------------------------------- mobile
+       This is a camera app: the phone is the device it is for, and until now the
+       desktop shell rendered unchanged at 375px. The layout did not scroll, it
+       clipped — the cube, the play control and half the header sat outside the
+       viewport and were unreachable.
+
+       The screens compose their layout from two shared objects in ui/theme.js,
+       `stage` (a flex row) and `sidePanel` (a fixed 330px column). Those are
+       inline styles, which a media query cannot reach, so each site carries a
+       class and the rules below override with !important. That is the whole
+       mechanism: turn the row into a column, let the panel go full width, and
+       give each half its own scroll region. */
+    @media (max-width: 768px) {
+      .cw-stage {
+        flex-direction: column !important;
+        overflow: hidden;
+      }
+      /* Split the stage by ratio rather than by vh. Fixed viewport units have to
+         be budgeted against the header and against each other, and the first
+         attempt here summed past 100% — which pushed the panel's primary action
+         below the fold, where it was as unreachable as the bug this replaced.
+         Two flex children of a column that is already exactly the height left
+         over cannot overflow it. */
+      .cw-stage > :not(.cw-panel) {
+        flex: 1 1 40% !important;
+        min-height: 0 !important;
+        min-width: 0;
+      }
+      /* `flex: none` and a 330px width are inline, so both need overriding.
+         min-height:0 lets a flex child shrink below its content, and overflow-y
+         is what turns that shrink into a scroll rather than a clip — without it
+         the panel simply hides whatever does not fit, primary actions included. */
+      .cw-panel {
+        width: 100% !important;
+        flex: 1 1 60% !important;
+        min-height: 0 !important;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        border-left: none !important;
+        border-top: 1px solid rgba(255,255,255,0.07) !important;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      /* Brand and chrome that cost more width than they earn on a phone. The
+         logo mark, the step tabs and Reset survive; the wordmark, the 4x4x4
+         badge, the step numbers, the tab separators and the "Color labels"
+         caption do not. */
+      .cw-hide-sm { display: none !important; }
+      .cw-header {
+        gap: 10px !important;
+        padding: 0 10px !important;
+      }
+    }
+    /* Phone browsers report 100vh as the height with the URL bar hidden, which
+       leaves the bottom of a 100vh layout under the chrome. dvh tracks the
+       visible height where it is supported. */
+    @supports (height: 100dvh) {
+      .cw-app { height: 100dvh !important; }
+    }
+
     /* Six looping animations run in this app — the scan pulse, the turn nudge,
        the blink, the parity ring and the solver spinner. Vestibular disorders
        make sustained motion genuinely unpleasant, and none of these carries

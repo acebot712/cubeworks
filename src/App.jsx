@@ -174,7 +174,7 @@ export default function App() {
   };
 
   return (
-    <div style={{ height: '100vh', minHeight: 800, display: 'flex', flexDirection: 'column', background: BG, color: INK, fontFamily: "'Space Grotesk', system-ui, sans-serif", overflow: 'hidden' }}>
+    <div className="cw-app" style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: BG, color: INK, fontFamily: "'Space Grotesk', system-ui, sans-serif", overflow: 'hidden' }}>
       <AppHeader
         screen={screen}
         solveReady={solveReady}

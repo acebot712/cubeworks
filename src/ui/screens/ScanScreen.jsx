@@ -23,7 +23,7 @@ export default function ScanScreen({ camera, scan, loop, cube, step, stepIdx, aw
   const frameColor = loop.manualQuad ? WARN : awaitingTurn ? INFO : loop.dwell > 40 ? ACCENT : 'rgba(255,255,255,0.4)';
 
   return (
-    <div style={stage}>
+    <div className="cw-stage" style={stage}>
       <CameraStage
         videoRef={camera.videoRef}
         camera={camera}
@@ -70,7 +70,7 @@ function FacePanel({ cube, colorOf, labels, stepIdx, step, scanning, rawCaptures
   }, [editFace, rawCaptures]);
 
   return (
-    <div style={sidePanel}>
+    <div className="cw-panel" style={sidePanel}>
       <div style={{ padding: '16px 16px 12px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div style={{ ...sectionLabel, marginBottom: 9 }}>GUIDANCE</div>
         <div style={{ fontSize: 12.5, fontWeight: 600, color: INK }}>

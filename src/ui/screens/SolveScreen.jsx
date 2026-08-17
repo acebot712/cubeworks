@@ -86,7 +86,7 @@ function SolutionView({ keepAlive, solver, playback, states, labels, colorOf, la
   }
 
   return (
-    <div style={stage}>
+    <div className="cw-stage" style={stage}>
       <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(ellipse at 50% 12%, #12161C 0%, #08090B 68%)', overflow: 'hidden' }}>
         {keepAlive}
 
@@ -141,7 +141,7 @@ function SolutionView({ keepAlive, solver, playback, states, labels, colorOf, la
         </div>
       </div>
 
-      <div style={sidePanel}>
+      <div className="cw-panel" style={sidePanel}>
         <div style={{ padding: 16, borderBottom: `1px solid ${LINE}` }}>
           <div style={sectionLabel}>SOLUTION</div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 7 }}>
