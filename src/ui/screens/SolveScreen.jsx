@@ -87,19 +87,21 @@ function SolutionView({ keepAlive, solver, playback, states, labels, colorOf, la
 
   return (
     <div className="cw-stage" style={stage}>
-      <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(ellipse at 50% 12%, #12161C 0%, #08090B 68%)', overflow: 'hidden' }}>
+      <div className="cw-solve-stage" style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(ellipse at 50% 12%, #12161C 0%, #08090B 68%)', overflow: 'hidden' }}>
         {keepAlive}
 
-        <div style={{ position: 'absolute', top: 16, left: 20, display: 'flex', alignItems: 'center', gap: 12, zIndex: 4 }}>
+        <div className="cw-solve-tophint" style={{ position: 'absolute', top: 16, left: 20, display: 'flex', alignItems: 'center', gap: 12, zIndex: 4 }}>
           <GripHint />
           <div style={{ ...mono, fontSize: 9.5, letterSpacing: '0.16em', color: ACCENT }}>
             {(done ? 'Done' : phaseOfMove[moveIdx] || phaseOfMove[0] || '').toUpperCase()}
           </div>
         </div>
 
-        <Cube3D states={states || []} moves={flat} idx={moveIdx} colorOf={colorOf} labelOf={labelOf} labels={labels} size={290} />
+        <div className="cw-solve-cube">
+          <Cube3D states={states || []} moves={flat} idx={moveIdx} colorOf={colorOf} labelOf={labelOf} labels={labels} size={290} />
+        </div>
 
-        <div style={{ position: 'relative', zIndex: 3, marginTop: 30, display: 'flex', alignItems: 'center', gap: 18, padding: '13px 22px', borderRadius: 16, background: 'rgba(14,16,19,0.92)', border: '1px solid rgba(255,255,255,0.09)' }}>
+        <div className="cw-solve-card" style={{ position: 'relative', zIndex: 3, marginTop: 30, display: 'flex', alignItems: 'center', gap: 18, padding: '13px 22px', borderRadius: 16, background: 'rgba(14,16,19,0.92)', border: '1px solid rgba(255,255,255,0.09)' }}>
           {done ? (
             <>
               <div style={{ fontSize: 38, color: ACCENT }}>✓</div>
@@ -123,21 +125,21 @@ function SolutionView({ keepAlive, solver, playback, states, labels, colorOf, la
           )}
         </div>
 
-        <div style={{ position: 'relative', zIndex: 3, marginTop: 20, display: 'flex', alignItems: 'center', gap: 7 }}>
+        <div className="cw-solve-chips" style={{ position: 'relative', zIndex: 3, marginTop: 20, display: 'flex', alignItems: 'center', gap: 7 }}>
           {strip.map((i) => (
             <MoveChip key={i} token={flat[i]} state={i === moveIdx ? 'current' : i < moveIdx ? 'past' : 'future'} onClick={() => setMoveIdx(i)} wide />
           ))}
         </div>
 
-        <div style={{ position: 'absolute', bottom: 18, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9, zIndex: 4 }}>
+        <div className="cw-solve-transport" style={{ position: 'absolute', bottom: 18, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9, zIndex: 4 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Btn onClick={() => step(-1)} label="Previous move" style={transportBtn}>◀</Btn>
+            <Btn onClick={() => step(-1)} label="Previous move" className="cw-transport-btn" style={transportBtn}>◀</Btn>
             <Btn onClick={() => setPlaying(!playing)} style={{ height: 44, padding: '0 22px', borderRadius: 12, display: 'flex', alignItems: 'center', gap: 9, fontSize: 13, fontWeight: 600, background: playing ? BG_CHIP_ON : ACCENT, color: playing ? INK : ACCENT_INK }}>
               {playing ? '❙❙  Pause' : '▶  Play along'}
             </Btn>
-            <Btn onClick={() => step(1)} label="Next move" style={transportBtn}>▶</Btn>
+            <Btn onClick={() => step(1)} label="Next move" className="cw-transport-btn" style={transportBtn}>▶</Btn>
           </div>
-          <div style={{ ...mono, fontSize: 9.5, letterSpacing: '0.1em', color: INK_GHOST }}>SPACE PLAY · ← → STEP</div>
+          <div className="cw-kbd-hint" style={{ ...mono, fontSize: 9.5, letterSpacing: '0.1em', color: INK_GHOST }}>SPACE PLAY · ← → STEP</div>
         </div>
       </div>
 

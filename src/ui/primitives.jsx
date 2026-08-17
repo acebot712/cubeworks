@@ -4,11 +4,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { WARN, INK_MUTED } from './theme.js';
 
-export function Btn({ onClick, style, children, label, disabled, title }) {
+// `className` is forwarded so a stylesheet can reach a button at all: every style
+// here is inline, and a media query cannot override an inline style without a
+// selector to hang an !important on.
+export function Btn({ onClick, style, children, label, disabled, title, className }) {
   const act = (e) => { if (disabled) return; e.stopPropagation(); onClick && onClick(e); };
   return (
     <div
       role="button"
+      className={className}
       tabIndex={disabled ? -1 : 0}
       aria-disabled={disabled || undefined}
       aria-label={label}

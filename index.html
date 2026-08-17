@@ -78,6 +78,68 @@
         border-top: 1px solid rgba(255,255,255,0.07) !important;
         padding-bottom: env(safe-area-inset-bottom);
       }
+      /* The Solve stage. Its transport controls sat at `position: absolute;
+         bottom: 18`, which works when the stage is wide and short — the cube,
+         the move card and the chip strip take about 450px of flow, and on a
+         desktop stage there is room beneath them. In a stage 300px tall the
+         absolute layer simply lands on top of the flow: measured at 24
+         overlapping element pairs, worst 188x28, with "Play along" covering the
+         move description. So on a phone the transport rejoins the flow and
+         `margin-top: auto` pushes it to the bottom of the column instead. */
+      .cw-solve-stage {
+        justify-content: flex-start !important;
+        padding: 4px 0 8px;
+      }
+      /* The grip reminder floats over the top-left of a roomy desktop stage. At
+         phone width it sits squarely on the cube's top rows, hiding the state
+         the user is checking against their hands. In flow instead, above the
+         cube, where it reads as the caption it actually is. */
+      .cw-solve-tophint {
+        position: static !important;
+        flex: none;
+        align-self: stretch;
+        justify-content: space-between;
+        padding: 0 12px 6px;
+      }
+      /* Cube3D renders at a fixed pixel size, so the wrapper is scaled rather
+         than threading a breakpoint through the component. The wrapper takes
+         whatever height is left after the card and the transport have theirs —
+         a fixed height cannot work here, because the space available depends on
+         the viewport and on whether the session-restore banner is showing. The
+         card and the transport are the two things that must never be clipped;
+         the cube can lose its bottom rows and still tell you the grip. */
+      .cw-solve-cube {
+        flex: 1 1 auto;
+        min-height: 0;
+        align-self: stretch;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: hidden;
+      }
+      .cw-solve-cube > * {
+        transform: scale(0.46);
+        transform-origin: center top;
+        flex: none;
+      }
+      .cw-solve-card {
+        margin-top: 2px !important;
+        padding: 9px 15px !important;
+        gap: 12px !important;
+        flex: none;
+        max-width: calc(100% - 24px);
+      }
+      /* The look-ahead strip duplicates the panel's move list, which is on the
+         same screen now that the layout is stacked. Dropping it buys the ~60px
+         the transport needs. */
+      .cw-solve-chips { display: none !important; }
+      .cw-solve-transport {
+        position: static !important;
+        transform: none !important;
+        margin-top: auto !important;
+        flex: none;
+      }
+
       /* Brand and chrome that cost more width than they earn on a phone. The
          logo mark, the step tabs and Reset survive; the wordmark, the 4x4x4
          badge, the step numbers, the tab separators and the "Color labels"
@@ -88,6 +150,16 @@
         padding: 0 10px !important;
       }
     }
+    /* "SPACE PLAY · ← → STEP" is advice a touch user cannot act on. Gate it on
+       the input device rather than the width, because a narrow desktop window
+       still has a keyboard and a tablet with one attached reports fine pointer. */
+    @media (pointer: coarse) {
+      .cw-kbd-hint { display: none !important; }
+      /* The step arrows are 40x40, under the 44px minimum, and they are the two
+         controls a user presses on every single move of a 168-move solve. */
+      .cw-transport-btn { width: 44px !important; height: 44px !important; }
+    }
+
     /* Phone browsers report 100vh as the height with the URL bar hidden, which
        leaves the bottom of a 100vh layout under the chrome. dvh tracks the
        visible height where it is supported. */
