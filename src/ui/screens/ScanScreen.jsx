@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { CAPTURE_STEPS } from '../../scan/orientations.js';
 import { Btn } from '../primitives.jsx';
 import { StickerGrid, ColorPicker, FACE_LIST, faceBase, colorLookup } from '../cubeFaces.jsx';
-import { ACCENT, WARN, WARN_DEEP, INFO, INK, INK_SOFT, INK_DIM, INK_MUTED, INK_SUBTLE, INK_FAINT, INK_GHOST, INK_DISABLED, BG_CARD, BG_INERT, mono, sidePanel, sectionLabel, stage, LINE, LINE_SOFT } from '../theme.js';
+import { ACCENT, ACCENT_INK, WARN, WARN_DEEP, INFO, INK, INK_SOFT, INK_DIM, INK_MUTED, INK_SUBTLE, INK_FAINT, INK_GHOST, INK_DISABLED, BG_CARD, BG_INERT, mono, sidePanel, sectionLabel, stage, LINE, LINE_SOFT } from '../theme.js';
 import { primaryAction, hintFor } from './scanGuidance.js';
 import { CONF_WEAK } from '../../scan/assemble.js';
 import CameraStage from './CameraStage.jsx';
@@ -114,11 +114,21 @@ function FacePanel({ cube, colorOf, labels, stepIdx, step, scanning, rawCaptures
       </div>
 
       <div style={{ padding: 14, borderTop: `1px solid ${LINE}` }}>
+        {/* The primary action has to get MORE prominent as the scan completes, not
+            less. This panel used to do the opposite: a button while faces were
+            still missing, and prose once all six were in, pointing at "Confirm the
+            read" on the camera overlay. That overlay does not render when the
+            camera is unavailable — the sample-cube path, or a denied permission —
+            so a finished scan named an action the user could not see or reach. */}
         {cube.allCaptured ? (
-          <div style={{ fontSize: 11.5, color: INK_GHOST, textAlign: 'center', lineHeight: 1.5 }}>
-            All six faces are in — use <strong style={{ color: INK_DIM }}>Confirm the read</strong> over the camera,
-            or click a face above to fix it first.
-          </div>
+          <>
+            <Btn onClick={onReview} style={{ padding: 13, borderRadius: 10, textAlign: 'center', fontSize: 13, fontWeight: 600, background: ACCENT, color: ACCENT_INK }}>
+              Confirm the read
+            </Btn>
+            <div style={{ fontSize: 11.5, color: INK_GHOST, textAlign: 'center', lineHeight: 1.5, marginTop: 8 }}>
+              All six faces are in — or click a face above to fix it first.
+            </div>
+          </>
         ) : (
           <Btn onClick={onReview} style={{ padding: 12, borderRadius: 10, textAlign: 'center', fontSize: 13, fontWeight: 600, color: INK_DIM, border: `1px solid ${LINE_SOFT}` }}>
             Confirm what I have so far
