@@ -12,8 +12,8 @@
 \usepackage{microtype}
 \usepackage{url}
 
-\title{Learned Heuristics Decay With Distance to Goal ---\\
-and So Do Pattern Databases, by the Same Two-Moment Law}
+\title{Learned Heuristics Decay With Distance to Goal:\\
+So Do Pattern Databases, by the Same Two-Moment Law}
 
 % AUTHOR BLOCK IS COMMENTED OUT ON PURPOSE. tmlr.sty ignores it without the
 % [accepted] option, so the compiled PDF was anonymous either way -- but the
@@ -40,23 +40,23 @@ $3.1\times10^{23}$ states.
 
 Call the set of states at exact distance $d$ from the goal the \emph{shell} at
 $d$. A search compares adjacent shells, and we find that a heuristic's accuracy
-at that comparison is $\Phi(\Delta/(\sigma\sqrt{2}))$ --- where $\Delta$ is the
+at that comparison is $\Phi(\Delta/(\sigma\sqrt{2}))$, where $\Delta$ is the
 difference in mean heuristic value between the two shells, $\sigma$ the spread of
-values within them, and $\Phi$ the standard normal distribution function --- with
-no fitted parameters. Estimating the moments and measuring accuracy on disjoint
+values within them, and $\Phi$ the standard normal distribution function. Nothing
+here is fitted. Estimating the moments and measuring accuracy on disjoint
 halves of each shell gives a mean absolute error of $0.012$ over 252 shell
 observations, against an estimator noise floor of $0.002$. It holds on a
 sub-problem 300 times larger whose ground truth comes from a different apparatus,
 and on heuristics trained under three further objectives. Injecting noise of known
 tail weight degrades it monotonically, and Cauchy noise, which has no finite
-variance, breaks it by a factor of 36 --- so the normal form, not mere
+variance, breaks it by a factor of 36, so the normal form, not mere
 monotonicity, carries the prediction.
 
 Three consequences follow. Ordering quality is invariant to rescaling. Decay with
 distance occurs exactly when $\sigma$ grows, which is why it is \emph{not}
 particular to learned heuristics: pattern databases on the same states decay as
 much, and matched on strength the two classes are indistinguishable. And $\sigma$
-is the one term an objective can act on --- but every objective we built to act on
+is the one term an objective can act on, but every objective we built to act on
 it produced a worse heuristic, monotonically in the penalty weight.
 
 We also show that $\tau$-b rewards a heuristic for being coarse-valued, by enough
@@ -78,7 +78,7 @@ trained heuristic is any good before committing compute to a search.
 There is an established answer. \citet{chrestien2023} prove that forward search
 with $f(s) = \alpha g(s) + \beta h(s)$ is strictly optimally efficient if and only
 if $h$ is a perfect ranking, and conclude that ``the absolute value of the
-heuristic is not important'' --- an observation credited to
+heuristic is not important'', an observation credited to
 \citet{xu2009} for beam search. \citet{wilt2016} turn this into a measurement:
 Goal Distance Rank Correlation, Kendall's $\tau$ between $h$ and the exact
 edge-count distance $d^*$, computed offline from a backward breadth-first search.
@@ -88,9 +88,9 @@ optimised directly to construct heuristics.
 Our starting point is that GDRC is a \emph{pooled} statistic, and that pooling
 discards a structure the heuristics it summarises actually have: ordering quality
 varies with distance from the goal. We expected that structure to be peculiar to
-bootstrapped heuristics --- Deep Approximate Value Iteration
+bootstrapped heuristics. Deep Approximate Value Iteration
 \citep{agostinelli2019} anchors its value estimate at the goal and propagates
-outward, so error should accumulate with distance by construction --- and we
+outward, so error should accumulate with distance by construction, and we
 report that this expectation is wrong. Abstraction-based heuristics decay too,
 and once heuristic strength is controlled the two classes are
 indistinguishable. What survives is the measurement problem rather than the
@@ -108,7 +108,7 @@ varied at exactly constant cardinality} by restricting the generating set
 rungs; a meet-in-the-middle prober, verified against that ground truth, extends
 it by one further rung.
 \item The measurement: ordering accuracy against exact ground truth, stratified
-by true distance --- and a strength-controlled comparison showing that the decay
+by true distance, and a strength-controlled comparison showing that the decay
 it reveals belongs to informative heuristics in general, not to learned ones
 (Section~\ref{sec:profile}). This is a negative result against our own initial
 hypothesis, and Section~\ref{sec:profile} states plainly what the earlier,
@@ -130,14 +130,14 @@ as a design target.
 \item An exact decomposition of pooled $\tau$ into that profile, which makes the
 dilution argument an identity rather than an intuition, and a measurement of a
 bias in $\tau$-b that favours coarse-valued heuristics over continuous ones by
-about $0.084$ --- enough to reverse comparisons of the kind this statistic is
+about $0.084$, enough to reverse comparisons of the kind this statistic is
 routinely used for (Section~\ref{sec:pooled}).
 \item Evidence that the pooled statistic is diluted by pairs search never makes,
 including a run whose GDRC is indistinguishable from a working classical
 heuristic while its adjacent-shell ordering is near chance
 (Section~\ref{sec:pooled}).
 \item A depth-versus-size experiment at constant cardinality, showing that size is
-not the operative variable in that design, and --- at ten seeds per condition ---
+not the operative variable in that design, and, at ten seeds per condition,
 that depth is not either over the range we can hold cardinality fixed
 (Section~\ref{sec:depth}). A second correction lives here: the apparent failure
 at the largest diameter, which an earlier version of this work reported as a
@@ -180,7 +180,7 @@ states drawn independently of any search. \citet{hernandez2012} name ``heuristic
 depression'', a \emph{bounded region} trapping real-time search; what we measure is
 monotone in distance across the whole space. \citet{czechowski2021} quantify how a
 learned value function's ordering degrades with the \emph{step spacing between
-compared states} and report a signal-to-noise ratio at one fixed spacing --- the
+compared states} and report a signal-to-noise ratio at one fixed spacing, the
 closest quantitative statement to ours, differing in the conditioning variable.
 \citet{zawalski2024} observe qualitatively that value functions fail far from the
 goal, but probe this by injecting distance-independent Gaussian noise, without
@@ -193,7 +193,7 @@ branching factor changing alongside; ours holds branching, encoding, architectur
 and budget fixed. \citet{futuhi2026} publish ordinal value losses, PAC-dimension
 bounds and \emph{near}-admissible learned heuristics with nonzero measured
 overestimation. \citet{arfaee2011} bootstrap from backward random walks of
-increasing length --- the depth curriculum we adopt and claim nothing for.
+increasing length, which is the depth curriculum we adopt and claim nothing for.
 
 \section{Experimental setup}
 \label{sec:setup}
@@ -202,7 +202,7 @@ increasing length --- the depth curriculum we adopt and claim nothing for.
 given exact distance from the goal; shell $d$ and shell $d+1$ are one move apart,
 and those are the states a search compares against each other. A \emph{rung} is
 one member of the family of sub-problems below, indexed by how many pieces it
-tracks --- higher rungs are exponentially larger. And $d^*(s)$ denotes the exact
+tracks; higher rungs are exponentially larger. And $d^*(s)$ denotes the exact
 number of moves from state $s$ to the goal, obtained by exhaustive search rather
 than estimated. $\Phi$ is the standard normal distribution function throughout.
 
@@ -231,12 +231,12 @@ collapse of that shape.
 \paragraph{Beyond enumeration.} A meet-in-the-middle prober gives exact distances
 for a \emph{sample} on larger rungs: build the ball of radius $f$ around the goal
 once, then walk $b$ levels out from each query state and intersect. Before use it
-is checked against exhaustive ground truth wherever both can run --- 200/200
+is checked against exhaustive ground truth wherever both can run: 200/200
 agreement at $k=4$ and 300/300 at $k=6$. It reaches one rung beyond enumeration
 ($k=8$); Section~\ref{sec:limits} explains why it stops there.
 
 \paragraph{Varying depth at constant size.} Restricting the generating set leaves
-the group generated unchanged --- a half turn is two quarter turns --- so the
+the group generated unchanged (a half turn is two quarter turns), so the
 reachable set is identical while the diameter grows. On rung $k=4$, four
 generating sets all reach exactly 255{,}024 states (verified by exhaustive search)
 at diameters 6, 8, 10 and 12. The cost of this design is that fewer generators
@@ -254,13 +254,13 @@ are compared on identical states. Every solution is replayed on the puzzle befor
 being counted.
 
 \paragraph{Sampling.} Profiles draw states across scramble lengths $1..16$ and
-then \emph{measure} the true distance. Drawing from deep random walks --- the
-obvious choice, since it approximates the uniform distribution --- concentrates
+then \emph{measure} the true distance. Drawing from deep random walks (the
+obvious choice, since it approximates the uniform distribution) concentrates
 almost every state into the shells nearest the mean, leaving the shallow half of
 the profile unmeasured. Scramble length is never used as the label: a state
 scrambled nine moves is usually nearer than nine.
 
-\section{Ordering accuracy decays with distance --- for every informative
+\section{Ordering accuracy decays with distance, for every informative
 heuristic}
 \label{sec:profile}
 
@@ -271,8 +271,8 @@ $0.5$ it is a coin flip and search at that depth is blind, however small its
 regression error.
 
 \paragraph{The comparison, and the baseline that broke it.} We began by comparing
-the DAVI-trained network against one pattern database --- the exact distance
-table of a smaller rung, admissible on the larger by abstraction --- and a
+the DAVI-trained network against one pattern database (the exact distance
+table of a smaller rung, admissible on the larger by abstraction) and a
 uniform random control. On rung $k=6$ the learned heuristic decayed and the
 abstraction was nearly flat, which we read as a signature of goal-anchored
 bootstrapping. That reading does not survive a stronger baseline. The abstraction
@@ -292,8 +292,8 @@ heuristic.}
 \includegraphics[width=0.86\linewidth]{figures/fig13.pdf}
 \caption{Ordering accuracy by true distance on rung $k=6$. Every informative
 heuristic is near-perfect adjacent to the goal and decays outward; only the
-random control is flat. Showing PDB($k{=}2$) alone --- the lowest curve above
-chance --- is what made the decay look particular to the learned heuristic.}
+random control is flat. Showing PDB($k{=}2$) alone, the lowest curve above
+chance, is what made the decay look particular to the learned heuristic.}
 \label{fig:profile}\end{figure}
 
 \paragraph{Controlling for strength.} Decay is a function of how good a heuristic
@@ -363,7 +363,7 @@ ordering accuracy across our data:
   \label{eq:law}
 \end{equation}
 Nothing here is fitted. There is no coefficient, no intercept, and no per-domain
-constant, so Equation~\ref{eq:law} is a prediction that could simply be wrong ---
+constant, so Equation~\ref{eq:law} is a prediction that could simply be wrong,
 most obviously for pattern databases, whose values are small integers with heavy
 ties and no reason whatever to look normal.
 
@@ -376,7 +376,7 @@ heuristic at one true-distance shell.}
 \includegraphics[width=0.82\linewidth]{figures/fig15.pdf}
 \caption{Predicted against measured ordering accuracy; the dashed line is
 $y = x$. Pattern databases sit slightly below it, which is the cost of their
-discreteness --- the one place the normal approximation is visibly imperfect.}
+discreteness, the one place the normal approximation is visibly imperfect.}
 \label{fig:law}\end{figure}
 
 \paragraph{The estimate must not use the states it is scored on.} Accuracy and
@@ -388,15 +388,15 @@ at all} and it reports a correlation of $+0.95$ between prediction and
 measurement where the truth is zero. We therefore split every shell, estimate
 $\Delta$ and $\sigma$ on one half and measure accuracy on the other, and report
 the split figures throughout. The correlations survive for informative
-heuristics and collapse for the random control, which is the expected signature
---- and is why we do not quote a correlation coefficient as evidence anywhere in
+heuristics and collapse for the random control, which is the expected signature,
+and is why we do not quote a correlation coefficient as evidence anywhere in
 this paper.
 
 Table~\ref{tab:law} and Figure~\ref{fig:law} report the comparison. Split-sample,
 the mean absolute error is $0.012$ over 252 shell observations. That is roughly
 six times the noise floor of the estimator itself ($0.002$, from the binomial
 error of accuracies computed on 20{,}000 sampled pairs), so the residual is real
-structure rather than measurement noise --- the law is a good approximation, not
+structure rather than measurement noise: the law is a good approximation, not
 an exact one. It holds on rung $k=8$, where ground truth comes from the
 meet-in-the-middle prober rather than exhaustive search ($0.008$), and on 152
 shell observations from heuristics trained under three objectives introduced
@@ -412,8 +412,8 @@ is not an empirical discovery: it appears because we write the denominator as a
 root-mean-square of the two shells' spreads, and
 $\Phi(\Delta/(\sigma_{\mathrm{rms}}\sqrt{2}))$ is identically
 $\Phi(\Delta/\sqrt{\sigma_1^2+\sigma_2^2})$, which is exact for independent
-normals. What the fit tests is whether real value distributions behave like that
---- and they do, to within about 3\% in the effective scale.
+normals. What the fit tests is whether real value distributions behave like that,
+and they do, to within about 3\% in the effective scale.
 
 \paragraph{Breaking it on purpose.} Everything above is observational: we
 measured heuristics that happened to exist. That leaves two objections. The
@@ -441,8 +441,8 @@ heuristic only to score it.}
 Table~\ref{tab:noise} reports the outcome, and it is the sharpest evidence in
 this paper. The error grows monotonically with the tail weight of the injected
 noise: uniform and Gaussian noise leave the prediction intact
-($0.004$--$0.005$), Laplace noise degrades it about threefold, and Cauchy noise
---- which has no finite variance --- breaks it by a factor of $36$, to $0.165$.
+($0.004$--$0.005$), Laplace noise degrades it about threefold, and Cauchy noise,
+which has no finite variance, breaks it by a factor of $36$, to $0.165$.
 A law that were merely monotone in $d'$ would have no reason to care which
 distribution the noise came from. This one does, in the direction and roughly the
 proportion the normal approximation implies.
@@ -476,13 +476,13 @@ abstraction value, surfacing because duplicated rows gave abstractions three
 times their true weight.
 
 The corrected statement is more interesting than the one it replaces. The two
-classes arrive at comparable decay from opposite directions --- a pattern database
+classes arrive at comparable decay from opposite directions: a pattern database
 starts imprecise and degrades slowly, a learned network starts sharp and degrades
-fast --- which is why matching them on overall strength makes their decay
+fast, which is why matching them on overall strength makes their decay
 indistinguishable while their mechanisms are not.
 
 Third, and most usefully, adjacent shells are one move apart, so $\Delta$ is
-pinned near $1$ for any heuristic calibrated to distance --- we measure $0.917$
+pinned near $1$ for any heuristic calibrated to distance; we measure $0.917$
 for learned heuristics and $0.600$ for abstractions, whose values compress
 because abstraction shortens distances. The only remaining free term is
 $\sigma$. A squared-error objective charges bias and variance alike; ordering is
@@ -500,7 +500,7 @@ setting, \citet{czechowski2021} model a learned value function as
 distance-plus-Gaussian-noise and report ordering-inversion rates against step
 separation, which is the same mechanism argued from the same premise. What we report is that it holds, parameter-free
 and to about one percentage point, for heuristic ordering quality measured
-against exact ground truth --- across learned networks, integer-valued pattern
+against exact ground truth, across learned networks, integer-valued pattern
 databases and random controls, on every rung and diameter we can measure. Its
 value is that it reduces a profile to two interpretable numbers and identifies
 which of them an intervention can move.
@@ -523,7 +523,7 @@ We compare squared error against a RankNet-style pairwise logistic, the same los
 restricted to pairs one shell apart, and squared error plus an explicit
 within-shell variance penalty at four weights. All arms share a scale-invariant
 curriculum criterion, because the default criterion advances on squared error and
-a scale-free ranking loss can never satisfy it --- using it would have pinned
+a scale-free ranking loss can never satisfy it, and using it would have pinned
 those arms at the first level and manufactured the result.
 
 \paragraph{Nothing beat the baseline.} At $\lambda = 1$ the variance penalty is
@@ -544,9 +544,9 @@ At $\lambda = 10$ training stalls at scramble depth 7 of 40.
 
 \paragraph{The flattest profile belongs to the worst heuristic.} The
 adjacent-pairs ranking loss produces exactly the effect
-Section~\ref{sec:law} predicts --- restricted to the comparisons a search
+Section~\ref{sec:law} predicts. Restricted to the comparisons a search
 actually makes, it yields the flattest profile we measured, decay $0.145$ against
-the baseline's $0.219$ --- while solving 44\% of scrambles against the baseline's
+the baseline's $0.219$, it solves 44\% of scrambles against the baseline's
 100\%. Every arm here that succeeded in flattening the profile also degraded the
 heuristic, and the two effects are not separable in our data.
 
@@ -555,8 +555,8 @@ removed. Within-shell spread is not noise contaminating a signal: it is how a
 heuristic distributes its predictions over depth at all, and suppressing it
 suppresses the thing being measured. A reader who takes Equation~\ref{eq:law} as
 a design target should read this section first. We do not claim the space of
-interventions is exhausted --- targeting the numerator, or the variance of the
-bootstrap target rather than of the network, remain untried --- only that the
+interventions is exhausted, since targeting the numerator, or the variance of the
+bootstrap target rather than of the network, remain untried, only that the
 most direct reading of the law does not work, and fails for a reason the law
 itself does not anticipate.
 
@@ -579,10 +579,10 @@ node against its siblings, one move apart and therefore in adjacent shells.
 \textbf{The comparison a search depends on is the hardest one, and it is the one
 $\tau$ dilutes most.} Combining this identity with Equation~\ref{eq:law}, which
 supplies $a(s,t)$, predicts the pooled coefficient from the profile alone to
-within $0.016$ for learned heuristics --- so the profile, not the scalar, is the
+within $0.016$ for learned heuristics, so the profile, not the scalar, is the
 more fundamental object.
 
-One run of the forty in Section~\ref{sec:depth} degenerated --- the deadlocked
+One run of the forty in Section~\ref{sec:depth} degenerated: the deadlocked
 one, which trained only within two moves of the goal. It is used here as a case
 study in what a pooled coefficient conceals, not as evidence about depth. Its
 pooled $\tau$ is $+0.660$, comparable to the abstractions available on those same
@@ -601,8 +601,8 @@ $\tau$-b divides by $\sqrt{(n_0-n_1)(n_0-n_2)}$, where $n_1$ counts pairs tied i
 the heuristic. A heuristic with no ties is charged for its arbitrary
 \emph{within}-shell ordering, and one that ties inside each shell is not. On our
 $k=6$ sample a tie-free heuristic that orders every shell perfectly is capped at
-$0.919$, while the exact distance function --- which makes the identical shell
-ordering, but is integer-valued --- scores $1.000$. Both are computed
+$0.919$, while the exact distance function, which makes the identical shell
+ordering but is integer-valued, scores $1.000$. Both are computed
 analytically and checked against \texttt{scipy}, which agrees to four decimals.
 
 The gap is not a curiosity. Pattern databases are small integers; learned
@@ -663,8 +663,8 @@ $100.0 \pm 0.0$.
 We report this because the failure mode generalises past our own experiment. A
 curriculum gated on a loss threshold is a feedback loop: a run that fails to fit
 the current level is denied the deeper data that might have dislodged it. The
-resulting collapse looks exactly like a hard instance --- low solve rate, tiny
-output range, near-chance ordering far from the goal --- and is nothing of the
+resulting collapse looks exactly like a hard instance (low solve rate, tiny
+output range, near-chance ordering far from the goal) and is nothing of the
 kind. The diagnostic is one integer, the curriculum level reached, and it costs
 nothing to record.
 
@@ -673,7 +673,7 @@ operative variable, which the design establishes by holding it exactly constant.
 Not that depth is: this range shows no depth effect at all, and a design that
 varies depth and branching factor together could not have attributed one anyway.
 Seed variance across the \emph{size} ladder (Table~\ref{tab:ladder}) is a
-separate matter and is unaffected --- every run there reached the curriculum
+separate matter and is unaffected, because every run there reached the curriculum
 ceiling, so its $\pm23.5$ percentage points at $k=10$ is genuine variation rather
 than this deadlock.
 
@@ -701,7 +701,7 @@ identical throughout. Note that variance peaks in the transition region.}
 Meet-in-the-middle buys exactly one further rung. A $k=10$ run was attempted and
 abandoned after 31 hours: its mean distance is $\approx9.9$ while a radius-6 ball
 with four backward levels reaches only distance 10, so roughly half its states
-would return unresolved --- the deep half the profile exists to measure. This is
+would return unresolved, the deep half the profile exists to measure. This is
 the same memory wall that stops enumeration, arriving one rung later, and it is
 why rungs above $k=8$ are reported by solve rate alone.
 
@@ -716,15 +716,15 @@ GDRC does not. It does not survive its own censoring: 11 of 19 configurations
 reach the target at beam width 1, and on the 8 where the outcome varies the
 ordering reverses in favour of pooled GDRC. We removed the section rather than
 report a correlation that inverts on the subset carrying the information.
-Establishing predictive value needs an outcome with no floor --- nodes expanded
-at a fixed generous width, rather than the width required to hit a target --- and
+Establishing predictive value needs an outcome with no floor (nodes expanded
+at a fixed generous width, rather than the width required to hit a target) and
 a censored-data estimator. Until then the contribution here is diagnostic: it
 says what a heuristic's ordering quality is made of, not what it will cost you.
 
 \paragraph{The law is an approximation, and we can see the gap.} Split-sample
 mean absolute error is $0.012$ against an estimator noise floor of $0.002$. The
 residual is six times the noise, so Equation~\ref{eq:law} is demonstrably not
-exact on this data --- real value distributions are not quite normal, and the
+exact on this data: real value distributions are not quite normal, and the
 deviation is largest for the small-integer pattern databases. We report the
 approximation and its error rather than claiming a law that holds exactly.
 
@@ -776,7 +776,7 @@ expected the opposite and say so plainly.
 
 It also says where to push, and we pushed there and failed. Adjacent shells are
 one move apart, ranking is invariant to rescaling, and the within-shell spread is
-the only term left --- so we penalised it. At low weight that changes nothing; at
+the only term left, so we penalised it. At low weight that changes nothing; at
 high weight it is monotonically harmful, because suppressing spread stalls the
 very curriculum that builds it. The flattest profile we produced belongs to one
 of the worst heuristics we produced. We report this because the law reads like a

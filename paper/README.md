@@ -11,7 +11,7 @@ refs.bib              references
 tmlr.sty  tmlr.bst    official TMLR style, from github.com/JmlrOrg/tmlr-style-file
 fancyhdr.sty          dependency of tmlr.sty
 figures/*.pdf         vector figures, converted from the SVGs the analysis emits
-tables/*.tex          generated from eval/results/*.json — not typed by hand
+tables/*.tex          generated from eval/results/*.json, not typed by hand
 ```
 
 ## Submission-ready as is
@@ -20,7 +20,7 @@ Nothing needs changing before uploading to OpenReview. The build is anonymised
 for double-blind review: the title page reads "Anonymous authors / Paper under
 double-blind review" and the header "Under review as submission to TMLR". The
 `\author{...}` block in `main.tex` is ignored in this mode and the compiled PDF
-was checked — including inside compressed streams and metadata — to confirm it
+was checked, including inside compressed streams and metadata, to confirm it
 contains no author name, email, affiliation or project identifier.
 
 `\def\openreview{XXXXXX}` is likewise never rendered here; `tmlr.sty` only

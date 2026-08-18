@@ -43,7 +43,7 @@ cd mlx-solver && ./run_pipeline.sh
 
 Idempotent: each step skips work whose output already exists, and training
 resumes from checkpoints written every 4,000 steps. Kill it, close the lid, cut
-the power — re-running loses at most a few minutes of the step in flight. A PID
+the power: re-running loses at most a few minutes of the step in flight. A PID
 lock prevents two copies racing and clears itself if a previous run was killed.
 
 Progress at any time, without any of this tooling running:
@@ -76,12 +76,12 @@ done
 ```
 
 Writes `eval/results/exact-k*.json` (tracked) and `mlx-solver/exact_k*.npy`
-(gitignored — 191 MB at k=6, regenerable).
+(gitignored; 191 MB at k=6, regenerable).
 
 **Self-check:** the script aborts if the reachable-set size disagrees with
 P(24,k). A mismatch is a bug, not a result.
 
-### E1 — the size ladder (`sweep.py`)
+### E1: the size ladder (`sweep.py`)
 
 8 rungs × 3 seeds × 3 budgets = 72 measurements. **~29 hours.**
 
@@ -92,7 +92,7 @@ P(24,k). A mismatch is a bug, not a result.
 Each run trains once to 40,000 steps and snapshots at 3,000 and 12,000, so the
 extra budget points cost nothing. → `eval/results/ladder.json`
 
-### E2 — depth versus size (`depth_vs_size.py`)
+### E2: depth versus size (`depth_vs_size.py`)
 
 The confound-breaking experiment: 4 generating sets on rung k=4, all reaching
 exactly 255,024 states, at diameters 6/8/10/12. **~2.2 hours.**
@@ -103,7 +103,7 @@ exactly 255,024 states, at diameters 6/8/10/12. **~2.2 hours.**
 
 → `eval/results/depth-vs-size.json`
 
-### E3/E4 — per-shell profiles (`profiles.py`)
+### E3/E4: per-shell profiles (`profiles.py`)
 
 Learned heuristic vs genuine pattern databases (the exact table of a smaller
 rung, admissible by abstraction) vs a random control, with pooled GDRC reported
@@ -125,7 +125,7 @@ done
 
 → `eval/results/profile-*.json`
 
-### E4b — is the decay about training, or about strength? (`strength_control.py`)
+### E4b: is the decay about training, or about strength? (`strength_control.py`)
 
 Reads every profile above and asks whether learned heuristics decay more than
 abstractions of the same strength. Deduplicates: a profile is written per learned
@@ -144,7 +144,7 @@ is far too small). Seconds.
 
 Meet-in-the-middle exact distances for a sample, on rungs too large to enumerate.
 
-**Verify before trusting it** — the prober must agree with exhaustive BFS
+**Verify before trusting it.** The prober must agree with exhaustive BFS
 wherever both can run:
 
 ```bash
@@ -161,7 +161,7 @@ Both return exact agreement (200/200 and 300/300). Then:
 
 → `eval/results/probeprofile-wings-k8_s0.json`
 
-### E6 — the two-moment law (`dprime_law.py`)
+### E6: the two-moment law (`dprime_law.py`)
 
 Tests whether per-shell ordering accuracy is `Phi(gap / (sd * sqrt(2)))`, with no
 fitted parameters, where `gap` is the between-shell mean difference and `sd` the
@@ -173,7 +173,7 @@ Two things this script learned the hard way, both worth keeping if you adapt it:
 
 - **Split the sample.** `profiles.py` records moments estimated on one half of
   each shell alongside accuracy measured on the other. Computing both from the
-  same states manufactures agreement — run that version on a heuristic with *no
+  same states manufactures agreement. Run that version on a heuristic with *no
   signal at all* and it reports a correlation of +0.95 where the truth is 0. The
   split figures are the ones any claim should rest on.
 - **De-duplicate.** A profile file is written per learned checkpoint and
@@ -190,11 +190,11 @@ Two things this script learned the hard way, both worth keeping if you adapt it:
 
 → `eval/results/dprime-law.json`
 
-### E6b — break the law on purpose (`noise_dose.py`)
+### E6b: break the law on purpose (`noise_dose.py`)
 
 Everything in E6 is observational. This injects calibrated per-state noise into a
-trained heuristic — `h(s) + lambda * eps(s)`, with `eps` derived by hashing the
-state's index so the result is still a function of the state — and asks whether
+trained heuristic (`h(s) + lambda * eps(s)`, with `eps` derived by hashing the
+state's index so the result is still a function of the state) and asks whether
 the prediction survives. Rung, network and training are identical across the
 sweep by construction, so nothing is confounded; and the noise family is chosen
 to include one, Cauchy, that has no finite variance and that the law therefore
@@ -206,19 +206,19 @@ has no right to fit. Minutes, no training.
 
 → `eval/results/noise-dose.json`
 
-The error tracks tail weight monotonically — uniform 0.0042, Gaussian 0.0046,
-Laplace 0.0123, **Cauchy 0.1654** — so the normal form, not mere monotonicity in
+The error tracks tail weight monotonically: uniform 0.0042, Gaussian 0.0046,
+Laplace 0.0123, **Cauchy 0.1654**, so the normal form, not mere monotonicity in
 gap/sd, is carrying the prediction. The `forward` column is the stronger test: it
 predicts perturbed accuracy from the *unperturbed* moments plus the analytic
 variance inflation, touching the perturbed heuristic only to score it.
 
-### E7 — pooled tau, derived from the profile (`tau_theory.py`)
+### E7: pooled tau, derived from the profile (`tau_theory.py`)
 
 Three things, all checked against measurement rather than asserted:
 
 - pooled tau-b written exactly as an `n_s * n_t`-weighted average of per-shell
   ordering accuracy over every pair of shells;
-- the tie bias — a tie-free heuristic that orders every shell perfectly is capped
+- the tie bias, a tie-free heuristic that orders every shell perfectly is capped
   at 0.919 on the k=6 sample, checked against scipy, while the integer-valued exact distance scores
   1.000. Each pattern database collects **+0.07 to +0.10 of pooled tau from ties
   alone**, which is why comparing a continuous learned heuristic against an
@@ -232,11 +232,11 @@ Three things, all checked against measurement rather than asserted:
 
 → `eval/results/tau-theory.json`
 
-### E8 — does targeting the right quantity help? (`p3_losses.py`)
+### E8: does targeting the right quantity help? (`p3_losses.py`)
 
 Three training objectives, identical in every other respect: `l2` (standard
 DAVI), `rank` (RankNet-style pairwise logistic), and `dprime` (l2 plus a
-within-shell variance penalty). **Hours.** Idempotent — re-run to resume.
+within-shell variance penalty). **Hours.** Idempotent, re-run to resume.
 
 All arms use `--gate order`. The default curriculum gate advances on squared
 error, which a scale-free ranking loss can never satisfy; using it would pin
@@ -256,11 +256,11 @@ that arm at the first curriculum level and manufacture a result.
 squared error. The variance penalty is inert at lambda=1 and monotonically harmful
 above it (Spearman between penalty weight and decay = +1.00), because suppressing
 within-shell spread makes outputs more constant, the curriculum gate reads that as
-failure to separate adjacent shells, and training stalls — at lambda=10 the run
+failure to separate adjacent shells, and training stalls, at lambda=10 the run
 never leaves scramble depth 7 of 40. Record `k_cur` for every run; without it this
 looks like the objective failing rather than the curriculum stalling.
 
-### E5 — does the profile predict search cost? (`e5_predict.py`)
+### E5: does the profile predict search cost? (`e5_predict.py`)
 
 Pairs each config's intrinsic profile against the smallest beam width reaching a
 target solve rate, then correlates. **~1 hour.**
@@ -303,7 +303,7 @@ scramble lengths 1..16 and then *measures* true distance rather than assuming th
 scramble length is the distance.
 
 This is not a cosmetic change. Under the old sampler, E5 reported pooled GDRC at
-Pearson −0.841 against the per-shell measure's −0.923 — a modest gap. Under the
+Pearson −0.841 against the per-shell measure's −0.923, a modest gap. Under the
 corrected sampler the same comparison is **−0.391 against −0.809**. A
 methodological fix moved a headline number substantially, which is a reason to
 distrust the original and a reason the old files are kept where they can be
@@ -316,8 +316,8 @@ against one abstraction. On that basis the paper claimed learned heuristics deca
 with distance *while pattern databases do not*. **That claim is withdrawn.**
 PDB(k=2) scores a pooled τ of only +0.570 on rung k=6; it is flat because it is
 close to chance, not because abstraction confers distance-invariance. With every
-abstraction reported, the steepest decay on that rung belongs to PDB(k=5) — the
-strongest heuristic in the comparison — and once strength is controlled the two
+abstraction reported, the steepest decay on that rung belongs to PDB(k=5), the
+strongest heuristic in the comparison, and once strength is controlled the two
 classes are statistically indistinguishable (`strength_control.py`).
 
 The old single-baseline JSONs are not preserved separately because re-running
@@ -336,7 +336,7 @@ Stated because their absence shapes what the paper can claim.
 buys exactly one further rung. A k=10 run was attempted and abandoned after
 **31 hours**: its mean distance is ≈9.9 (from the fitted `0.864k + 1.242`) while
 a radius-6 ball with 4 backward levels reaches only distance 10, so roughly half
-its states would have returned unresolved — the deep half the profile exists to
+its states would have returned unresolved, the deep half the profile exists to
 measure. Covering it needs a ball larger than memory allows. **This is the same
 wall that stops enumeration, arriving one rung later**, and it is why every rung
 above k=8 is reported by solve rate alone.
@@ -369,15 +369,15 @@ results would have supported the wrong conclusion in both places.
 
 ## 7. What is tracked and what is not
 
-Tracked — small, and the source of every figure:
+Tracked, small, and the source of every figure:
 
 - `eval/results/*.json`
 - `eval/figures/*.svg`
 - `paper/related-work.md`
 - all scripts, `requirements-lock.txt`
 
-Gitignored — large and regenerable:
+Gitignored, large and regenerable:
 
-- `mlx-solver/ckpt_*.npz` — checkpoints, 155 MB each (network plus Adam moments)
-- `mlx-solver/exact_k*.npy` — distance tables, 191 MB at k=6
+- `mlx-solver/ckpt_*.npz`, checkpoints, 155 MB each (network plus Adam moments)
+- `mlx-solver/exact_k*.npy`, distance tables, 191 MB at k=6
 - `mlx-solver/*.log`, `eval/figures/png/`
