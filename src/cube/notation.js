@@ -1,5 +1,5 @@
 // Move-sequence algebra: parse, invert, simplify, and translate to the notation
-// a human reads. Operates on tokens alone — no cube state is ever touched.
+// a human reads. Operates on tokens alone, no cube state is ever touched.
 import { MOVE_DEFS, tokenBase, tokenTurns, tokenFromTurns, sameAxis, layersOverlap } from './moveTable.js';
 
 export function parseMoves(s) {
@@ -51,7 +51,7 @@ export function simplifyMoves(moves) {
 
 // Internal tokens to user-facing WCA-ish ones: a bare inner slice becomes a
 // wide+outer pair (r == Rw R'). Rotations pass through unchanged.
-// the bare inner slices u/d/r/l/f/b — single lower-case bases that are not
+// the bare inner slices u/d/r/l/f/b: single lower-case bases that are not
 // whole-cube rotations
 const INNER_SLICES = new Set(Object.keys(MOVE_DEFS).filter(
   (b) => b.length === 1 && b === b.toLowerCase() && MOVE_DEFS[b][1].length !== 4

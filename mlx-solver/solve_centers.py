@@ -2,7 +2,7 @@
 
 Search is batched beam search guided by J(s): keep the most promising `width`
 states, expand every successor, keep the best `width` again. DeepCubeA uses
-batch weighted A* for the same reason beam search works here — the network is
+batch weighted A* for the same reason beam search works here, the network is
 far more useful evaluating thousands of states at once on the GPU than one at a
 time.
 
@@ -117,7 +117,7 @@ def main():
         if sol is None:
             fails += 1
             continue
-        # verify by replay — never trust a solver's own word for it
+        # verify by replay: never trust a solver's own word for it
         check = st[None, :].copy()
         for mv in sol:
             check = apply_moves(check, np.array([TOKENS.index(mv)]))

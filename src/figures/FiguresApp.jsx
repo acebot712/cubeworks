@@ -22,7 +22,7 @@ const optional = (name) => Object.values(
 const pdb = optional('pdb-depths');
 const ladderExact = optional('ladder-exact');   // exact.py, rungs k<=6
 const ladder = optional('ladder');              // sweep.py, the full experiment
-const figDepth = optional('fig-depth');         // depth_vs_size.py — size held constant
+const figDepth = optional('fig-depth');         // depth_vs_size.py: size held constant
 // Read straight from the profiles.py output rather than a hand-shaped copy, so
 // the figure and paper/tables/matched.tex cannot drift apart.
 const figProfile = optional('profile-wings-k6_s0');
@@ -41,7 +41,7 @@ const figStrength = optional('strength-control'); // strength_control.py
 const figLaw = optional('dprime-law');            // dprime_law.py
 
 // ---------------------------------------------------------------------------
-// Fig 1 — what the pipeline is
+// Fig 1: what the pipeline is
 function PipelineFigure() {
   const stages = [
     { t: 'Camera frame', s: ['640 px'], c: C.mid },
@@ -68,8 +68,8 @@ function PipelineFigure() {
           <path d="M0 0 L10 5 L0 10 z" fill={C.mid} />
         </marker>
       </defs>
-      {bar(0, 4, C.blue, 'Perception — classical, verifiable')}
-      {bar(5, 5, C.green, 'Search — learned')}
+      {bar(0, 4, C.blue, 'Perception: classical, verifiable')}
+      {bar(5, 5, C.green, 'Search: learned')}
       {stages.map((st, i) => {
         const x = at(i);
         return (
@@ -101,7 +101,7 @@ function PipelineFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 2 — how DAVI actually works
+// Fig 2: how DAVI actually works
 function DaviFigure() {
   const cx = 158, cy = 218;
   const ring = [38, 76, 114, 152];
@@ -152,14 +152,14 @@ function DaviFigure() {
 
         <Label x={0} y={276} size={13} bold>What it cannot give you</Label>
         <Mono x={0} y={298} size={11}>a learned heuristic is not admissible, so the</Mono>
-        <Mono x={0} y={314} size={11}>result is near-optimal — never proven minimal.</Mono>
+        <Mono x={0} y={314} size={11}>result is near-optimal: never proven minimal.</Mono>
       </g>
     </g>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Fig 3 — the value function taking shape
+// Fig 3, the value function taking shape
 function ValueShapeFigure({ rows }) {
   if (!rows.length) return <Label x={M.l} y={H / 2}>no training metrics yet</Label>;
   const maxK = Math.max(...rows.flatMap((r) => r.probe.map(([k]) => k)));
@@ -199,7 +199,7 @@ function ValueShapeFigure({ rows }) {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 4 — loss and curriculum together
+// Fig 4: loss and curriculum together
 function TrainingFigure({ rows }) {
   if (!rows.length) return <Label x={M.l} y={H / 2}>no training metrics yet</Label>;
   const R = 52;                               // room for the curriculum axis
@@ -237,12 +237,12 @@ function TrainingFigure({ rows }) {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 5 — greedy vs learned, paired
+// Fig 5: greedy vs learned, paired
 function CentresFigure() {
   const rows = centres.rows.filter((r) => r.learned !== null);
   const all = rows.flatMap((r) => [r.greedy, r.learned]);
   // A common range on both axes so the diagonal means what it looks like. Zero
-  // is not the reference here — the diagonal is — so the range starts at the data.
+  // is not the reference here (the diagonal is) so the range starts at the data.
   const lo = Math.max(0, Math.floor((Math.min(...all) - 3) / 5) * 5);
   const hi = Math.ceil((Math.max(...all) + 3) / 5) * 5;
   const x = linear(lo, hi, ...px());
@@ -252,7 +252,7 @@ function CentresFigure() {
       xLabel="moves used by the hand-written greedy solver"
       yLabel="moves used by the learned beam search">
       <Line pts={[[x(lo), y(lo)], [x(hi), y(hi)]]} stroke={C.faint} width={1.5} dash="5 4" />
-      <Mono x={x(hi) - 8} y={y(hi) + 18} anchor="end" size={10}>equal — above this line is worse</Mono>
+      <Mono x={x(hi) - 8} y={y(hi) + 18} anchor="end" size={10}>equal: above this line is worse</Mono>
       <Dots pts={rows.map((r) => [x(r.greedy), y(r.learned)])} fill={C.blue} r={4} />
       {/* parked in the gap between the cloud and the axis, not on top of it */}
       <Label anchor="middle" size={13} bold fill={C.blue}
@@ -274,7 +274,7 @@ function CentresFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 6 — what beam width buys, and what it costs
+// Fig 6: what beam width buys, and what it costs
 function BeamFigure() {
   const R = 44;
   const rows = beam.rows;
@@ -315,7 +315,7 @@ function BeamFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 7 — where the moves actually go
+// Fig 7, where the moves actually go
 function PhasesFigure() {
   const names = ['Centers', 'Edge pairing', 'Parity', '3×3 finish'];
   const cols = [C.blue, C.sky, C.orange, C.green];
@@ -380,14 +380,14 @@ function PhasesFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 8 — the pattern database, and why it does not certify anything
+// Fig 8, the pattern database, and why it does not certify anything
 function PdbFigure() {
   if (!pdb) {
     return (
       <g>
         <Label x={M.l} y={H / 2 - 10} size={13} bold>not built</Label>
         <Mono x={M.l} y={H / 2 + 14} size={11}>
-          run `node scripts/bench-solver.mjs --pdb` — the BFS covers 51.5M states and takes a few minutes
+          run `node scripts/bench-solver.mjs --pdb`, the BFS covers 51.5M states and takes a few minutes
         </Mono>
       </g>
     );
@@ -424,7 +424,7 @@ function PdbFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 9 — the scale that makes the 4x4 hard
+// Fig 9, the scale that makes the 4x4 hard
 function ScaleFigure() {
   const items = [
     { t: '4×4 centres', v: 3.25e15, note: 'learned, solved here', c: C.green },
@@ -470,7 +470,7 @@ function ScaleFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 10 — the control that makes the ladder interpretable.
+// Fig 10, the control that makes the ladder interpretable.
 // If depth grew as fast as size, a failure at the top of the ladder would be
 // ambiguous. It does not: exact BFS shows depth adding one move per rung while
 // the space multiplies by ~20.
@@ -480,7 +480,7 @@ function DepthControlFigure() {
       <g>
         <Label x={M.l} y={H / 2 - 10} size={13} bold>not built</Label>
         <Mono x={M.l} y={H / 2 + 14} size={11}>
-          run `mlx-solver/exact.py --k 2..6` — exhaustive BFS, ~22 min at k=6
+          run `mlx-solver/exact.py --k 2..6`: exhaustive BFS, ~22 min at k=6
         </Mono>
       </g>
     );
@@ -536,14 +536,14 @@ function DepthControlFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 11 — the experiment itself: does a learned heuristic degrade with size?
+// Fig 11, the experiment itself: does a learned heuristic degrade with size?
 function LadderFigure() {
   if (!ladder) {
     return (
       <g>
         <Label x={M.l} y={H / 2 - 10} size={13} bold>sweep not run yet</Label>
         <Mono x={M.l} y={H / 2 + 14} size={11}>
-          run `mlx-solver/sweep.py --steps N --seeds 3` — 11 rungs, ~10 GPU-hours
+          run `mlx-solver/sweep.py --steps N --seeds 3`: 11 rungs, ~10 GPU-hours
         </Mono>
       </g>
     );
@@ -561,7 +561,7 @@ function LadderFigure() {
       yTicks={[0, 0.25, 0.5, 0.75, 1]}
       fmtX={(v) => `10^${Math.round(Math.log10(v))}`}
       fmtY={(v) => `${v * 100}%`}>
-      {/* Wilson intervals — a solve rate from n=200 is a range, not a point */}
+      {/* Wilson intervals, a solve rate from n=200 is a range, not a point */}
       {byK.flatMap(({ rs }) => rs.map((r, i) => (
         <line key={`${r.k}-${i}`} x1={x(r.states)} x2={x(r.states)}
           y1={y(r.ci95[0])} y2={y(r.ci95[1])} stroke={C.faint} strokeWidth="1.5" />
@@ -593,7 +593,7 @@ function LadderFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 12 — the confound broken. Every bar is the SAME 255,024 states; only the
+// Fig 12, the confound broken. Every bar is the SAME 255,024 states; only the
 // generating set changes, and with it the diameter. Size cannot explain a
 // difference across bars because size never differs.
 function DepthFigure() {
@@ -632,7 +632,7 @@ function DepthFigure() {
                 stroke={C.ink} strokeWidth="1.5" />
             ))}
             {r.n_deadlocked > 0 && (() => {
-              // annotate inward — on the last bar an outward label runs off the plot
+              // annotate inward, on the last bar an outward label runs off the plot
               const right = i >= rows.length - 1;
               const tx = right ? cx - bw / 2 - 10 : cx + 10;
               const anchor = right ? 'end' : 'start';
@@ -658,20 +658,20 @@ function DepthFigure() {
         );
       })}
       <Mono x={M.l} y={392} size={11} fill={C.green}>
-        {`state space fixed at ${figDepth.states.toLocaleString()} in every bar — verified by exhaustive BFS`}
+        {`state space fixed at ${figDepth.states.toLocaleString()} in every bar: verified by exhaustive BFS`}
       </Mono>
       <Mono x={M.l} y={412} size={11} fill={C.ink}>
         {`${figDepth.seeds} seeds each (open circles). Bars show the rate excluding deadlocked runs:`}
       </Mono>
       <Mono x={M.l} y={430} size={11} fill={C.ink}>
-        doubling the diameter changes nothing — every other seed solves everything
+        doubling the diameter changes nothing, every other seed solves everything
       </Mono>
     </Axes>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Fig 13 — the mechanism, and what a pooled scalar hides.
+// Fig 13, the mechanism, and what a pooled scalar hides.
 function ProfileFigure() {
   if (!figProfile) {
     return (
@@ -695,7 +695,7 @@ function ProfileFigure() {
     ? 0.35 + 0.65 * ((pdbs.indexOf(n) + 1) / pdbs.length) : 1);
   // Six curves end within a narrow band, so a label at each endpoint would
   // overlap. Place them top-down at their own endpoint, pushed apart only as
-  // far as needed — order still matches the curves, so no leader lines.
+  // far as needed: order still matches the curves, so no leader lines.
   const labelY = {};
   let floor = -Infinity;
   Object.entries(hs)
@@ -711,7 +711,7 @@ function ProfileFigure() {
       xTicks={[...new Set(all)].sort((a, b) => a - b)}
       yTicks={[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]}
       fmtY={(v) => v.toFixed(1)}>
-      {/* chance — a heuristic at this line cannot order anything */}
+      {/* chance, a heuristic at this line cannot order anything */}
       <Line pts={[[x(Math.min(...all) - 0.4), y(0.5)], [x(Math.max(...all) + 0.4), y(0.5)]]}
         stroke={C.faint} width={1.5} dash="4 4" />
       <Mono x={x(Math.min(...all) - 0.3)} y={y(0.5) - 7} size={10}>chance</Mono>
@@ -744,7 +744,7 @@ function ProfileFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 14 — decay against strength, which is the confound that broke the
+// Fig 14: decay against strength, which is the confound that broke the
 // original version of the profile claim
 function StrengthFigure() {
   if (!figStrength) {
@@ -805,7 +805,7 @@ function StrengthFigure() {
 }
 
 // ---------------------------------------------------------------------------
-// Fig 15 — the profile is a two-moment quantity
+// Fig 15, the profile is a two-moment quantity
 function LawFigure() {
   if (!figLaw) {
     return (
@@ -829,7 +829,7 @@ function LawFigure() {
   const ticks = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
   return (
     <Axes x={x} y={y} pad={6}
-      xLabel="predicted   Φ( gap / (spread · √2) )   — no fitted parameters"
+      xLabel="predicted   Φ( gap / (spread · √2) ), no fitted parameters"
       yLabel="measured ordering accuracy"
       xTicks={ticks} yTicks={ticks}
       fmtX={(v) => v.toFixed(1)} fmtY={(v) => v.toFixed(1)}>
@@ -888,8 +888,8 @@ export default function FiguresApp() {
         <h1>CUBEWORKS</h1>
         <p className="sub">
           Figures for the perception and search stack. Every plot is rendered from a
-          results file written by an actual run — <code>scripts/bench-solver.mjs</code> and{' '}
-          <code>scripts/collect-metrics.mjs</code> — so re-running the benchmarks moves
+          results file written by an actual run: <code>scripts/bench-solver.mjs</code> and{' '}
+          <code>scripts/collect-metrics.mjs</code>, so re-running the benchmarks moves
           the figures. The two schematics are labelled as such.
         </p>
       </header>
@@ -907,12 +907,12 @@ export default function FiguresApp() {
       </Figure>
 
       <Figure n={3} title="The value function takes shape (edge wings)"
-        caption={`Mean predicted cost-to-go against true scramble depth, at ${Math.min(6, wingRows.length)} checkpoints from earliest (faint) to latest (bold). A network that has collapsed shows a flat line here, which a falling training loss will not reveal — an earlier run without a curriculum sat at J = 15.33 for every depth. Curves sit under J = k because random scrambles partly cancel.`}>
+        caption={`Mean predicted cost-to-go against true scramble depth, at ${Math.min(6, wingRows.length)} checkpoints from earliest (faint) to latest (bold). A network that has collapsed shows a flat line here, which a falling training loss will not reveal, an earlier run without a curriculum sat at J = 15.33 for every depth. Curves sit under J = k because random scrambles partly cancel.`}>
         <ValueShapeFigure rows={wingRows} />
       </Figure>
 
       <Figure n={4} title="Training loss and curriculum depth"
-        caption={`Loss (blue, log scale, left) against curriculum depth k (orange, right). Depth advances only once the loss at the current depth falls below a threshold, so the two rise together: each new depth is harder than the one before, and the loss climbing is the curriculum working rather than a failure. ${w ? `Through step ${w.step.toLocaleString()}, k = ${w.k}.` : ''} Loss alone is a poor progress signal here — the collapsed run in Figure 2 reached a lower loss than this one while being useless to search. Figure 3 is the signal that matters.`}>
+        caption={`Loss (blue, log scale, left) against curriculum depth k (orange, right). Depth advances only once the loss at the current depth falls below a threshold, so the two rise together: each new depth is harder than the one before, and the loss climbing is the curriculum working rather than a failure. ${w ? `Through step ${w.step.toLocaleString()}, k = ${w.k}.` : ''} Loss alone is a poor progress signal here, the collapsed run in Figure 2 reached a lower loss than this one while being useless to search. Figure 3 is the signal that matters.`}>
         <TrainingFigure rows={wingRows} />
       </Figure>
 
@@ -932,7 +932,7 @@ export default function FiguresApp() {
       </Figure>
 
       <Figure n={8} title="Pattern database: an exact bound that is too weak"
-        caption="Exact distance-to-solved for every arrangement of the U and D centres, by breadth-first search. This is a genuinely admissible heuristic — it can never overestimate — which is exactly what an optimality proof needs. It is also far too shallow to certify anything about a full solve, which is the honest reason this project does not claim minimal solutions.">
+        caption="Exact distance-to-solved for every arrangement of the U and D centres, by breadth-first search. This is a genuinely admissible heuristic (it can never overestimate) which is exactly what an optimality proof needs. It is also far too shallow to certify anything about a full solve, which is the honest reason this project does not claim minimal solutions.">
         <PdbFigure />
       </Figure>
 
@@ -943,32 +943,32 @@ export default function FiguresApp() {
       </Figure>
 
       <Figure n={10} title="The depth control"
-        caption="Exact breadth-first search on the five ladder rungs small enough to enumerate. Depth is the obvious confound for a scaling study — bigger spaces are usually deeper ones — and here it is measured rather than assumed. Diameter is exactly k+2; over the whole ladder the state space grows by 21 orders of magnitude while depth grows from 4 to about 26.">
+        caption="Exact breadth-first search on the five ladder rungs small enough to enumerate. Depth is the obvious confound for a scaling study (bigger spaces are usually deeper ones) and here it is measured rather than assumed. Diameter is exactly k+2; over the whole ladder the state space grows by 21 orders of magnitude while depth grows from 4 to about 26.">
         <DepthControlFigure />
       </Figure>
 
       <Figure n={11} title="Where a learned heuristic stops working"
-        caption="The experiment. Identical DAVI, identical network, identical budget, on sub-problems spanning 21 orders of magnitude with branching factor pinned at 63. The dashed green line is the stronger claim — solutions verified optimal against exhaustive ground truth — which is only available where the space is small enough to enumerate, and that limit is itself part of the result.">
+        caption="The experiment. Identical DAVI, identical network, identical budget, on sub-problems spanning 21 orders of magnitude with branching factor pinned at 63. The dashed green line is the stronger claim (solutions verified optimal against exhaustive ground truth) which is only available where the space is small enough to enumerate, and that limit is itself part of the result.">
         <LadderFigure />
       </Figure>
 
       <Figure n={12} width={W} height={430} title="Neither depth nor size, over this range"
-        caption="Every bar is the same 255,024 states — restricting the generating set leaves the group unchanged (a half turn is two quarter turns) and moves only the diameter, verified by exhaustive BFS reaching all 255,024 in each case. Ten seeds per condition; open circles are individual seeds. Doubling the diameter from 6 to 12 changes nothing: every seed solves every scramble, with one exception. An earlier version of this figure had three seeds and read that exception as a depth effect — but the checkpoint shows the run never advanced past the first curriculum level, so it trained only within two moves of the goal and never saw depth at all. At ten seeds the failure rate is 1 in 40 and is not associated with diameter (Fisher p ≈ 0.23); excluding it, every cell is 100.0 ± 0.0. The design still rules out cardinality, which is held exactly constant, and it never could have separated depth from branching factor since fewer generators means both.">
+        caption="Every bar is the same 255,024 states: restricting the generating set leaves the group unchanged (a half turn is two quarter turns) and moves only the diameter, verified by exhaustive BFS reaching all 255,024 in each case. Ten seeds per condition; open circles are individual seeds. Doubling the diameter from 6 to 12 changes nothing: every seed solves every scramble, with one exception. An earlier version of this figure had three seeds and read that exception as a depth effect, but the checkpoint shows the run never advanced past the first curriculum level, so it trained only within two moves of the goal and never saw depth at all. At ten seeds the failure rate is 1 in 40 and is not associated with diameter (Fisher p ≈ 0.23); excluding it, every cell is 100.0 ± 0.0. The design still rules out cardinality, which is held exactly constant, and it never could have separated depth from branching factor since fewer generators means both.">
         <DepthFigure />
       </Figure>
 
       <Figure n={13} title="What a pooled correlation hides"
-        caption="Per-shell ranking accuracy against exact ground truth on rung k=6, for the learned heuristic and for every pattern database available on this rung — the exact distance table of a smaller rung, admissible here by abstraction. Each is summarised by a single Goal Distance Rank Correlation (Wilt &amp; Ruml, JAIR 2016). Every informative heuristic is near-perfect adjacent to the goal and decays outward; only the random control is flat, because it starts at chance and has nowhere to fall from. An earlier version of this figure showed PDB(k=2) alone and read its flatness as a property of classical heuristics; the stronger abstractions show it was a property of being near chance. The decay is not a signature of bootstrapping — the steepest curve here belongs to a pattern database.">
+        caption="Per-shell ranking accuracy against exact ground truth on rung k=6, for the learned heuristic and for every pattern database available on this rung, the exact distance table of a smaller rung, admissible here by abstraction. Each is summarised by a single Goal Distance Rank Correlation (Wilt &amp; Ruml, JAIR 2016). Every informative heuristic is near-perfect adjacent to the goal and decays outward; only the random control is flat, because it starts at chance and has nowhere to fall from. An earlier version of this figure showed PDB(k=2) alone and read its flatness as a property of classical heuristics; the stronger abstractions show it was a property of being near chance. The decay is not a signature of bootstrapping, the steepest curve here belongs to a pattern database.">
         <ProfileFigure />
       </Figure>
 
       <Figure n={15} title="The profile is a two-moment quantity"
-        caption="Each point is one heuristic at one true-distance shell. The horizontal axis is what the shell's ordering accuracy should be if the two value distributions were normal with equal variance — Φ(gap / (spread·√2)), with nothing fitted. The vertical axis is what was measured. Crucially the two axes use disjoint halves of each shell: moments are estimated on one half and accuracy measured on the other, because computing both from the same states manufactures agreement — run that version on a heuristic with no signal at all and it reports a correlation of +0.95 where the truth is zero. The dashed line is y = x. It holds for learned networks, for integer-valued pattern databases with heavy ties, and for a random control, across every rung and diameter, and on a rung 300× larger whose ground truth comes from a different apparatus. The residual is about six times the estimator's own binomial noise, so this is a good approximation rather than an exact law.">
+        caption="Each point is one heuristic at one true-distance shell. The horizontal axis is what the shell's ordering accuracy should be if the two value distributions were normal with equal variance: Φ(gap / (spread·√2)), with nothing fitted. The vertical axis is what was measured. Crucially the two axes use disjoint halves of each shell: moments are estimated on one half and accuracy measured on the other, because computing both from the same states manufactures agreement: run that version on a heuristic with no signal at all and it reports a correlation of +0.95 where the truth is zero. The dashed line is y = x. It holds for learned networks, for integer-valued pattern databases with heavy ties, and for a random control, across every rung and diameter, and on a rung 300× larger whose ground truth comes from a different apparatus. The residual is about six times the estimator's own binomial noise, so this is a good approximation rather than an exact law.">
         <LawFigure />
       </Figure>
 
       <Figure n={14} title="The decay tracks strength, not training method"
-        caption="Every distinct heuristic measured here — 22 learned checkpoints, 12 pattern databases, 5 random controls — plotted as pooled GDRC against how far its per-shell ordering accuracy falls. A profile file is written per learned checkpoint and re-measures the same abstractions on the same states, so those repeats are collapsed; counting them would have inflated n from 39 to 98 and every p-value with it. Decay rises with strength (r = +0.59), which is what makes a weak baseline look deceptively flat. The line is the least-squares fit; the test that matters is whether learned points sit above it, and they do not (Welch t = +0.72, p = 0.48 on the residuals, difference +0.023 with 95% CI [−0.039, +0.084] against a mean decay of 0.154). Matched on the same states at the nearest available strength, the pattern database decays more in 13 of 18 pairs and the two means are identical to three decimals.">
+        caption="Every distinct heuristic measured here (22 learned checkpoints, 12 pattern databases, 5 random controls) plotted as pooled GDRC against how far its per-shell ordering accuracy falls. A profile file is written per learned checkpoint and re-measures the same abstractions on the same states, so those repeats are collapsed; counting them would have inflated n from 39 to 98 and every p-value with it. Decay rises with strength (r = +0.59), which is what makes a weak baseline look deceptively flat. The line is the least-squares fit; the test that matters is whether learned points sit above it, and they do not (Welch t = +0.72, p = 0.48 on the residuals, difference +0.023 with 95% CI [−0.039, +0.084] against a mean decay of 0.154). Matched on the same states at the nearest available strength, the pattern database decays more in 13 of 18 pairs and the two means are identical to three decimals.">
         <StrengthFigure />
       </Figure>
 

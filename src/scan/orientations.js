@@ -40,7 +40,7 @@ export const CAPTURE_STEPS = [
   },
   {
     key: 'D', orient: ['x'],
-    instr: 'Roll toward you again', sub: 'Keep the same grip — third face in the loop',
+    instr: 'Roll toward you again', sub: 'Keep the same grip: third face in the loop',
   },
   {
     key: 'B', orient: ['x2'],
@@ -52,7 +52,7 @@ export const CAPTURE_STEPS = [
   },
   {
     key: 'L', orient: ["y'"],
-    instr: 'Spin to the opposite side', sub: 'Half-way around — the last face',
+    instr: 'Spin to the opposite side', sub: 'Half-way around, the last face',
   },
 ];
 

@@ -1,7 +1,7 @@
 // Finding the best window: coarse seeds, then hill-climbing.
 //
-// Seam alignment is a sharp peak in (cx, cy, size, theta) — the basin is only a
-// few px wide — so a fixed candidate lattice either misses it or costs a
+// Seam alignment is a sharp peak in (cx, cy, size, theta), the basin is only a
+// few px wide, so a fixed candidate lattice either misses it or costs a
 // fortune. Coordinate descent with shrinking steps converges to sub-pixel
 // precision cheaply, provided it starts somewhere sensible (see seeds.js).
 import { DEG, quadFromPose, poseFromQuad, cropFrame } from './frame.js';
@@ -50,8 +50,7 @@ function refine(frame, seed, steps) {
 }
 
 // Free the four corners. A cube held at an angle projects to a trapezoid, so
-// the last few points of accuracy — and most of the accuracy on a 3/4 view —
-// live outside the rotated-square family the pose descent can reach.
+// the last few points of accuracy, and most of the accuracy on a 3/4 view: // live outside the rotated-square family the pose descent can reach.
 function refineCorners(frame, pose) {
   let q = quadFromPose(pose.cx, pose.cy, pose.size, pose.theta);
   let score = scoreQuad(frame, q);
@@ -79,7 +78,7 @@ function refineCorners(frame, pose) {
 
 // Search only inside a region someone else nominated (a model's box, a
 // user-drawn frame). The comb runs on the crop; the descent then runs on the
-// FULL frame, so the quad is free to settle slightly outside the box — a box
+// FULL frame, so the quad is free to settle slightly outside the box, a box
 // around a tilted cube rarely bounds the face exactly.
 // roi = [x0, y0, x1, y1] in frame pixels. -> same shape as detectFace, or null
 export function detectFaceInRoi(frame, roi, pad = 0.12) {

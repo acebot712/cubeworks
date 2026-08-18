@@ -3,13 +3,13 @@ function of how big the problem is?
 
 Everything except state-space size is pinned. Same 63 moves, same 600-wide
 encoding, same network, same batch, same optimiser, same curriculum policy, same
-evaluation protocol. Rung k=2 has 552 states and rung k=24 has 3.10e23 — 21
+evaluation protocol. Rung k=2 has 552 states and rung k=24 has 3.10e23: 21
 orders of magnitude apart, and that is the only difference.
 
 The question was originally "where does it break", which turned out to be the
 wrong question. Rung k=10 solved 0/60 at 3,000 steps and 11/60 at 40,000: it had
-not broken, it was undertrained. So the measurement is a SURFACE — solve rate
-against (size, budget) — from which the interesting quantity falls out: the
+not broken, it was undertrained. So the measurement is a SURFACE: solve rate
+against (size, budget), from which the interesting quantity falls out: the
 compute needed to reach a given competence, as a function of size. That is a
 scaling law, and unlike a breakage threshold it predicts rather than reports.
 
@@ -24,7 +24,7 @@ Two controls make the result mean something:
                  space is usually a deeper one: measured, diameter = k+2 exactly,
                  so depth cannot explain a collapse spanning 21 orders of size.
 
-  budget         see above — the reason this file measures a surface rather than
+  budget         see above, the reason this file measures a surface rather than
                  a line.
 
 Resumable by construction: every checkpoint and evaluation is a file, and an
@@ -49,7 +49,7 @@ RESULTS = HERE.parent / "eval" / "results"
 RUNGS = [2, 4, 6, 8, 10, 12, 16, 24]
 
 # The question is not "does it fail at size S" but "how much compute does size S
-# need". A rung that fails at one budget may simply be undertrained — measured:
+# need". A rung that fails at one budget may simply be undertrained: measured:
 # k=10 solved 0/60 at 3k steps and 11/60 at 40k. So every run is trained once to
 # the largest budget and snapshotted along the way, giving several budget points
 # for the price of one run.

@@ -4,7 +4,7 @@
 //
 //   * A PDB entry is the EXACT number of moves to solve a simplified version of
 //     the cube. Because the real cube is at least as hard as the simplification,
-//     that number is a LOWER BOUND on the real distance — it can never
+//     that number is a LOWER BOUND on the real distance, it can never
 //     overestimate. A heuristic with that property is called admissible, and
 //     IDA* driven by an admissible heuristic provably returns a shortest
 //     solution. That is the whole basis of optimal solving.
@@ -15,8 +15,7 @@
 //     ever meet, the solution is proven optimal for that configuration.
 //
 // The relaxation here tracks only WHERE the U-centres and D-centres sit,
-// ignoring every other piece. That is C(24,4) x C(20,4) = 51,482,970 states —
-// small enough to enumerate exhaustively by breadth-first search from solved,
+// ignoring every other piece. That is C(24,4) x C(20,4) = 51,482,970 states: // small enough to enumerate exhaustively by breadth-first search from solved,
 // which is what makes the stored distances exact rather than estimated.
 import { CENTER_PERMS, centersFromState } from './tables.js';
 
@@ -95,7 +94,7 @@ export function pdbUnindex(idx, out, faceA = 0, faceB = 3) {
 }
 
 // Build the table by BFS from solved. Operates on INDICES, reconstructing each
-// arrangement on demand — storing 51M arrangements as objects exhausts the heap,
+// arrangement on demand: storing 51M arrangements as objects exhausts the heap,
 // while the same queue as packed 32-bit indices is ~200MB.
 // -> Uint8Array(PDB_SIZE), 255 meaning unreachable
 export function buildPdb({ onProgress } = {}) {

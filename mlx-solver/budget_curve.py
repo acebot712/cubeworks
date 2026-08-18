@@ -1,6 +1,6 @@
 """How much search does a given heuristic need?
 
-Everything the field reports — solve rate, solution length, nodes expanded — is a
+Everything the field reports (solve rate, solution length, nodes expanded) is a
 property of (heuristic x search algorithm x budget), not of the heuristic. Change
 the beam width and every one of those numbers moves. So none of them can answer
 "is this heuristic good", and none can be compared across papers that chose
@@ -11,8 +11,8 @@ solve rate, it sweeps the budget and reports the SMALLEST width that reaches a
 target solve rate. That number is a property of the heuristic and the problem,
 with the search budget divided out.
 
-Paired with resolution.py — which measures ranking quality intrinsically, against
-exact ground truth, stratified by true distance — it gives the two halves of the
+Paired with resolution.py, which measures ranking quality intrinsically, against
+exact ground truth, stratified by true distance, it gives the two halves of the
 question we actually care about:
 
     does an intrinsic property of the heuristic predict the search it will need?
@@ -39,8 +39,7 @@ WIDTHS = [1, 2, 5, 10, 25, 50, 100, 250, 600, 1500]
 
 def required_width(rows, target):
     """Smallest width reaching `target` solve rate, log-interpolated between the
-    bracketing measurements. Returns None if even the widest never gets there —
-    which is itself the answer, and must not be silently reported as the cap."""
+    bracketing measurements. Returns None if even the widest never gets there, which is itself the answer, and must not be silently reported as the cap."""
     below = None
     for r in rows:
         if r["rate"] >= target:

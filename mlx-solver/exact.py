@@ -2,8 +2,8 @@
 
 This is what makes the ladder a real experiment rather than a demo. On rungs
 small enough to enumerate we know the TRUE optimal solution length for every
-state, so we can measure the learned solver's optimality gap directly — the same
-claim DeepCubeA makes on the 3x3 — and then watch that claim become unverifiable
+state, so we can measure the learned solver's optimality gap directly, the same
+claim DeepCubeA makes on the 3x3, and then watch that claim become unverifiable
 as the rungs grow. It also gives each rung's exact diameter, which controls for
 the obvious confound: a larger space is usually also a deeper one, and without
 the diameter we could not tell those two effects apart.
@@ -12,8 +12,7 @@ the diameter we could not tell those two effects apart.
     ../.venv-mlx/bin/python exact.py --k 6        # ~190MB, tens of minutes
 
 Indexing is mixed-radix base 24 over the tracked pieces' slot positions. That
-wastes some space — 24^k cells for P(24,k) reachable states, about 2x at k=6 —
-but it is a branch-free vectorised computation, which matters far more here than
+wastes some space: 24^k cells for P(24,k) reachable states, about 2x at k=6, but it is a branch-free vectorised computation, which matters far more here than
 the memory: a minimal ranking would need a sequential "how many unused slots are
 below this one" loop that numpy cannot do in one shot.
 """
@@ -109,7 +108,7 @@ def main():
           f"{'OK' if ok else '*** MISMATCH ***'}")
     print(f"  diameter {diameter}   built in {secs:.0f}s")
     if not ok:
-        raise SystemExit("reachable-set size disagrees with P(24,k) — bug, not a result")
+        raise SystemExit("reachable-set size disagrees with P(24,k): bug, not a result")
 
     suffix = "" if args.moves == "all" else f"-{args.moves}"
     out = HERE.parent / "eval" / "results" / f"exact-k{args.k}{suffix}.json"

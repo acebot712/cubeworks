@@ -3,7 +3,7 @@
 // The trainer writes a checkpoint every few minutes and prints its own rate and
 // ETA; this reads those files rather than recomputing anything, so the number
 // here is the same number the terminal shows. Nothing needs to be running for
-// the panel to render — if the trainer has stopped, it says so instead of
+// the panel to render, if the trainer has stopped, it says so instead of
 // quietly showing a stale ETA as if it were live.
 import { useEffect, useState } from 'react';
 import { C, Line, linear } from './plot.jsx';
@@ -22,7 +22,7 @@ export function useTraining(everyMs = 15000) {
     const pull = () => fetch('/__training')
       .then((r) => r.json())
       .then((j) => { if (alive) setData(j); })
-      .catch(() => {});       // dev endpoint absent (built page) — panel hides
+      .catch(() => {});       // dev endpoint absent (built page): panel hides
     pull();
     const id = setInterval(pull, everyMs);
     return () => { alive = false; clearInterval(id); };
@@ -78,7 +78,7 @@ function Row({ t }) {
           {t.meta?.hidden ? `hidden ${t.meta.hidden.join(', ')}` : ''}
         </span>
         <span className="run-when">
-          {done ? 'finished' : running ? `updated ${fmtAge(ageMs)}` : `stopped — last wrote ${fmtAge(ageMs)}`}
+          {done ? 'finished' : running ? `updated ${fmtAge(ageMs)}` : `stopped: last wrote ${fmtAge(ageMs)}`}
         </span>
       </div>
 
@@ -89,7 +89,7 @@ function Row({ t }) {
       </div>
 
       <div className="stats">
-        <Stat label="ETA" value={done ? '—' : live.eta} sub={`${live.rate} it/s`} />
+        <Stat label="ETA" value={done ? ': ' : live.eta} sub={`${live.rate} it/s`} />
         <Stat label="curriculum k" value={live.k} sub={`of ${t.meta?.kmax ?? '?'}`} />
         <Stat label="J spread" value={live.spread.toFixed(2)}
           sub={<Spark values={tail.map(spread)} colour={C.blue} w={96} h={22} />} />
@@ -108,7 +108,7 @@ export default function TrainingPanel({ data }) {
       <h2>Training</h2>
       {runs.map((t) => <Row key={t.task} t={t} />)}
       <p className="panel-note">
-        Polled every 15s from the trainer's own log — the ETA here is the one it
+        Polled every 15s from the trainer's own log, the ETA here is the one it
         prints. Figures 3 and 4 below track the same run.
       </p>
     </section>

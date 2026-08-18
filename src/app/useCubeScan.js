@@ -39,7 +39,7 @@ export function useCubeScan() {
 
   // Structural error correction: an invalid complete state is usually a whole
   // face read at the wrong rotation, an R/L yaw the other way, or a couple of
-  // misclassified stickers — all recoverable from the cube's own redundancy.
+  // misclassified stickers: all recoverable from the cube's own redundancy.
   useEffect(() => {
     if (!complete || validation.ok || validation.incomplete || repair) return;
     const captures = capturesForRepair({ rawCaptures, manualColors });
@@ -57,7 +57,7 @@ export function useCubeScan() {
     setManualColors((m) => ({ ...m, [idx]: color }));
   }, []);
 
-  // Drop one face's capture and only ITS manual edits — corrections elsewhere
+  // Drop one face's capture and only ITS manual edits: corrections elsewhere
   // stand.
   const clearFace = useCallback((faceKey) => {
     setRawCaptures((rc) => {

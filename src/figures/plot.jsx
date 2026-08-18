@@ -35,7 +35,7 @@ export const log = (d0, d1, r0, r1) => {
   return s;
 };
 
-// "Nice" round ticks — 1, 2, 2.5 or 5 times a power of ten.
+// "Nice" round ticks: 1, 2, 2.5 or 5 times a power of ten.
 export function ticks(d0, d1, count = 6) {
   const raw = (d1 - d0) / count;
   const mag = 10 ** Math.floor(Math.log10(raw || 1));

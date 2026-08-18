@@ -6,8 +6,7 @@ on either. This experiment breaks that tie by holding the state space EXACTLY
 constant and moving only the depth.
 
 Rung k=4 has 255,024 states. Restricting the generating set leaves that number
-untouched — a half turn is two quarter turns, so the group generated is the same
-— while stretching the diameter:
+untouched, a half turn is two quarter turns, so the group generated is the same, while stretching the diameter:
 
     all      63 moves   diameter  6
     oi-q     24 moves   diameter  8
@@ -17,7 +16,7 @@ untouched — a half turn is two quarter turns, so the group generated is the sa
 All four verified by exhaustive BFS to reach all 255,024 states. Train the same
 network, on the same budget, with the same everything, on each. If performance
 falls as the diameter grows, state-space cardinality cannot be the operative
-variable — because it never changed.
+variable, because it never changed.
 
 The honest caveat, stated up front: fewer generators also means a smaller
 branching factor, so this design varies depth and branching together and cannot
@@ -67,7 +66,7 @@ def main():
         p = RESULTS / f"exact-k{RUNG}{suf}.json"
         diam[v] = json.loads(p.read_text())["diameter"] if p.exists() else None
 
-    print(f"rung k={RUNG}: 255,024 states in every row — only depth changes\n")
+    print(f"rung k={RUNG}: 255,024 states in every row, only depth changes\n")
     print(f"{'moveset':>8} {'diameter':>9} {'seeds':>6}")
     for v in VARIANTS:
         print(f"{v:>8} {str(diam[v]):>9} {args.seeds:>6}")

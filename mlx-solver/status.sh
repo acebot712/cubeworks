@@ -1,5 +1,5 @@
 #!/bin/zsh
-# What is running, how far along, and how much longer — with no Claude involved.
+# What is running, how far along, and how much longer, with no Claude involved.
 #
 #   ./status.sh          one snapshot
 #   ./status.sh -w       refresh every 15s until you stop it
@@ -27,9 +27,9 @@ snapshot() {
     print -r -- "  pipeline   NOT RUNNING"
   fi
   if [[ "$agent" -gt 0 ]]; then
-    print -r -- "  launchd    armed — survives reboot, logout and closing Claude"
+    print -r -- "  launchd    armed: survives reboot, logout and closing Claude"
   else
-    print -r -- "  launchd    ** NOT ARMED — a reboot will not resume this **"
+    print -r -- "  launchd    ** NOT ARMED, a reboot will not resume this **"
   fi
   print -r -- ""
 
@@ -39,7 +39,7 @@ snapshot() {
         | head -1 | sed 's/.*Python //;s/ --tag/ /' | cut -c1-70)
   [[ -n "$job" ]] && print -r -- "  now:  $job"
 
-  # a job's own ETA line is the honest one — it knows its remaining work
+  # a job's own ETA line is the honest one, it knows its remaining work
   local eta
   eta=$(grep -E "ETA" pipeline.log 2>/dev/null | tail -1)
   [[ -n "$eta" ]] && print -r -- "  eta:  $(print -r -- $eta | sed 's/^ *//')"

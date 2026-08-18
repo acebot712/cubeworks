@@ -107,7 +107,7 @@ test('detects a stickerless solved face (seams only, no color pairs)', () => {
   const f = makeFrame(W, H, [90, 94, 100]);
   const size = 0.6 * H, cx = W / 2, cy = H / 2;
   // uniform green with genuinely DARKER seams. (An earlier version of this
-  // fixture used gapLum 120 against green whose luma is 115 — the "seam" was
+  // fixture used gapLum 120 against green whose luma is 115, the "seam" was
   // brighter than the sticker, so the test passed only via a shrunken rotated
   // window. Hence the tight size/theta assertions below.)
   drawFace(f, cx, cy, size, 0, new Array(16).fill('G'), { gapLum: 88, gapFrac: 0.06, noise: 4, seed: 17 });
@@ -253,19 +253,19 @@ test('detects a light-bodied SOLVED face (one colour, bright seams)', () => {
 // having passed at 25ms on the same commit minutes earlier.
 //
 // scoreWindow is a fair unit because it takes a fixed number of taps whatever
-// the window size — measured 25-31us across a 7x range of sizes.
+// the window size: measured 25-31us across a 7x range of sizes.
 //
 // Both halves are timed alternately and each is reduced by MIN across rounds.
 // Preemption only ever adds time, so the fastest round of each approximates
 // what that half costs with the CPU to itself, and the ratio of the two minima
 // is close to load-independent. Measured: 637-674 idle, 602-661 with twelve
 // spinners and the MLX trainer competing. (The median across rounds is much
-// worse here — it reached 907 under that load, which overlaps the regression
+// worse here, it reached 907 under that load, which overlaps the regression
 // band below and would make the budget unsettable.)
 //
 // The budget sits between the measured baseline and a real regression: widening
-// the seed stage's angle sweep from 5 steps to 11 — a plausible change someone
-// might make for robustness — costs 933-1043, and trips this.
+// the seed stage's angle sweep from 5 steps to 11, a plausible change someone
+// might make for robustness: costs 933-1043, and trips this.
 const WINDOW_SCORE_BUDGET = 850;   // baseline ~655, ceiling seen 674
 
 test('coarse scan stays within budget', () => {
@@ -274,7 +274,7 @@ test('coarse scan stays within budget', () => {
   drawFace(f, cx, cy, size, 0, scrambledColors(3), { seed: 5 });
 
   // Warm the JIT first, or the early rounds time the optimiser rather than the
-  // search — cold, detectFace costs several times its steady-state.
+  // search: cold, detectFace costs several times its steady-state.
   for (let i = 0; i < 3; i++) detectFace(f);
   for (let i = 0; i < 3000; i++) scoreWindow(f, cx, cy, size, 0);
 
@@ -299,7 +299,7 @@ test('coarse scan stays within budget', () => {
 // ---- ROI-restricted acquisition ----
 // Measured on real captured frames: giving the search a rough box makes it
 // 10-17x faster AND more accurate, because the comb no longer has to resolve a
-// small face against a whole room. Any box source works — a model, or the
+// small face against a whole room. Any box source works, a model, or the
 // user's own hand-placed frame.
 test('a rough box makes the search faster and no worse', () => {
   const f = makeFrame(W, H, curtainSkinBg);

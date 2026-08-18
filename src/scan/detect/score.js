@@ -2,7 +2,7 @@
 //
 // The structural claim: a cube face is a GRID, not stripes. It has seams in both
 // axes at once, those seams are narrow (brightness recovers within a couple of
-// px), its colours come from a small palette, and it ends — stepping away from
+// px), its colours come from a small palette, and it ends: stepping away from
 // the background on all four sides. Curtain folds and bare skin each satisfy at
 // most one of those, which is what an earlier, looser scoring failed to require.
 //
@@ -47,8 +47,7 @@ function readCells(px, size) {
 //
 // A seam is a DISCONTINUITY, not specifically a dark one. Measuring only
 // "darker than both flanks" made the detector structurally blind to
-// light-bodied stickerless cubes, whose seams are brighter than the stickers —
-// no threshold could have found them. Both directions now count.
+// light-bodied stickerless cubes, whose seams are brighter than the stickers: // no threshold could have found them. Both directions now count.
 function seamStrength(line, f1, f2) {
   const darker = Math.min(f1, f2) - line;  // dark seam between brighter stickers
   const lighter = line - Math.max(f1, f2); // light body between darker stickers
@@ -106,7 +105,7 @@ function colorPairCount(means) {
 }
 
 // --- four-edge silhouette ---------------------------------------------------
-// A cube face ends. A patch of curtain does not — slide the window sideways and
+// A cube face ends. A patch of curtain does not: slide the window sideways and
 // you find more curtain. Take the 3rd-best of the 4 edges so one occluded side
 // (a hand, an adjacent face) does not veto an otherwise good detection.
 function silhouette(px, inFrame, size) {
@@ -199,7 +198,7 @@ function paletteCoherence(means) {
 // custom sticker sets; a fixed hue list silently rejects all of them. What
 // actually separates a sticker from skin, wood, beige fabric and cardboard is
 // not WHICH hue it is but that it is either vividly saturated or genuinely
-// neutral-and-bright — never the muddy middle those materials occupy. The white
+// neutral-and-bright: never the muddy middle those materials occupy. The white
 // test's saturation allowance only opens at high v, so a warm-cast white sticker
 // (v 1.0, s 0.21) passes while beige curtain (v 0.84, s 0.20) does not.
 function stickerGamut(means) {
@@ -216,7 +215,7 @@ function stickerGamut(means) {
 }
 
 // Score an arbitrary quad [TL, TR, BR, BL]. Everything below is unchanged from
-// the rotated-square version — the scorer only ever touches the image through
+// the rotated-square version, the scorer only ever touches the image through
 // px(u, v), so swapping in a homography generalises it to perspective for free.
 // -> 0..1
 export function scoreQuad(frame, q) {

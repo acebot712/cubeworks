@@ -16,7 +16,7 @@ export function isSolved(state) {
 // opts.learnedCenters (default true): use the trained value network for the
 // centres stage. Measured on real scrambles it spends ~15 moves where the
 // greedy solver spends ~36, and it verifies its own output, falling back to
-// greedy if the search fails — so it can only shorten the solve.
+// greedy if the search fails, so it can only shorten the solve.
 export function solve4x4(state96, { learnedCenters = true } = {}) {
   initThreeSolver();
   const phases = [];

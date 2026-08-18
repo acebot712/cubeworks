@@ -1,4 +1,4 @@
-// 01 Scan — camera stage with the tracking overlay, plus the per-face list.
+// 01 Scan: camera stage with the tracking overlay, plus the per-face list.
 import React, { useEffect, useState } from 'react';
 import { CAPTURE_STEPS } from '../../scan/orientations.js';
 import { Btn } from '../primitives.jsx';
@@ -78,8 +78,7 @@ function FacePanel({ cube, colorOf, labels, stepIdx, step, scanning, rawCaptures
           {cube.allCaptured ? 'All six faces captured' : `Next up: ${step.instr.toLowerCase()}`}
         </div>
         <div style={{ fontSize: 11, color: INK_GHOST, marginTop: 6, lineHeight: 1.5 }}>
-          I follow a six-face loop, but you can click any face below to scan it instead —
-          or click a scanned face to fix its colours by hand.
+          I follow a six-face loop, but you can click any face below to scan it instead, or click a scanned face to fix its colours by hand.
         </div>
       </div>
 
@@ -119,15 +118,14 @@ function FacePanel({ cube, colorOf, labels, stepIdx, step, scanning, rawCaptures
             less. This panel used to do the opposite: a button while faces were
             still missing, and prose once all six were in, pointing at "Confirm the
             read" on the camera overlay. That overlay does not render when the
-            camera is unavailable — the sample-cube path, or a denied permission —
-            so a finished scan named an action the user could not see or reach. */}
+            camera is unavailable, the sample-cube path, or a denied permission, so a finished scan named an action the user could not see or reach. */}
         {cube.allCaptured ? (
           <>
             <Btn onClick={onReview} style={{ padding: 13, borderRadius: 10, textAlign: 'center', fontSize: 13, fontWeight: 600, background: ACCENT, color: ACCENT_INK }}>
               Confirm the read
             </Btn>
             <div style={{ fontSize: 11.5, color: INK_GHOST, textAlign: 'center', lineHeight: 1.5, marginTop: 8 }}>
-              All six faces are in — or click a face above to fix it first.
+              All six faces are in, or click a face above to fix it first.
             </div>
           </>
         ) : (
@@ -147,8 +145,8 @@ function FaceRow({ face, cube, colorOf, labels, done, isCurrent, scanning, editi
   const barColor = !done ? BG_INERT : weakN > 3 ? WARN_DEEP : ACCENT;
 
   let status;
-  if (!done) status = isCurrent ? (scanning ? 'Reading now…' : 'Up next — press Start') : 'Waiting';
-  else if (editing) status = 'Editing — tap a sticker';
+  if (!done) status = isCurrent ? (scanning ? 'Reading now…' : 'Up next: press Start') : 'Waiting';
+  else if (editing) status = 'Editing: tap a sticker';
   else status = weakN > 0 ? `${weakN} sticker${weakN > 1 ? 's' : ''} to confirm` : 'Clean read';
 
   return (
@@ -174,7 +172,7 @@ function FaceRow({ face, cube, colorOf, labels, done, isCurrent, scanning, editi
           label={`Re-scan ${face.name}`}
           style={{ flex: 'none', fontSize: 11, padding: '4px 8px', borderRadius: 6, color: done ? INK_SOFT : INK_DISABLED, border: `1px solid ${done ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.05)'}` }}
         >
-          {done ? 'Re-scan' : '—'}
+          {done ? 'Re-scan' : ': '}
         </Btn>
       </Btn>
 
@@ -201,7 +199,7 @@ function FaceRow({ face, cube, colorOf, labels, done, isCurrent, scanning, editi
             />
           </div>
           <div style={{ fontSize: 10.5, color: INK_SUBTLE, marginTop: 8 }}>
-            {editIdx == null ? 'Tap a sticker, then pick its colour.' : `Sticker ${(editIdx % 16) + 1} — pick its colour.`}
+            {editIdx == null ? 'Tap a sticker, then pick its colour.' : `Sticker ${(editIdx % 16) + 1}: pick its colour.`}
           </div>
         </div>
       )}

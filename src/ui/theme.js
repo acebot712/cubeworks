@@ -13,7 +13,7 @@ export const INK_SOFT = '#C7CDD4';
 export const INK_DIM = '#9AA2AC';
 export const INK_MUTED = '#8A929C';
 export const INK_SUBTLE = '#7A828C';
-// The two faintest tiers that still carry reading text — section labels and the
+// The two faintest tiers that still carry reading text: section labels and the
 // hint paragraphs. Both sat under WCAG AA on the panel and card surfaces
 // (4.15/3.91 and 3.14/2.96 against a 4.5 floor), so the ramp compressed at the
 // bottom rather than staying legible. Raised to clear 4.5 on both; measure

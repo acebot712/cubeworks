@@ -1,6 +1,6 @@
 // Multi-frame accumulation for a face capture (Touch-ID style): several
 // consecutive steady frames vote on each cell rather than trusting one.
-// Pure — it only sees the frames the sampler produced.
+// Pure, it only sees the frames the sampler produced.
 
 // frames: [{cells, confs, rgbs}] -> { grid, conf, rgb } of 16 entries each
 export function voteFrames(frames) {

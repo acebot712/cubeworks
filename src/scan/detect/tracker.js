@@ -2,7 +2,7 @@
 // of the one-shot search.
 //
 // Acquiring needs a high score held over a STABLE pose, not just repeated high
-// scores — that is what stops a lucky false positive from taking the lock.
+// scores, that is what stops a lucky false positive from taking the lock.
 // Losing is far more forgiving, so a brief occlusion does not drop it.
 import { DEG } from './frame.js';
 import { detectFace } from './search.js';
@@ -31,7 +31,7 @@ export function createTracker() {
   let goodRun = 0, badRun = 0, tick = 0;
 
   // While tracking, descend from the last pose. Periodically rescan from
-  // scratch if the track has degraded — that guards against a false positive
+  // scratch if the track has degraded, that guards against a false positive
   // holding the lock while the real face sits elsewhere in the frame.
   const locate = (frame) => {
     if (!found || !quad) return detectFace(frame, null);
@@ -75,7 +75,7 @@ export function createTracker() {
   return {
     reset() { found = false; quad = null; anchor = null; goodRun = 0; badRun = 0; tick = 0; },
 
-    // Hand the tracker a pose found by something else — a model's box refined
+    // Hand the tracker a pose found by something else, a model's box refined
     // into a quad, or a hand-placed frame that snapped. It still has to earn
     // the lock through the normal acquire run, so a bad external suggestion
     // cannot pin a false positive: it only decides where to look first.

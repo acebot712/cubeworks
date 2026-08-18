@@ -1,9 +1,9 @@
-// Coarse localization by comb filtering — the "finder pattern" step.
+// Coarse localization by comb filtering, the "finder pattern" step.
 //
 // A cube face is periodic structure: 5 equally spaced edges per axis (2 borders
 // + 3 seams). Rather than hunt a peaky 4-D score with a lattice, we project edge
 // energy onto each axis and exhaustively comb-search the 1-D profiles for that
-// period — the same trick QR finders use on scanlines, and immune to the local
+// period, the same trick QR finders use on scanlines, and immune to the local
 // maxima that trap a window search.
 import { DEG, downsample } from './frame.js';
 import { scoreWindow } from './score.js';
@@ -70,7 +70,7 @@ function combSearch(prof, pMin, pMax) {
     }
   }
   if (best) {
-    // strength relative to the profile's own energy — an absolute score means
+    // strength relative to the profile's own energy, an absolute score means
     // nothing across scenes, but "this comb beats the average edge" does
     let sum = 0, nn = 0;
     for (let i = 0; i < L; i++) if (prof[i] > 0) { sum += prof[i]; nn++; }

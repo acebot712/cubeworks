@@ -1,6 +1,6 @@
 // Fixed algorithms used by more than one solver stage. Each is verified by
 // tests (and re-verified by simulation at runtime where it is applied), so they
-// live in exactly one place — edges.js and three.js both need the OLL parity
+// live in exactly one place: edges.js and three.js both need the OLL parity
 // alg and must never drift apart.
 import { parseMoves } from '../cube/notation.js';
 

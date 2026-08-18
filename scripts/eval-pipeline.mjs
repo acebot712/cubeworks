@@ -1,8 +1,8 @@
 // End-to-end evaluation of the full acquisition pipeline on real frames.
 //
 // Compares, per frame:
-//   classical  — the in-browser search alone, no service
-//   best-of    — every proposal the service makes (the VLM's box and each of
+//   classical, the in-browser search alone, no service
+//   best-of, every proposal the service makes (the VLM's box and each of
 //                SAM's masks), each polished by the corner descent, with the
 //                cube-face scorer picking the winner
 //
@@ -91,7 +91,7 @@ const boxOf = (q) => {
   return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
 };
 
-console.log(`\nPIPELINE EVAL — ${health.model}`);
+console.log(`\nPIPELINE EVAL: ${health.model}`);
 console.log(`  segmentation: ${health.segment ? 'on' : 'OFF'}   width ${WIDTH}   acquire ${ACQUIRE_SCORE}\n`);
 console.log('id   | classical         | best-of pipeline                    | winner');
 console.log('-----|-------------------|-------------------------------------|--------');
@@ -132,7 +132,7 @@ for (const l of labels.filter((x) => x.corners)) {
   if (best) ious.best.push(iou(best.d.corners, truth));
 
   const fmt = (d) => (d ? `${d.score.toFixed(2)}, IoU ${iou(d.corners, truth).toFixed(2)}` : 'none');
-  console.log(`${l.id} | ${fmt(classical).padEnd(17)} | ${fmt(best && best.d).padEnd(35)} | ${best ? best.tag : '—'}`);
+  console.log(`${l.id} | ${fmt(classical).padEnd(17)} | ${fmt(best && best.d).padEnd(35)} | ${best ? best.tag : ': '}`);
   if (VERBOSE) for (const p of props.slice(0, 6)) console.log(`     ${p.tag.padEnd(12)} ${fmt(p.d)}`);
 }
 

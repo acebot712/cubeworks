@@ -1,6 +1,6 @@
 # Real-frame evaluation set
 
-The detector's unit tests are synthetic — images generated from the same
+The detector's unit tests are synthetic: images generated from the same
 assumptions the detector encodes. That is circular, and it stayed green through
 every real-world failure so far (curtains read as a cube, light-bodied cubes
 invisible, non-standard palettes unresolvable). This directory is the fix: real
@@ -13,8 +13,7 @@ npm run dev
 ```
 
 Open <http://localhost:5183/capture.html> (a dev tool, deliberately separate
-from the app). Point the camera at a cube, click its four corners in order —
-top-left, top-right, bottom-right, bottom-left — then **Save**. The dashed teal
+from the app). Point the camera at a cube, click its four corners in order: top-left, top-right, bottom-right, bottom-left, then **Save**. The dashed teal
 box shows what the detector currently thinks, so disagreements are visible while
 you label.
 
@@ -29,7 +28,7 @@ you label.
 false positives on background. Bank plenty of frames of the places it has
 false-fired: curtains, bookshelves, bare skin, keyboards, empty desks.
 
-Fill in the **conditions** field (`white-body, lamp-lit, tilted`) — the report
+Fill in the **conditions** field (`white-body, lamp-lit, tilted`), the report
 breaks results down by tag, which is how you find out *which* conditions fail
 rather than just that something does.
 
@@ -48,7 +47,7 @@ npm run eval -- --iou 0.75      # demand tighter localisation
 Exits non-zero if recall drops below 90% or the false-positive rate exceeds 2%,
 so it can gate a commit.
 
-Failures are listed by id — open `eval/frames/<id>.jpg` to see exactly what the
+Failures are listed by id: open `eval/frames/<id>.jpg` to see exactly what the
 detector saw.
 
 ## Format
@@ -69,9 +68,9 @@ detector saw.
 
 Each sample has two files in `frames/`:
 
-- `<id>.jpg` — full-resolution frame, for human inspection and for training a
+- `<id>.jpg`: full-resolution frame, for human inspection and for training a
   model later.
-- `<id>.bin` — the exact downscaled RGB buffer the detector consumes
+- `<id>.bin`, the exact downscaled RGB buffer the detector consumes
   (`detW × detH × 3`, row-major). The eval runner reads this directly, so it
   needs no image decoder and no dependencies.
 
@@ -81,7 +80,7 @@ a home interior, and note that excluding only the `.jpg` would achieve nothing:
 `<id>.bin` is the same picture as raw `detW × detH × 3` RGB and reconstructs in a
 few lines of numpy. Both are out, permanently.
 
-Nothing else depends on them — no result in the paper reads `frames/`, and the
+Nothing else depends on them, no result in the paper reads `frames/`, and the
 rest of the test suite passes without it. To run this eval, capture your own set
 with `capture.html`; `labels.json` is tracked so the format and the label schema
 are still there to follow.

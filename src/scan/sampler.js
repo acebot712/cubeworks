@@ -1,10 +1,10 @@
 // Reading one video frame: locate the face, rectify it, and sample its 16
-// cells. Everything here is imaging work — it touches <canvas> but knows
+// cells. Everything here is imaging work, it touches <canvas> but knows
 // nothing about React, screens or capture steps.
 //
 // All coordinates stay in raw, UNMIRRORED video pixels, matching CAPTURE_MAPS
 // and the detector. The preview is drawn unmirrored too, so every surface the
-// user sees agrees with the cube in their hands — no mirror math anywhere.
+// user sees agrees with the cube in their hands, no mirror math anywhere.
 import { classify } from './classify.js';
 import { createTracker } from './detect/tracker.js';
 import { detectFaceInRoi } from './detect/search.js';
@@ -17,8 +17,8 @@ const MOTION_N = 16;    // frame-diff grid, one tap per 4px of the rectified fac
 // A hand-placed box only snaps to a detected face if the search is confident;
 // otherwise the user's own placement is respected exactly as drawn.
 const MANUAL_SNAP_SCORE = 0.45;
-// Model-assisted acquisition. The request is fired and forgotten — it takes
-// ~1s while read() runs at 10Hz — and its box is then used as a search region
+// Model-assisted acquisition. The request is fired and forgotten, it takes
+// ~1s while read() runs at 10Hz, and its box is then used as a search region
 // for a few seconds. Purely an accelerator: without the service nothing here
 // runs, and the classical search behaves exactly as before.
 const ROI_TTL_MS = 4000;
@@ -94,7 +94,7 @@ export function createFrameReader() {
   };
 
   return {
-    // Forget the tracked pose and the motion history — used when the user
+    // Forget the tracked pose and the motion history: used when the user
     // switches to or from a hand-placed frame.
     reset() {
       if (tracker) tracker.reset();
@@ -138,8 +138,7 @@ export function createFrameReader() {
         if (!det.found) {
           const now = Date.now();
           if (modelRoi && now - modelRoi.at < ROI_TTL_MS) {
-            // refine inside EVERY proposal and keep the best-scoring quad —
-            // the models disagree about which region is the face, and the
+            // refine inside EVERY proposal and keep the best-scoring quad: // the models disagree about which region is the face, and the
             // cube-face scorer is the only thing qualified to settle it
             let best = null;
             for (const p of modelRoi.proposals) {
@@ -171,7 +170,7 @@ export function createFrameReader() {
       } catch { return null; }
 
       if (!quad) {
-        // Nothing located. Still report scene brightness — darkness is usually
+        // Nothing located. Still report scene brightness: darkness is usually
         // the REASON the cube cannot be found, so this is when it matters most.
         prevGray = null;
         return { found: false, quad: null, vw, vh, vel: 0, lighting: wb.brightness, detScore: det ? det.score : 0 };

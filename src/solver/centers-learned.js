@@ -3,13 +3,13 @@
 // The shipped greedy solver fixes centres face by face, accepting any sequence
 // that places at least one piece. Measured on real scrambles that costs ~37
 // moves. This one asks a network "how far from solved is this arrangement?" and
-// keeps the most promising states — measured ~15 moves for the same states.
+// keeps the most promising states: measured ~15 moves for the same states.
 //
 // The network was trained by Deep Approximate Value Iteration (see
 // mlx-solver/train_centers.py): scramble k moves from solved, and regress
 // J(s) towards min over successors of 1 + J(s'), bootstrapping from a
 // periodically-frozen copy of itself. Training data is free because scrambling
-// generates labelled states endlessly — no dataset to collect.
+// generates labelled states endlessly, no dataset to collect.
 //
 // What this is NOT: proven optimal. A learned heuristic is not admissible, so
 // nothing here certifies minimality. The information-theoretic floor for this
@@ -53,7 +53,7 @@ function net() {
 
 // Forward pass over a batch. Rows of `states` are 24 face ids; the encoding is
 // one-hot per slot, so the first matrix multiply only ever touches 24 of 144
-// inputs — worth exploiting since this runs thousands of times per solve.
+// inputs: worth exploiting since this runs thousands of times per solve.
 function evaluate(states, count) {
   const L = net();
   const first = L[0];

@@ -3,8 +3,7 @@
 Scope, and why this sub-problem. Full-cube DeepCubeA is a research project: the
 3x3 version needed ~10 billion training states and days of multi-GPU time for a
 space of depth 20 and branching 18, and the 4x4 has depth ~40, branching ~36 and
-10^26 times more states. The CENTRES alone are 3.25e15 states at depth ~20 —
-comfortably trainable on one machine, and worth 55 of the ~169 moves the current
+10^26 times more states. The CENTRES alone are 3.25e15 states at depth ~20: comfortably trainable on one machine, and worth 55 of the ~169 moves the current
 solver spends.
 
 The method is DeepCubeA's, not AlphaZero's. There is no self-play here because a
@@ -20,7 +19,7 @@ the bootstrap from chasing its own tail. Scrambles are drawn from k = 1..K so
 that easy states anchor the value function near solved and it propagates outward.
 
 Honest note on what this can and cannot give you: a learned heuristic is NOT
-admissible — nothing stops the network overestimating — so solutions found with
+admissible (nothing stops the network overestimating) so solutions found with
 it are near-optimal, never proven optimal. That is the same trade DeepCubeA
 makes, and it is unavoidable for a learned value function.
 
@@ -96,7 +95,7 @@ def is_solved(states):
 
 
 class ValueNet(nn.Module):
-    """Cost-to-go estimator. Deliberately small — the centres sub-problem does
+    """Cost-to-go estimator. Deliberately small, the centres sub-problem does
     not need DeepCubeA's residual tower, and a model that trains in minutes is
     worth more here than one that trains in days."""
 

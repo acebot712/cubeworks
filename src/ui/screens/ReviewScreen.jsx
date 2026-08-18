@@ -1,4 +1,4 @@
-// 02 Confirm — the whole cube as an editable net, with an opt-in one-at-a-time
+// 02 Confirm, the whole cube as an editable net, with an opt-in one-at-a-time
 // queue for the stickers the scan was unsure about, and the validation panel.
 import React, { useMemo, useState } from 'react';
 import { FACES } from '../../cube/geometry.js';
@@ -13,7 +13,7 @@ import { ACCENT, ACCENT_INK, WARN, BAD, INFO, INK_DIM, INK_MUTED, INK_SUBTLE, IN
 const NET_POS = { U: [2, 1], L: [1, 2], F: [2, 2], R: [3, 2], B: [4, 2], D: [2, 3] };
 
 // Stickers implicated by validation. A miscounted colour must not light up all
-// 16 of its stickers — for a centres problem, narrow to the centre facelets,
+// 16 of its stickers, for a centres problem, narrow to the centre facelets,
 // which is what the user can actually fix.
 function flaggedStickers(problems, colors) {
   const flagged = new Set();
@@ -64,7 +64,7 @@ export default function ReviewScreen({ cube, scan, labels, actions }) {
   const flagged = flaggedStickers(cube.validation.problems || [], cube.colors);
 
   // Answering removes this sticker from the derived queue and shifts the rest
-  // down, so queueIdx must stay put — incrementing it too would skip every
+  // down, so queueIdx must stay put: incrementing it too would skip every
   // other flagged sticker.
   const answer = (idx, color) => { scan.setManual(idx, color); actions.invalidateSolution(); };
 
@@ -123,7 +123,7 @@ function QueueCard({ entry, total, position, cube, colorOf, labels, onAnswer, on
       <div style={{ textAlign: 'center' }}>
         <div style={{ ...mono, fontSize: 10, letterSpacing: '0.16em', color: INK_FAINT }}>STICKER {position} OF {total}</div>
         <div style={{ fontSize: 21, fontWeight: 600, letterSpacing: '-0.02em', marginTop: 8 }}>Which color is this?</div>
-        <div style={{ fontSize: 12.5, color: INK_MUTED, marginTop: 5 }}>Only the stickers I'm unsure about — everything else is settled.</div>
+        <div style={{ fontSize: 12.5, color: INK_MUTED, marginTop: 5 }}>Only the stickers I'm unsure about: everything else is settled.</div>
       </div>
 
       <div style={{ position: 'relative', padding: 6, borderRadius: 10, ...cardStyle }}>
@@ -205,7 +205,7 @@ function CubeNet({ cube, colorOf, labels, flagged, selected, setSelected, weakTo
         <div style={{ width: 1, height: 22, background: 'rgba(255,255,255,0.1)' }} />
         <div style={{ fontSize: 11.5, color: selected != null ? INK_MUTED : INK_FAINT }}>
           {selected != null
-            ? `${faceOfFacelet(selected)} · sticker ${(selected % 16) + 1} — pick its colour`
+            ? `${faceOfFacelet(selected)} · sticker ${(selected % 16) + 1}: pick its colour`
             : 'Tap a sticker in the net first'}
         </div>
       </div>
@@ -237,9 +237,9 @@ function ValidationPanel({ cube, colorOf, labels, repair, flagged, actions }) {
   const flaggedFaces = [...new Set([...flagged].map(faceOfFacelet))];
 
   let explanation;
-  if (ok) explanation = 'Every piece checks out — corners, edge wings and centers are all real. Solver is ready.';
-  else if (incomplete) explanation = `${missingFaces.length} face${missingFaces.length > 1 ? 's' : ''} still to scan: ${missingFaces.join(', ')}. Grey squares in the net are unscanned — you can also fill them in by hand.`;
-  else explanation = `${describeProblems(problems).join(' · ')}. The stickers involved are pulsing in the net — tap one, then pick its real colour.`;
+  if (ok) explanation = 'Every piece checks out: corners, edge wings and centers are all real. Solver is ready.';
+  else if (incomplete) explanation = `${missingFaces.length} face${missingFaces.length > 1 ? 's' : ''} still to scan: ${missingFaces.join(', ')}. Grey squares in the net are unscanned, you can also fill them in by hand.`;
+  else explanation = `${describeProblems(problems).join(' · ')}. The stickers involved are pulsing in the net: tap one, then pick its real colour.`;
 
   return (
     <div className="cw-panel" style={{ ...sidePanel, padding: '18px 16px' }}>
@@ -285,7 +285,7 @@ function ValidationPanel({ cube, colorOf, labels, repair, flagged, actions }) {
 
       {repair && repair.dismissed && (
         <div style={{ marginTop: 12, padding: 12, borderRadius: 11, ...cardStyle, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ fontSize: 11.5, color: INK_DIM, flex: 1, lineHeight: 1.5 }}>Auto-repair is off — you are seeing the raw scan.</div>
+          <div style={{ fontSize: 11.5, color: INK_DIM, flex: 1, lineHeight: 1.5 }}>Auto-repair is off, you are seeing the raw scan.</div>
           <Btn onClick={actions.reapplyRepair} style={{ fontSize: 11, color: INFO, border: '1px solid rgba(127,168,245,0.4)', borderRadius: 6, padding: '3px 8px' }}>Re-apply</Btn>
         </div>
       )}
@@ -324,7 +324,7 @@ function ValidationPanel({ cube, colorOf, labels, repair, flagged, actions }) {
         disabled={!ok}
         style={{ padding: 13, borderRadius: 10, textAlign: 'center', fontSize: 13, fontWeight: 600, background: ok ? ACCENT : '#1A1D22', color: ok ? ACCENT_INK : INK_GHOST }}
       >
-        {ok ? 'Solve — reduction method'
+        {ok ? 'Solve: reduction method'
           : incomplete ? `Scan ${missingFaces.length} more face${missingFaces.length > 1 ? 's' : ''} to solve`
           : 'Fix the pulsing stickers to solve'}
       </Btn>

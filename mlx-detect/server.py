@@ -1,4 +1,4 @@
-"""Cube-face acquisition service — MLX on Apple silicon.
+"""Cube-face acquisition service: MLX on Apple silicon.
 
 Why a service at all: the classical detector's cold search costs 75-100ms
 because it exhaustively combs the frame for every rotation and seam period.
@@ -6,8 +6,8 @@ Once the face is found, TRACKING it is 3.2ms and resolution-independent. So the
 only expensive step is acquisition, and that is exactly the step a pretrained
 model does well: one forward pass finds an object at any scale or angle.
 
-This service therefore answers one question — "where is the cube face in this
-frame?" — and returns a box. Everything downstream (exact corners, rectifying,
+This service therefore answers one question: "where is the cube face in this
+frame?", and returns a box. Everything downstream (exact corners, rectifying,
 reading colours, validating the cube) stays in the browser, where it is
 deterministic and testable.
 
@@ -31,8 +31,7 @@ import segment
 
 DEFAULT_MODEL = "mlx-community/Qwen2.5-VL-7B-Instruct-4bit"
 # Ask for the FACE, not the cube. A box around the whole 3D cube includes the
-# side faces, so it is systematically larger and offset from the front face —
-# measured box IoU 0.31-0.57 against the labelled face. The downstream search
+# side faces, so it is systematically larger and offset from the front face: # measured box IoU 0.31-0.57 against the labelled face. The downstream search
 # only needs a region, but a tighter region is a better one.
 PROMPT = (
     "This image contains a Rubik's cube. Give the bounding box of ONLY the "
@@ -170,7 +169,7 @@ if __name__ == "__main__":
     if args.no_segment:
         print("segmentation disabled", flush=True)
     elif segment.load(args.sam):
-        print(f"SAM loaded ({args.sam}) — returning exact corners", flush=True)
+        print(f"SAM loaded ({args.sam}): returning exact corners", flush=True)
     else:
         print(f"SAM unavailable, boxes only: {segment._state['error']}", flush=True)
     print(f"listening on http://127.0.0.1:{args.port}", flush=True)

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { clusterStickers } from '../src/scan/cluster.js';
 
-// The clusterer no longer names colours — it groups them. These tests assert the
+// The clusterer no longer names colours, it groups them. These tests assert the
 // two properties the rest of the pipeline relies on: samples of one colour land
 // in one group (purity), and each group holds exactly 16 (the error-correcting
 // constraint). Naming is resolve.js's job and is covered in palette.test.js.
@@ -52,7 +52,7 @@ test('clustering recovers all 96 stickers under neutral light', () => {
 });
 
 test('clustering recovers all 96 stickers under a strong warm cast', () => {
-  // warm indoor lighting: red boosted, blue crushed — the cast that makes
+  // warm indoor lighting: red boosted, blue crushed, the cast that makes
   // fixed HSV thresholds read white as yellow/orange
   const { rgbs, truth } = makeSamples([1.25, 1.0, 0.65], 10, 42);
   const { assign } = clusterStickers(rgbs);

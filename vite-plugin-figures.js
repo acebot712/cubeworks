@@ -4,7 +4,7 @@
 // The per-figure download button covers one figure at a time through the
 // browser's download flow. This writes the whole set in one call, which is what
 // you actually want when the numbers have moved and every figure needs
-// regenerating — and it puts them on disk as real files rather than in a
+// regenerating, and it puts them on disk as real files rather than in a
 // downloads folder.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -13,7 +13,7 @@ const DIR = path.join('eval', 'figures');
 const MLX = 'mlx-solver';
 
 // The trainer already computes the rate and ETA and prints them, so parse its
-// own line rather than recomputing from timestamps — one source of truth, and
+// own line rather than recomputing from timestamps, one source of truth, and
 // it keeps working across a resume (where elapsed restarts at zero).
 //   "  step  36,000/150,000  k 40  loss   0.0959  J spread   9.00    3.9 it/s  ETA 8.1h"
 const LINE = /step\s+([\d,]+)\/([\d,]+)\s+k\s+(\d+)\s+loss\s+([\d.]+)\s+J spread\s+([-\d.]+)\s+([\d.]+) it\/s\s+ETA\s+(\S+)/;
@@ -41,7 +41,7 @@ function readTraining(task) {
                    loss: Number(m[4]), spread: Number(m[5]),
                    rate: Number(m[6]), eta: m[7] };
     }
-    // how long since the trainer last wrote — a dead run goes quiet, and a
+    // how long since the trainer last wrote, a dead run goes quiet, and a
     // stale panel that still says "running" is worse than no panel
     out.ageMs = Date.now() - fs.statSync(log).mtimeMs;
   }
@@ -57,7 +57,7 @@ export default function figuresPlugin() {
     configureServer(server) {
       // Live training state, polled by the figures page. Reads the files the
       // trainer is already writing, so nothing has to be running for this to
-      // answer — it just reports an older `ageMs`.
+      // answer, it just reports an older `ageMs`.
       server.middlewares.use('/__training', (req, res) => {
         res.setHeader('content-type', 'application/json');
         res.setHeader('cache-control', 'no-store');

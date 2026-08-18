@@ -7,7 +7,7 @@ Works on either sub-problem's checkpoint:
 
 Batched beam search: keep the `width` most promising states, expand every
 successor, keep the best `width` again. DeepCubeA uses batch weighted A* for the
-same underlying reason beam search works here — the network is far more useful
+same underlying reason beam search works here, the network is far more useful
 evaluating thousands of states at once on the GPU than one at a time.
 
 Two things can be checked, and both are:
@@ -111,7 +111,7 @@ def main():
             fails += 1
             print(f"  {i + 1:3d}  no solution within depth {args.max_depth}", flush=True)
             continue
-        # replay it — never trust the solver's own word
+        # replay it: never trust the solver's own word
         check = st.copy()
         for mv in sol:
             check = task.apply(check, np.array([task.tokens.index(mv)]))

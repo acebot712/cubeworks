@@ -13,7 +13,7 @@ so state is written every --ckpt-every steps and picked up automatically:
     ../.venv-mlx/bin/python davi.py --task wings --steps 200000
     ../.venv-mlx/bin/python davi.py --task wings --steps 200000   # resumes
 
-Method (DeepCubeA's, not AlphaZero's — a cube is single-agent shortest path,
+Method (DeepCubeA's, not AlphaZero's, a cube is single-agent shortest path,
 so there is no adversarial self-play):
 
     J(s) = 0                             if solved
@@ -23,7 +23,7 @@ Targets come from a periodically-frozen copy of the network. That refresh rate
 matters more than it looks: at one point a centres net trained with a 20x
 slower refresh reached a LOWER loss while being useless to search, because the
 value function never propagated outward from the solved state. Loss is not the
-metric — `--task X --probe` measures whether J actually tracks distance.
+metric: `--task X --probe` measures whether J actually tracks distance.
 """
 import argparse
 import json
@@ -47,8 +47,7 @@ DONT_CARE = 24          # the symbol for "this slot holds a piece we are not tra
 def rung_size(k):
     """Reachable states on wing rung k: place k distinguishable pieces in 24 slots.
 
-    P(24, k) = 24! / (24-k)!.  At k = 24 the cube's parity constraint halves it —
-    below that the untracked pieces absorb parity, so every arrangement is reachable.
+    P(24, k) = 24! / (24-k)!.  At k = 24 the cube's parity constraint halves it: below that the untracked pieces absorb parity, so every arrangement is reachable.
     """
     n = math.factorial(24) // math.factorial(24 - k)
     return n // 2 if k >= 23 else n
@@ -63,8 +62,8 @@ class Task:
       wings-k<N>   a LADDER RUNG: track N of the 24 wings, treat the rest as
                    interchangeable
 
-    The rungs exist to answer one question — how does a learned heuristic degrade
-    as the state space grows? — so everything except state-space size is held
+    The rungs exist to answer one question: how does a learned heuristic degrade
+    as the state space grows?, so everything except state-space size is held
     fixed across them. Same 63 moves, same 24 slots, same 600-wide encoding
     (24 slots x 25 symbols, the 25th being "not tracked"). Only N varies, and
     with it the reachable count, from 552 at N=2 to 3.10e23 at N=24.
@@ -82,7 +81,7 @@ class Task:
         self.perms = np.array(tbl["perms"], dtype=np.int32)
         # Restricting the generating set is how size and DEPTH are separated.
         # Dropping half-turns generates exactly the same group (X2 = X.X), so the
-        # reachable state count is untouched while the diameter grows — which is
+        # reachable state count is untouched while the diameter grows, which is
         # the only way to ask whether performance tracks how BIG a problem is or
         # how DEEP it is. On the unrestricted ladder those two are perfectly
         # correlated (diameter = k+2), so neither can be blamed for a failure.
@@ -124,7 +123,7 @@ class Task:
     # Measured diameter at k=4:   all 6  |  oi-q 8  |  oi-q4 10  |  oi-q3 12
     #
     # The price is that fewer generators also means a smaller branching factor,
-    # so depth and branching move together here. Size does not — and since size
+    # so depth and branching move together here. Size does not, and since size
     # is held exactly constant, any change in performance across these sets
     # rules size out as the cause, which is the claim that matters.
     # faces allowed, as single-letter bases (outer UPPER, inner slice lower)
@@ -294,7 +293,7 @@ def main():
                     help="comma list of steps to freeze a separate copy at, e.g. "
                          "3000,12000,40000. One training run then yields several "
                          "budget points, which is what turns 'does it fail' into "
-                         "'how much compute does it need' — and costs nothing extra")
+                         "'how much compute does it need', and costs nothing extra")
     ap.add_argument("--fresh", action="store_true", help="ignore any checkpoint")
     ap.add_argument("--probe", action="store_true", help="probe a trained net and exit")
     ap.add_argument("--half", choices=["auto", "on", "off"], default="auto",
@@ -336,7 +335,7 @@ def main():
     is_wing = args.task != "centers"
     kmax = args.kmax or (24 if not is_wing else 40)
     # Every rung gets the SAME architecture. Sizing each one to its own state
-    # space would confound the very thing we are measuring — we would no longer
+    # space would confound the very thing we are measuring, we would no longer
     # know whether a rung failed because it was large or because its net was small.
     hidden = tuple(int(x) for x in args.hidden.split(",")) if args.hidden \
         else ((256, 128) if not is_wing else (4096, 2048, 1024))
@@ -353,7 +352,7 @@ def main():
     # states near solved: those are the ones whose successors include the solved
     # state, so their target is a real 1 rather than a guess. Sampling k~U(1,40)
     # over 63 moves puts ~2.5% of the batch there, and the squared-error loss is
-    # dominated by the 97.5% whose targets are noise — a wings run set up that
+    # dominated by the 97.5% whose targets are noise, a wings run set up that
     # way collapsed to a constant J = 15.33 at every depth. Growing k only once
     # the network has fitted the current depth keeps the anchor in view.
     curric = args.curriculum == "on" or (args.curriculum == "auto" and is_wing)
@@ -535,7 +534,7 @@ def main():
             meta_path.write_text(json.dumps({"step": step, "task": args.task, "k_cur": k_cur,
                                              "hidden": list(hidden), "kmax": kmax,
                                              "moves": args.moves}))
-            # a full J-vs-depth curve, not just endpoints — this is the figure
+            # a full J-vs-depth curve, not just endpoints, this is the figure
             # that shows whether the value function is actually taking shape
             pr = probe(task, net, rng,
                        depths=sorted({*(d for d in PROBE_DEPTHS if d <= kmax), kmax}))

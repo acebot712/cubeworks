@@ -3,12 +3,12 @@
 // Brands ship very different palettes: pastel sets, "bright" stickerless,
 // purple in place of blue, pink in place of red, custom stickers. None of the
 // six colours below are the canonical ones, and the pipeline must still resolve
-// the cube exactly — because it clusters by structure (16 stickers per colour,
+// the cube exactly, because it clusters by structure (16 stickers per colour,
 // piece geometry names the faces), never by matching hues to a table.
 //
 // On what is knowable: from a SCRAMBLED cube the colour-to-face labelling is
 // determined only up to the 24 whole-cube rotations. That information is not
-// present in the stickers, and it is not needed — the solver works in position
+// present in the stickers, and it is not needed, the solver works in position
 // space, so any of the 24 gives a correct solution. What must hold is that one
 // physical colour lands in one class (purity) and that the result is a real,
 // non-mirrored cube (validity + chirality).
@@ -125,7 +125,7 @@ test('a solved cube resolves on a non-standard palette', () => {
 });
 
 test('labelling is driven by piece geometry, not by hue similarity', () => {
-  // Up is PURPLE and Back is WHITE — the inverse of the canonical scheme.
+  // Up is PURPLE and Back is WHITE, the inverse of the canonical scheme.
   const inverted = {
     U: [126, 74, 214], R: [232, 64, 42], F: [35, 177, 90],
     D: [255, 208, 40], L: [255, 122, 26], B: [240, 240, 244],

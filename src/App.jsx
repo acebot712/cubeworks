@@ -1,4 +1,4 @@
-// CUBEWORKS — 4x4 cube AR solver.
+// CUBEWORKS: 4x4 cube AR solver.
 //
 // Composition root. Three stages: 01 Scan (camera, guided capture), 02 Confirm
 // (fix uncertain stickers, validate), 03 Solve (real reduction solution,
@@ -223,7 +223,7 @@ function ResumeBar({ capturedCount, onContinue, onStartOver }) {
   return (
     <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 14, padding: '11px 18px', background: 'rgba(79,227,193,0.08)', borderBottom: '1px solid rgba(79,227,193,0.2)', animation: 'cw-fade .3s ease' }}>
       <div style={{ fontSize: 12.5, color: '#B6F2E5' }}>
-        Picking up where you left off — {capturedCount} of 6 faces already scanned.
+        Picking up where you left off: {capturedCount} of 6 faces already scanned.
       </div>
       <div style={{ flex: 1 }} />
       <Btn onClick={onContinue} style={{ padding: '5px 12px', borderRadius: 7, fontSize: 12, fontWeight: 600, background: ACCENT, color: ACCENT_INK }}>Continue</Btn>

@@ -5,9 +5,9 @@
 // distinct corners), so most misreads are not just detectable but *correctable*.
 // Two failure modes dominate in practice:
 //   A. a whole face captured at the wrong in-plane rotation, or R/L yawed the
-//      other way — a 4^6 x 2 search, checked against validateState
+//      other way, a 4^6 x 2 search, checked against validateState
 //   B. a handful of individual stickers misclassified (red/orange under warm
-//      light) — a small guided beam search over low-confidence stickers
+//      light), a small guided beam search over low-confidence stickers
 //
 // Pure module. Capture maps are passed in so cube/ never imports from scan/.
 import { validateState } from './validate.js';

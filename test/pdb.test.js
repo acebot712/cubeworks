@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { pdbIndex, pdbUnindex, PDB_SIZE, U_RANKS, D_RANKS } from '../src/solver/pdb.js';
 
 // The full table takes ~7 minutes to build, so the suite verifies the INDEXING
-// — which is what correctness of the stored distances rests on. A ranking that
+//, which is what correctness of the stored distances rests on. A ranking that
 // collides would silently corrupt every entry.
 
 test('index space is exactly C(24,4) x C(20,4)', () => {
@@ -30,8 +30,7 @@ test('indexing is injective on a large random sample', () => {
     pdbUnindex(idx, buf);
     const key = buf.join('');
     // Two DIFFERENT indices mapping to one arrangement would corrupt the table.
-    // The same index appearing twice is just the sampler repeating itself —
-    // with 20k draws from 51.5M, the birthday bound expects a handful.
+    // The same index appearing twice is just the sampler repeating itself: // with 20k draws from 51.5M, the birthday bound expects a handful.
     const prev = byArrangement.get(key);
     if (prev !== undefined) assert.equal(prev, idx, `indices ${prev} and ${idx} collide`);
     byArrangement.set(key, idx);

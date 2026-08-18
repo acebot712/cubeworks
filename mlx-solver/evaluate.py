@@ -7,8 +7,8 @@ Reports, as JSON:
                     right interval for proportions near 0 or 1 where the normal
                     approximation is worst.
   optimality gap    only on rungs where exact.py has enumerated the ground truth.
-                    This is the strong claim — how often the learned solver finds
-                    a genuinely shortest path — and it is available precisely
+                    This is the strong claim: how often the learned solver finds
+                    a genuinely shortest path, and it is available precisely
                     where the space is small enough to verify, which is the honest
                     limit of the whole approach.
   saturation        J at a range of scramble depths, plus the slope over the deep
@@ -108,7 +108,7 @@ def main():
             st = task.apply(st, rng.integers(0, task.n_moves, size=512))
         curve.append((d, float(j_of(task, net, st).mean())))
 
-    # slope over the deepest half — near zero means the heuristic cannot tell
+    # slope over the deepest half: near zero means the heuristic cannot tell
     # far-from-goal states apart, which is invisible in the loss
     deep = [(d, j) for d, j in curve if d >= max(depths) / 2]
     slope = ((deep[-1][1] - deep[0][1]) / (deep[-1][0] - deep[0][0])) if len(deep) > 1 else 0.0

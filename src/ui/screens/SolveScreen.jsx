@@ -1,4 +1,4 @@
-// 03 Solve — the animated 3D guide, the move transport, and the phase list.
+// 03 Solve, the animated 3D guide, the move transport, and the phase list.
 import React, { useMemo } from 'react';
 import Cube3D from '../Cube3D.jsx';
 import { Btn, ConfirmBtn } from '../primitives.jsx';
@@ -108,7 +108,7 @@ function SolutionView({ keepAlive, solver, playback, states, labels, colorOf, la
               <div style={{ fontSize: 38, color: ACCENT }}>✓</div>
               <div>
                 <div style={{ ...mono, fontSize: 30, fontWeight: 700 }}>Solved</div>
-                <div style={{ fontSize: 13, color: INK_DIM, marginTop: 3 }}>All {total} moves done — enjoy the moment.</div>
+                <div style={{ fontSize: 13, color: INK_DIM, marginTop: 3 }}>All {total} moves done: enjoy the moment.</div>
               </div>
               <div style={{ display: 'flex', gap: 8, marginLeft: 6 }}>
                 <Btn onClick={restart} style={{ padding: '8px 13px', borderRadius: 9, fontSize: 12.5, color: INK_SOFT, border: '1px solid rgba(255,255,255,0.16)' }}>Watch again</Btn>
@@ -191,7 +191,7 @@ function SolutionView({ keepAlive, solver, playback, states, labels, colorOf, la
             onConfirm={actions.startOver}
             label="Erase this scan and start a new one"
             style={{ padding: 10, borderRadius: 9, textAlign: 'center', fontSize: 12.5, color: WARN, border: '1px solid rgba(255,122,26,0.3)' }}
-            armedChildren="Tap again — this erases all six faces"
+            armedChildren="Tap again, this erases all six faces"
           >
             Lost track? Re-scan the cube
           </ConfirmBtn>

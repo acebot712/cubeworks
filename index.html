@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CUBEWORKS — 4×4 AR Solver</title>
+  <title>CUBEWORKS: 4×4 AR Solver</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     /* Every screen sets its own font inline, so nothing renders in the fallback
-       today — but with no family on body the inherited value is the UA default
+       today, but with no family on body the inherited value is the UA default
        serif, and any element that later forgets to set one lands in Times. Name
        the display face once, here, so the fallback is the intended one. */
     html, body {
@@ -27,7 +27,7 @@
     @keyframes cw-spin { to { transform: rotate(360deg); } }
 
     /* Visually hidden, still announced. Each screen carries an h1 naming the
-       step, because the visible design has no single title element — the largest
+       step, because the visible design has no single title element, the largest
        text on Solve is the move token, which is the wrong thing to open with. */
     .cw-sr-only {
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -35,7 +35,7 @@
     }
 
     /* The controls are divs with role="button" and tabindex, so keyboard focus
-       falls back to the browser's default ring — an orange that belongs to no
+       falls back to the browser's default ring, an orange that belongs to no
        part of this palette. Use the accent instead, and only for :focus-visible
        so a mouse click does not leave a ring behind. */
     [role="button"]:focus-visible, a:focus-visible, button:focus-visible {
@@ -47,7 +47,7 @@
     /* ---------------------------------------------------------------- mobile
        This is a camera app: the phone is the device it is for, and until now the
        desktop shell rendered unchanged at 375px. The layout did not scroll, it
-       clipped — the cube, the play control and half the header sat outside the
+       clipped, the cube, the play control and half the header sat outside the
        viewport and were unreachable.
 
        The screens compose their layout from two shared objects in ui/theme.js,
@@ -63,7 +63,7 @@
       }
       /* Split the stage by ratio rather than by vh. Fixed viewport units have to
          be budgeted against the header and against each other, and the first
-         attempt here summed past 100% — which pushed the panel's primary action
+         attempt here summed past 100%, which pushed the panel's primary action
          below the fold, where it was as unreachable as the bug this replaced.
          Two flex children of a column that is already exactly the height left
          over cannot overflow it. */
@@ -74,7 +74,7 @@
       }
       /* `flex: none` and a 330px width are inline, so both need overriding.
          min-height:0 lets a flex child shrink below its content, and overflow-y
-         is what turns that shrink into a scroll rather than a clip — without it
+         is what turns that shrink into a scroll rather than a clip, without it
          the panel simply hides whatever does not fit, primary actions included. */
       .cw-panel {
         width: 100% !important;
@@ -87,7 +87,7 @@
         padding-bottom: env(safe-area-inset-bottom);
       }
       /* The Solve stage. Its transport controls sat at `position: absolute;
-         bottom: 18`, which works when the stage is wide and short — the cube,
+         bottom: 18`, which works when the stage is wide and short, the cube,
          the move card and the chip strip take about 450px of flow, and on a
          desktop stage there is room beneath them. In a stage 300px tall the
          absolute layer simply lands on top of the flow: measured at 24
@@ -111,8 +111,7 @@
       }
       /* Cube3D renders at a fixed pixel size, so the wrapper is scaled rather
          than threading a breakpoint through the component. The wrapper takes
-         whatever height is left after the card and the transport have theirs —
-         a fixed height cannot work here, because the space available depends on
+         whatever height is left after the card and the transport have theirs, a fixed height cannot work here, because the space available depends on
          the viewport and on whether the session-restore banner is showing. The
          card and the transport are the two things that must never be clipped;
          the cube can lose its bottom rows and still tell you the grip. */
@@ -175,7 +174,7 @@
       .cw-app { height: 100dvh !important; }
     }
 
-    /* Six looping animations run in this app — the scan pulse, the turn nudge,
+    /* Six looping animations run in this app, the scan pulse, the turn nudge,
        the blink, the parity ring and the solver spinner. Vestibular disorders
        make sustained motion genuinely unpleasant, and none of these carries
        information that the static state does not. */

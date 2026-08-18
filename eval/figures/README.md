@@ -5,15 +5,14 @@ Nine figures covering the perception and search stack, at
 
 Every plot is rendered from a results file written by an actual run. Two
 schematics (Figures 1 and 2) illustrate a mechanism rather than report a
-measurement, and are labelled as such on the page. Nothing is typed in by hand —
-a chart built from remembered numbers is a drawing, and once rendered there is no
+measurement, and are labelled as such on the page. Nothing is typed in by hand, a chart built from remembered numbers is a drawing, and once rendered there is no
 way to tell the two apart.
 
 ## Watching a training run
 
 The page polls `/__training` every 15s and shows a live panel: progress bar,
 ETA, curriculum depth, and sparklines for J spread and loss. Figures 3 and 4
-track the same run, so a job in progress needs no manual refresh — `npm run
+track the same run, so a job in progress needs no manual refresh: `npm run
 metrics` is only needed to freeze the numbers into a checked-in file.
 
 The status dot is green while the trainer is still writing, amber once it has
@@ -33,7 +32,7 @@ npm run metrics        # training logs -> eval/results/training-*.json
 ```
 
 Then reload the page. `npm run metrics` is safe to run while training is still
-going — it picks up whatever has been written so far, so Figures 3 and 4 track a
+going, it picks up whatever has been written so far, so Figures 3 and 4 track a
 run in progress.
 
 ## Exporting

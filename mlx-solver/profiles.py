@@ -6,7 +6,7 @@ the closest prior measure.
 Wilt & Ruml (JAIR 57, 2016) introduced Goal Distance Rank Correlation: Kendall's
 tau between a heuristic and exact distance-to-goal, computed offline, shown to
 predict search cost. It is a single pooled scalar over all states. That is the
-right object for the heuristics they studied — pattern databases, whose quality
+right object for the heuristics they studied: pattern databases, whose quality
 has no particular reason to vary with distance from the goal.
 
 A heuristic trained by bootstrapping is different by construction. Value is
@@ -18,7 +18,7 @@ exactly where search operates.
 So this script computes, on the same rung and against the same exact ground truth:
 
   learned    the DAVI-trained network
-  PDB        a genuine pattern database — the exact distance table of a SMALLER
+  PDB        a genuine pattern database, the exact distance table of a SMALLER
              rung, which is admissible on the larger one because tracking fewer
              pieces can only shorten the required solution
   random     a control, to show what a flat-at-chance profile looks like
@@ -60,7 +60,7 @@ def sweep_sample(task, per_len, max_len, rng):
 
     Deep random walks approximate the uniform distribution over the rung, which
     sounds right but concentrates almost every state into the two or three
-    shells nearest the mean distance — so the shallow half of the profile is
+    shells nearest the mean distance, so the shallow half of the profile is
     measured on a handful of states or not at all. Sweeping the scramble length
     populates the whole range.
 

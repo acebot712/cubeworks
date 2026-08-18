@@ -11,7 +11,7 @@ import { labelClusters } from './resolve.js';
 import { COLOR_OF_FACE } from '../state/colors.js';
 
 // rgbAll: 96 x [r,g,b] in home-frame facelet order
-// -> { colors, alt, conf, palette } — each 96 long except palette (6 css colours)
+// -> { colors, alt, conf, palette }, each 96 long except palette (6 css colours)
 export function resolveScanColors(rgbAll) {
   const cl = clusterStickers(rgbAll);
   const { faceOfCluster } = labelClusters(cl.assign, cl.centroids);

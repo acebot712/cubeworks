@@ -1,15 +1,15 @@
 // Palette-free colour resolution for a scanned cube.
 //
 // The scanner must not assume what the six colours ARE. Cube brands ship wildly
-// different palettes — pastel, neon, "bright" stickerless, purple in place of
-// blue, custom sticker sets — and a fixed hue table silently fails on all of
+// different palettes: pastel, neon, "bright" stickerless, purple in place of
+// blue, custom sticker sets, and a fixed hue table silently fails on all of
 // them. What IS universal is the structure:
 //
 //   * a 4x4 cube has exactly 16 stickers of each of 6 colours.
 //
 // So we cluster the 96 RGB samples into 6 balanced groups with no reference
 // colours at all. Naming those groups is a separate problem solved in
-// resolve.js by the cube's piece geometry (NOT by centres — on a 4x4 the
+// resolve.js by the cube's piece geometry (NOT by centres, on a 4x4 the
 // centre blocks are scrambled like any other piece). The solver only ever sees
 // face letters; colour names and hexes become a display concern derived from
 // the measured pixels.
@@ -58,7 +58,7 @@ function seedCenters(feats, k) {
 // lowest total cost. This is a transportation problem, solved exactly by
 // min-cost flow. A greedy pass is much cheaper but order-dependent, and on
 // palettes with two close colours (neon white vs neon yellow) it wedges items
-// into the wrong group and never recovers — the 16-per-colour constraint only
+// into the wrong group and never recovers, the 16-per-colour constraint only
 // corrects errors if it is applied optimally.
 function balancedAssign(costs, per) {
   const N = costs.length, K = costs[0].length;
@@ -116,7 +116,7 @@ export function clusterStickers(rgbs) {
   //
   // The three chromaticity axes share ONE scale, because they are commensurate
   // and rescaling them independently would distort the colour geometry.
-  // Brightness gets its own scale but floored — on a cube whose colours are all
+  // Brightness gets its own scale but floored, on a cube whose colours are all
   // equally bright that axis carries nothing but sensor noise, and normalising
   // it independently would amplify that noise until it drowned the real signal.
   const mean = [0, 0, 0, 0], sd = [0, 0, 0, 0];
@@ -161,7 +161,7 @@ export function clusterStickers(rgbs) {
   return { assign, centroids: centroids.map((c) => c.map(Math.round)), conf, alt };
 }
 
-// Nearest canonical name, for labels only — never for decisions.
+// Nearest canonical name, for labels only: never for decisions.
 const CANON = [
   { key: 'W', rgb: [242, 243, 245] }, { key: 'Y', rgb: [255, 208, 40] },
   { key: 'G', rgb: [35, 177, 90] }, { key: 'B', rgb: [44, 107, 232] },

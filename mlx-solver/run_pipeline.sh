@@ -4,7 +4,7 @@
 # Safe to run at any time, any number of times, from any state. Every step
 # checks whether its output already exists and skips it, and the two long
 # training phases resume from checkpoints written every 4,000 steps. Kill it
-# mid-run, close the lid, pull the power — re-running loses at most a few
+# mid-run, close the lid, pull the power: re-running loses at most a few
 # minutes of the step that was in flight.
 #
 #   ./run_pipeline.sh              run (or resume) everything
@@ -25,7 +25,7 @@ log() { print -r -- "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG"; }
 # --- progress report ------------------------------------------------------
 report() {
   {
-    print -r -- "CUBEWORKS pipeline — $(date)"
+    print -r -- "CUBEWORKS pipeline: $(date)"
     print -r -- ""
     local done=0 total=0
     for k in 2 4 6 8 10 12 16 24; do
@@ -56,7 +56,7 @@ LOCK=pipeline.lock
 if [[ -f $LOCK ]]; then
   old=$(cat $LOCK 2>/dev/null)
   if [[ -n "$old" ]] && kill -0 "$old" 2>/dev/null; then
-    log "already running as pid $old — exiting"
+    log "already running as pid $old: exiting"
     exit 0
   fi
   log "clearing stale lock from pid ${old:-unknown}"
@@ -78,7 +78,7 @@ report
 # opposite split cost 37 s/state at k=6.
 # k=8 only. k=10 was attempted and abandoned after 31 hours: its mean distance
 # is ~9.9 (from the fit 0.864k+1.242) while forward 6 + back 4 reaches only 10,
-# so roughly half its states would return unresolved — the deep half the profile
+# so roughly half its states would return unresolved, the deep half the profile
 # exists to measure. Covering it needs a far larger ball than fits in memory,
 # which is the same wall that stops enumeration, arriving one rung later.
 for k in 8; do

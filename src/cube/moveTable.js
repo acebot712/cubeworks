@@ -1,6 +1,6 @@
 // The move vocabulary: which layers each token turns, and how far.
 //
-// Pure token algebra — no permutations, no state. Both the permutation
+// Pure token algebra, no permutations, no state. Both the permutation
 // generator (moves.js) and the notation utilities (notation.js) read this
 // table, and neither needs the other.
 

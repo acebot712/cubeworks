@@ -1,7 +1,7 @@
 // The live half of scanning: run the frame reader on a timer, decide when the
 // face is held steady enough to lock, and publish what the overlay draws.
 //
-// Faces advance only when the user says so — motion-based turn detection
+// Faces advance only when the user says so: motion-based turn detection
 // misfired constantly on handheld wobble and was removed.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createFrameReader } from '../scan/sampler.js';
@@ -17,7 +17,7 @@ const MOTION_LIMIT = 0.14;      // frame-diff above this reads as movement
 const SLEW_LIMIT = 0.05;        // quad drift per tick, as a fraction of its size
 const SEARCH_CAP_MS = 20000;    // how long "still looking" is allowed to climb
 
-// enabled: the Scan screen is up with a working camera — running detection on
+// enabled: the Scan screen is up with a working camera: running detection on
 //   Confirm or Solve burned ten searches a second on data nothing consumed.
 // active: scanning is running and there is a face still to capture.
 // onLock(capture): receives the voted 16-cell grid when a face is read.
@@ -94,7 +94,7 @@ export function useScanLoop({ videoRef, enabled, active, onLock }) {
       setSearchMs(0);
 
       // The sampled window follows the cube, so frame-diff motion stays small
-      // even while the cube moves — quad slew is the honest "it's moving"
+      // even while the cube moves: quad slew is the honest "it's moving"
       // signal, and the UI must report what the lock gate actually uses.
       const moving = frame.motion > MOTION_LIMIT || frame.vel > SLEW_LIMIT * frame.quad.size;
       setLive({
@@ -126,7 +126,7 @@ export function useScanLoop({ videoRef, enabled, active, onLock }) {
 
       votes.current.push(frame);
       if (votes.current.length > VOTE_FRAMES) votes.current.shift();
-      // Updaters must stay pure — scheduling the lock from inside one fired it
+      // Updaters must stay pure: scheduling the lock from inside one fired it
       // twice under StrictMode and double-advanced the face.
       setDwell((d) => Math.min(100, d + DWELL_GAIN));
       if (s.dwell + DWELL_GAIN >= 100) lock(null);

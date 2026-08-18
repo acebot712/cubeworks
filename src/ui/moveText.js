@@ -1,5 +1,4 @@
-// Turning a move token into something a person can follow. Presentation only —
-// the solver never sees these strings.
+// Turning a move token into something a person can follow. Presentation only: // the solver never sees these strings.
 
 const LAYER_NAME = {
   U: 'Top layer', Uw: 'Top two layers', D: 'Bottom layer', Dw: 'Bottom two layers',

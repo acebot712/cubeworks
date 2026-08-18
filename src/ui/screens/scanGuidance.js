@@ -30,7 +30,7 @@ export function primaryAction(state, handlers) {
   const { allCaptured, scanning, awaitingTurn, manualQuad, found, searchMs } = state;
   if (allCaptured) return action('Confirm the read', '✓', 'go', handlers.goReview);
   if (!scanning) return action('Start scanning', '▶', 'go', handlers.startScanning);
-  if (awaitingTurn) return action("I've turned it — read this face", '↻', 'turn', handlers.continueScan);
+  if (awaitingTurn) return action("I've turned it: read this face", '↻', 'turn', handlers.continueScan);
   if (manualQuad) return action('Capture this frame', '⧉', 'go', handlers.lockNow);
   if (!found && searchMs >= STUCK_MS) return action('Place the frame myself', '✋', 'manual', handlers.placeManualFrame);
   return null;
@@ -41,21 +41,21 @@ export function hintFor(state) {
 
   if (allCaptured) return hint('✓', 'All six faces captured', 'Move on to confirm the read');
   if (!scanning) return hint('▶', 'Hold the cube up, then start', "I'll find the face wherever it is in view");
-  if (awaitingTurn) return hint('↻', 'Locked — turn the cube', step.instr, 'info');
+  if (awaitingTurn) return hint('↻', 'Locked: turn the cube', step.instr, 'info');
   if (manualQuad) return hint('✋', 'Line the box up with one face', 'Drag to move, scroll to resize, then capture', 'warn');
 
   if (!found) {
     if (lowLight) {
       return hint('☾', 'Too dark to find the cube',
-        'Add light or face a window — I cannot separate the colours this dark', 'alarm');
+        'Add light or face a window: I cannot separate the colours this dark', 'alarm');
     }
     return hint('⌕', 'Looking for the cube…', searchMs >= STUCK_MS
-      ? 'Still nothing — try a plainer background, or place the frame yourself'
+      ? 'Still nothing: try a plainer background, or place the frame yourself'
       : 'Show one face flat to the camera, holding it by the edges');
   }
 
   if (lowLight) return hint('☾', 'Too dark to read colors', 'Add light, or move toward a window', 'alarm');
   if (moving) return hint('⇢', 'Hold still', 'I need a steady frame to lock this face', 'warn');
-  if (dwell > 5) return hint('◉', 'Reading…', 'Hold it steady — got it');
+  if (dwell > 5) return hint('◉', 'Reading…', 'Hold it steady: got it');
   return hint('⬒', step.instr, step.sub);
 }

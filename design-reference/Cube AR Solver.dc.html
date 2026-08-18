@@ -200,7 +200,7 @@
           <div style="text-align: center;">
             <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: #6E7681;">{{ qProgress }}</div>
             <div style="font-size: 21px; font-weight: 600; letter-spacing: -0.02em; margin-top: 8px;">{{ qTitle }}</div>
-            <div style="font-size: 12.5px; color: #8A929C; margin-top: 5px;">Only the stickers I'm unsure about — everything else is settled.</div>
+            <div style="font-size: 12.5px; color: #8A929C; margin-top: 5px;">Only the stickers I'm unsure about: everything else is settled.</div>
           </div>
 
           <div style="position: relative; padding: 6px; border-radius: 10px; background: #14171C; border: 1px solid rgba(255,255,255,0.08);">
@@ -430,7 +430,7 @@
           <div onClick="{{ onView3d }}" style="flex: 1; padding: 7px; text-align: center; border-radius: 6px; font-size: 12px; cursor: pointer; background: {{ view3dBg }}; color: {{ view3dFg }};">3D guide</div>
           <div onClick="{{ onViewAr }}" style="flex: 1; padding: 7px; text-align: center; border-radius: 6px; font-size: 12px; cursor: pointer; background: {{ viewArBg }}; color: {{ viewArFg }};">Camera overlay</div>
         </div>
-        <div onClick="{{ onLostIt }}" style="padding: 10px; border-radius: 9px; text-align: center; font-size: 12.5px; color: #FF9E52; border: 1px solid rgba(255,122,26,0.3); cursor: pointer;">I turned the wrong way — re-scan</div>
+        <div onClick="{{ onLostIt }}" style="padding: 10px; border-radius: 9px; text-align: center; font-size: 12.5px; color: #FF9E52; border: 1px solid rgba(255,122,26,0.3); cursor: pointer;">I turned the wrong way: re-scan</div>
       </div>
     </div>
   </div>
@@ -767,7 +767,7 @@ class Component extends DCLogic {
         bg: f.key === step.key && !done && isScan ? 'rgba(79,227,193,0.07)' : 'transparent',
         statusText: !done ? (f.key === step.key ? 'Reading now…' : 'Waiting') : weakN > 0 ? weakN + ' sticker' + (weakN > 1 ? 's' : '') + ' to confirm' : 'Clean read',
         barColor: bar,
-        action: done ? 'Re-scan' : '—',
+        action: done ? 'Re-scan' : ': ',
         actionFg: done ? '#C7CDD4' : '#4A5058',
         actionBorder: done ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.05)',
         onRescan: () => this.rescan(f.key)
@@ -776,7 +776,7 @@ class Component extends DCLogic {
 
     let hintTitle = step.instr, hintSub = step.sub, hintIcon = '⬒', hintFg = '#E8EAED', hintChipBg = 'rgba(79,227,193,0.14)', hintChipFg = accent, hintBorder = 'rgba(255,255,255,0.09)';
     if (all) { hintTitle = 'All six faces captured'; hintSub = 'Move on to confirm the read'; hintIcon = '✓'; }
-    else if (s.awaitingTurn) { hintTitle = 'Locked — now turn the cube'; hintSub = s.scanMode === 'guided' ? step.instr : 'Any unseen face next'; hintIcon = '↻'; hintChipBg = 'rgba(44,107,232,0.18)'; hintChipFg = '#7FA8F5'; }
+    else if (s.awaitingTurn) { hintTitle = 'Locked, now turn the cube'; hintSub = s.scanMode === 'guided' ? step.instr : 'Any unseen face next'; hintIcon = '↻'; hintChipBg = 'rgba(44,107,232,0.18)'; hintChipFg = '#7FA8F5'; }
     else if (s.turnFlash > 0) { hintTitle = 'Turn detected'; hintSub = 'Hold steady for the next read'; hintIcon = '✓'; }
     else if (lowLight) { hintTitle = 'Too dark to read colors'; hintSub = 'Add light, or move toward a window'; hintIcon = '☾'; hintFg = '#FF9E52'; hintChipBg = 'rgba(255,122,26,0.16)'; hintChipFg = '#FF9E52'; hintBorder = 'rgba(255,122,26,0.3)'; }
     else if (s.motion > 0.10) { hintTitle = 'Hold still'; hintSub = 'I need a steady frame to lock this face'; hintIcon = '⇢'; hintChipBg = 'rgba(255,122,26,0.16)'; hintChipFg = '#FF9E52'; }
@@ -907,14 +907,14 @@ class Component extends DCLogic {
         this.setState({ screen: 'scan', cube: null, cellConf: {}, stepIdx: 0, dwell: 0, awaitingTurn: false, moveIdx: 0, playing: false, selected: null, queue: [], queueIdx: 0, confirmReset: false, showResume: false });
       },
       showResume: s.showResume,
-      resumeMsg: 'Picking up where you left off — ' + captured + ' of 6 faces already scanned.',
+      resumeMsg: 'Picking up where you left off: ' + captured + ' of 6 faces already scanned.',
       onDismissResume: () => this.setState({ showResume: false }),
       onHardReset: () => this.setState({ screen: 'scan', cube: null, cellConf: {}, stepIdx: 0, moveIdx: 0, queue: [], queueIdx: 0, showResume: false }),
 
       attachVideo: this.attachVideo, attachCanvas: this.attachCanvas, attachStage: this.attachStage, attachFrame: this.attachFrame,
       cameraError: s.cameraError,
       cameraTitle: s.cameraDenied ? 'Camera access blocked' : 'Camera off',
-      cameraMsg: s.cameraDenied ? 'Allow camera in your browser settings and try again — scanning reads real sticker colors from the video frame.' : 'Turn the camera on to scan your cube, or load a sample cube to walk the rest of the flow.',
+      cameraMsg: s.cameraDenied ? 'Allow camera in your browser settings and try again: scanning reads real sticker colors from the video frame.' : 'Turn the camera on to scan your cube, or load a sample cube to walk the rest of the flow.',
       onRetryCamera: () => this.startCamera(),
       onSampleScan: this.sampleScan,
       lightingPct: Math.round(Math.min(1, s.lighting * 1.4) * 100) + '%',
@@ -940,7 +940,7 @@ class Component extends DCLogic {
       modeFreeFg: s.scanMode === 'free' ? '#E8EAED' : '#7A828C',
       onModeGuided: () => this.setState({ scanMode: 'guided' }),
       onModeFree: () => this.setState({ scanMode: 'free' }),
-      modeHelp: s.scanMode === 'guided' ? 'I name each turn in a fixed six-face loop. Best if you have not scanned before.' : 'Turn however you like — I lock any steady face and require a real turn before reading again.',
+      modeHelp: s.scanMode === 'guided' ? 'I name each turn in a fixed six-face loop. Best if you have not scanned before.' : 'Turn however you like: I lock any steady face and require a real turn before reading again.',
       nextLabel: all ? 'Confirm ' + (weakTotal > 0 ? weakTotal + ' uncertain sticker' + (weakTotal > 1 ? 's' : '') : 'the read') : 'Confirm what I have so far',
       nextBg: all ? accent : 'transparent',
       nextFg: all ? '#05201A' : '#9AA2AC',
@@ -967,8 +967,8 @@ class Component extends DCLogic {
       validBg: ok ? 'rgba(79,227,193,0.08)' : 'rgba(232,64,42,0.1)',
       validBorder: ok ? 'rgba(79,227,193,0.28)' : 'rgba(232,64,42,0.32)',
       validMsg: ok ? 'All six colors appear exactly 16 times. Solver is ready.'
-        : 'Wrong sticker counts: ' + bad.map(k => NAMES[k] + ' ' + cnt[k]).join(', ') + '. Those stickers are pulsing red in the net — fix them to unlock the solve.',
-      solveBtnLabel: ok ? 'Solve — shortest route' : 'Fix flagged stickers to solve',
+        : 'Wrong sticker counts: ' + bad.map(k => NAMES[k] + ' ' + cnt[k]).join(', ') + '. Those stickers are pulsing red in the net: fix them to unlock the solve.',
+      solveBtnLabel: ok ? 'Solve: shortest route' : 'Fix flagged stickers to solve',
       solveBtnBg: ok ? accent : '#1A1D22',
       solveBtnFg: ok ? '#05201A' : '#5C636D',
 

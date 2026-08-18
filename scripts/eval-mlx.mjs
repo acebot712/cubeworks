@@ -16,7 +16,7 @@ const VERBOSE = argv.includes('--verbose');
 const IOU_PASS = Number(arg('iou', 0.5));
 
 const LABELS = 'eval/labels.json';
-if (!fs.existsSync(LABELS)) { console.error('No dataset — capture frames first.'); process.exit(1); }
+if (!fs.existsSync(LABELS)) { console.error('No dataset: capture frames first.'); process.exit(1); }
 const labels = JSON.parse(fs.readFileSync(LABELS, 'utf8'));
 
 const health = await fetch(`http://127.0.0.1:${PORT}/health`).then((r) => r.json()).catch(() => null);
@@ -27,7 +27,7 @@ if (!health) {
 `);
   process.exit(1);
 }
-console.log(`\nMLX ACQUISITION EVAL — model ${health.model}`);
+console.log(`\nMLX ACQUISITION EVAL: model ${health.model}`);
 
 // axis-aligned IoU: the model returns a box, so compare against the labelled
 // quad's bounding box rather than the quad itself
@@ -67,7 +67,7 @@ const hits = pos.filter((r) => r.found && r.iou >= IOU_PASS);
 const missed = pos.filter((r) => !r.found);
 const off = pos.filter((r) => r.found && r.iou < IOU_PASS);
 const fp = neg.filter((r) => r.found);
-const pct = (n, d) => (d ? `${((n / d) * 100).toFixed(1)}%` : '—');
+const pct = (n, d) => (d ? `${((n / d) * 100).toFixed(1)}%` : ': ');
 const med = (xs) => (xs.length ? [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] : 0);
 
 console.log('─'.repeat(64));
@@ -79,7 +79,7 @@ console.log(`  without a cube     ${String(neg.length).padStart(4)}`);
 console.log(`    false positives    ${String(fp.length).padStart(4)}   ${pct(fp.length, neg.length)}`);
 console.log('─'.repeat(64));
 console.log(`  median box IoU           ${med(pos.filter((r) => r.found).map((r) => r.iou)).toFixed(3)}`);
-console.log(`  median latency           ${med(results.map((r) => r.ms))} ms   (acquisition only — tracking stays 3.2ms)`);
+console.log(`  median latency           ${med(results.map((r) => r.ms))} ms   (acquisition only: tracking stays 3.2ms)`);
 
 const bad = [...missed, ...off, ...fp];
 if (bad.length) {

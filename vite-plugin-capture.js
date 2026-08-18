@@ -1,6 +1,6 @@
 // Dev-only endpoint that writes labelled camera frames to eval/ on disk.
 //
-// The detector's whole test suite is synthetic — images generated from the same
+// The detector's whole test suite is synthetic: images generated from the same
 // assumptions the detector encodes, which is circular and has missed every
 // real-world failure so far. This lets real frames from a real camera become
 // the benchmark instead.

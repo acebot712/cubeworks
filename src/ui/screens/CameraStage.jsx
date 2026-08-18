@@ -3,7 +3,7 @@
 //
 // The preview is NOT mirrored. Detection, sampling and the capture maps all
 // work in raw camera pixels, so a selfie-style scaleX(-1) would put the one
-// thing the user checks their scan against — the live picture — in the opposite
+// thing the user checks their scan against (the live picture) in the opposite
 // handedness to the face thumbnails, the editable net and the cube itself.
 // Everything on this screen is in raw camera space; there is no mirror to undo.
 import React, { useEffect, useRef, useState } from 'react';
@@ -166,7 +166,7 @@ export default function CameraStage({
   );
 }
 
-// The meter must report the signal the lock gate actually uses — an earlier
+// The meter must report the signal the lock gate actually uses, an earlier
 // STEADY meter read frame-diff motion while the gate read quad velocity, so it
 // showed ~100% steady while refusing to lock.
 function LockPill({ live }) {
@@ -185,7 +185,7 @@ function LockPill({ live }) {
 }
 
 // The 16 cells the sampler is currently reading, laid over the face in the same
-// order the sampler reads them — row-major from the picture's top-left.
+// order the sampler reads them: row-major from the picture's top-left.
 function LiveCells({ live, labels, hidden }) {
   const cells = (live && live.cells) || new Array(16).fill(null);
   const confs = (live && live.confs) || new Array(16).fill(0);
@@ -215,8 +215,8 @@ function CameraError({ camera, onSampleCube }) {
   const message = !camera.denied
     ? 'This browser or device is not offering a camera. You can still walk the whole flow with a sample cube.'
     : camera.retries > 1
-      ? 'Still blocked. The browser will not re-ask once you have denied it — open the camera icon in the address bar (or Site settings) and set Camera to Allow, then reload this page.'
-      : 'Allow camera when the browser asks — scanning reads real sticker colours from the video.';
+      ? 'Still blocked. The browser will not re-ask once you have denied it: open the camera icon in the address bar (or Site settings) and set Camera to Allow, then reload this page.'
+      : 'Allow camera when the browser asks: scanning reads real sticker colours from the video.';
 
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, background: BG_STAGE, zIndex: 6 }}>

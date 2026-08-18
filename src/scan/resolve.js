@@ -2,12 +2,12 @@
 //
 // Clustering tells us which stickers share a colour, but not which class is
 // "up". A first attempt named classes by the colour of each face's centre
-// stickers — that is valid on a 3x3, where centres are fixed, and WRONG on a
+// stickers, that is valid on a 3x3, where centres are fixed, and WRONG on a
 // 4x4, where the 2x2 centre blocks are scrambled like any other piece.
 //
 // The constraint that does hold is the cube's own geometry. The capture maps
 // already pin every sticker to a facelet position, so the only freedom left is
-// which class is called U, R, F, D, L, B — and of the 720 possible labellings,
+// which class is called U, R, F, D, L, B, and of the 720 possible labellings,
 // essentially one produces pieces that can physically exist (corners made of
 // three mutually-adjacent colours, wings of two, no opposite-colour pairs).
 // So we let the cube pick its own labelling and never look at a hue table.
@@ -19,7 +19,7 @@ import { nameCentroids } from './cluster.js';
 
 // Corner chirality. Sticker counts and piece identity alone cannot tell a cube
 // from its mirror image, nor from the same cube relabelled by a whole-cube
-// rotation — both pass validateState. Twisting a corner rotates its three
+// rotation, both pass validateState. Twisting a corner rotates its three
 // stickers but can never reflect them, so the RIGHT-HANDED cyclic order of a
 // corner's three colours is an invariant of the physical piece. Matching that
 // against the solved cube pins the labelling uniquely.
@@ -102,7 +102,7 @@ export function labelClusters(assign, centroids) {
   }
 
   if (best) return { faceOfCluster: best.perm.map((f) => FACES[f]), exact: true };
-  // Nothing validated — the scan has real errors. Fall back to the friendly
+  // Nothing validated, the scan has real errors. Fall back to the friendly
   // naming so the Confirm screen can still show the cube and let the user fix
   // it; validation will report exactly what is impossible.
   return { faceOfCluster: preferred.map((f) => FACES[f]), exact: false };

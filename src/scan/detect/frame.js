@@ -2,14 +2,14 @@
 // scorer works in.
 //
 // A frame is {data: Uint8ClampedArray RGBA, width, height} in raw, UNMIRRORED
-// camera orientation — the same orientation CAPTURE_MAPS are defined against.
+// camera orientation, the same orientation CAPTURE_MAPS are defined against.
 // A candidate window is a square of side `size` centred at (cx, cy) and rotated
 // by `theta`; inside it, (u, v) run from -size/2 to +size/2.
 
 export const DEG = Math.PI / 180;
 
 // Width the video is downscaled to before detection. A face filling only ~11%
-// of frame height — which is how people actually hold a cube — is 12px at 192,
+// of frame height (which is how people actually hold a cube) is 12px at 192,
 // i.e. 3px per sticker with sub-pixel seams. There is no signal left to find at
 // that size, so the search resolution has to carry it.
 export const DETECT_W = 640;
@@ -81,7 +81,7 @@ export function downsample(frame, targetW) {
 }
 
 // Crop to a region of interest. When something else has already said roughly
-// where the cube is, the coarse search only has to comb that region — which is
+// where the cube is, the coarse search only has to comb that region, which is
 // both far cheaper than a full-frame scan and immune to structure elsewhere in
 // the room.
 export function cropFrame(frame, x0, y0, x1, y1) {

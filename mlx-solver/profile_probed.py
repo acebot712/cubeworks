@@ -1,6 +1,6 @@
 """Per-shell ranking profiles on rungs too large to enumerate.
 
-profiles.py needs a full exact distance table, so it stops at k=6 — and every
+profiles.py needs a full exact distance table, so it stops at k=6, and every
 rung it can reach solves at beam width 1, leaving nothing for a search-cost
 prediction to explain. The rungs with real search cost (k=8 upward, solve rates
 95% down to 0%) are exactly the ones enumeration cannot touch.
@@ -14,7 +14,7 @@ Sampling is deliberately spread over scramble lengths rather than drawn at one
 depth. States scrambled 30 moves all pile into two or three shells near the mean,
 which measures the profile nowhere; sweeping the scramble length populates the
 whole range so the decay curve is visible end to end. The true distance is then
-measured, never assumed — a state scrambled 9 moves is usually not 9 moves from
+measured, never assumed, a state scrambled 9 moves is usually not 9 moves from
 solved, and treating scramble length as ground truth is the mistake this whole
 apparatus exists to avoid.
 

@@ -1,5 +1,5 @@
 // Small shared widgets. Clickable surfaces in this app are styled divs;
-// Btn gives them the button semantics they need — tab order, Enter/Space and
+// Btn gives them the button semantics they need: tab order, Enter/Space and
 // an accessible name.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { WARN, INK_MUTED } from './theme.js';

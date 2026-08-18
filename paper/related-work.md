@@ -24,7 +24,7 @@ compute it using Kendall's tau."*
 Everything we might have claimed as novel about "a ranking measure against exact
 ground truth" is theirs:
 
-- it is **search-independent** — computed without running a forward search;
+- it is **search-independent**: computed without running a forward search;
 - it is a **ranking** measure, not a magnitude-error measure;
 - it **predicts search cost**. Their p.293: *"when the GDRC is below roughly 0.4,
   greedy best-first search performs very poorly, but as the GDRC increases, the
@@ -43,7 +43,7 @@ A full-text search of the paper for `stratif`, `shell`, `bucket`, `binned`,
 one coefficient per domain. The one object resembling a decomposition is Figure
 10, an unbinned h-vs-d\* scatter used qualitatively.
 
-Pooling is a reasonable choice for the heuristics they study — pattern databases,
+Pooling is a reasonable choice for the heuristics they study: pattern databases,
 whose quality has no particular reason to vary with distance from the goal. It is
 the wrong choice for a heuristic trained by bootstrapping, whose accuracy is
 anchored at the goal and degrades outward by construction. Our measurement is
@@ -59,7 +59,7 @@ There is a second, sharper problem with the pooled statistic, and it concerns
 *which pairs of states enter the coefficient*.
 
 Kendall's τ is computed over all pairs. In a state distribution spanning
-distances 1 to 9, most randomly drawn pairs are far apart — and far-apart pairs
+distances 1 to 9, most randomly drawn pairs are far apart, and far-apart pairs
 are easy to order correctly. A search never makes those comparisons. Beam search,
 greedy best-first and A\* all compare a node against its siblings, which are one
 move apart and therefore in adjacent distance shells. **The comparison a search
@@ -89,7 +89,7 @@ It orders distant states almost perfectly and adjacent ones barely above chance.
 column.
 
 **A correction we make explicitly.** We first attributed this to Kendall's τ
-being scale-invariant — seed 0's outputs span only 0.004 — and that explanation
+being scale-invariant (seed 0's outputs span only 0.004) and that explanation
 is wrong. A heuristic with a small span and clean ordering works perfectly well;
 scale-invariance is a *feature* here, and Wilt & Ruml rely on it deliberately
 (§4.4). What actually degrades seed 0 is that its within-shell spread
@@ -98,9 +98,9 @@ overlap. Span alone is not a diagnostic and we do not propose it as one; it is
 recorded only as context. The diagnostic is the adjacent-shell profile itself.
 
 One caution against over-reading the case. Seed 0 still solved 73.5% of its
-evaluation scrambles. That is beam search brute-forcing the problem — 12
+evaluation scrambles. That is beam search brute-forcing the problem: 12
 generators at beam width 100 over depth 60 touches an appreciable fraction of a
-255,024-state space — not the heuristic contributing. It is a further reason
+255,024-state space, not the heuristic contributing. It is a further reason
 solve rate alone is a poor instrument for judging a heuristic, and a reader must
 not take 73.5% as evidence that this heuristic partially worked.
 
@@ -121,12 +121,11 @@ So "an intrinsic property of a heuristic predicts search cost" is long settled.
 
 Two things distinguish it from what we measure. First, KRE predicts from a
 **magnitude-value distribution**, and `h*` appears nowhere in its characterisation
-of a heuristic — Korf states the omission deliberately: *"the characterization of
+of a heuristic: Korf states the omission deliberately: *"the characterization of
 a heuristic function in terms of its distribution is not a measure of the accuracy
 of the function. In particular, it says nothing about the correlation of heuristic
 values with actual costs."* Two heuristics with identical value histograms but
-different state-to-value assignments — one a perfect ranking of `h*`, one shuffled
-— receive **identical KRE predictions**. The formula is provably ranking-blind.
+different state-to-value assignments, one a perfect ranking of `h*`, one shuffled: receive **identical KRE predictions**. The formula is provably ranking-blind.
 
 Second, and importantly for us, KRE **contradicts** a framing we initially
 adopted. Its cost is proportional to the brute-force node counts `N_i`, and the
@@ -138,7 +137,7 @@ exactly constant and varies depth and branching together; it can rule size out a
 the operative variable in that design, and nothing more.
 
 **Zahavi et al.'s Conditional Distribution Prediction** conditions on parent and
-grandparent heuristic value, node type and operator — never on `h*`. **CDP and
+grandparent heuristic value, node type and operator: never on `h*`. **CDP and
 KRE stratify by depth in the brute-force search tree** (distance from the *start*),
 which is a different variable from distance to the *goal*.
 
@@ -193,7 +192,7 @@ between the states being compared** along a path, and reports a signal-to-noise
 ratio at one fixed spacing. This is the nearest quantitative statement to ours and
 is genuinely close. It differs in the conditioning variable: spacing between two
 compared states, versus absolute distance from the goal. Ours can therefore
-exhibit a *profile* — a curve over `d` — where theirs yields a single number.
+exhibit a *profile* (a curve over `d`) where theirs yields a single number.
 
 **Zawalski et al. (arXiv:2406.03361)** observe qualitatively that learned value
 functions fail on states far from the goal, but probe this by injecting
@@ -212,12 +211,12 @@ approximation of the completely informed heuristic function in time polynomial i
 the instance sizes."* Their sweep varies *instance size* across pancake, TSP and
 Blocks World, with branching factor changing along with it. Ours holds branching,
 encoding, architecture and budget fixed and varies only the projection, which is
-what lets us separate size from depth in §3 — but their result is the stronger
+what lets us separate size from depth in §3, but their result is the stronger
 statement about representational capacity and we do not contest it.
 
 **Futuhi & Sturtevant (ICLR 2026)** publish ordinal/classification value losses,
 PAC-dimension bounds for learned heuristics, and *near-admissible* heuristics with
-measured overestimation rates of 3×10⁻⁷ to 9×10⁻⁵ — nonzero, and self-described as
+measured overestimation rates of 3×10⁻⁷ to 9×10⁻⁵: nonzero, and self-described as
 "near-admissible". Sound admissibility from a learned heuristic remains
 unachieved. Their ordinal losses are a natural remedy to test against the decay we
 report, and we treat them as a baseline rather than as a contribution of ours.
@@ -234,7 +233,7 @@ we adopt it and claim nothing for it.
 **We claim:**
 
 1. **Ranking quality decays with distance from the goal for every informative
-   heuristic on this family** — learned and classical alike — and the size of
+   heuristic on this family** (learned and classical alike) and the size of
    the decay is predicted by heuristic strength (r = +0.588, n = 39,
    p = 8.3e-5), not by training method. Controlling for strength leaves no
    detectable difference (Welch t = +0.72, p = 0.48; difference +0.023, 95% CI
@@ -243,7 +242,7 @@ we adopt it and claim nothing for it.
 
    > **Superseded.** An earlier version of this claim asserted that learned
    > heuristics decay *while pattern databases do not*. That comparison used a
-   > single abstraction, rung k=2, whose pooled τ on rung k=6 is +0.570 — near
+   > single abstraction, rung k=2, whose pooled τ on rung k=6 is +0.570: near
    > enough to chance that it is flat for want of accuracy to lose. Reporting
    > every available abstraction reverses the reading: the steepest decay on
    > that rung belongs to PDB(k=5), the strongest heuristic in the comparison.
@@ -260,7 +259,7 @@ we adopt it and claim nothing for it.
    from a working pattern database's +0.693. Search only ever compares
    near-neighbours, so the adjacent-shell figure is the one that matters (§1.1).
 4. On a family where state-space cardinality is held **exactly constant** and only
-   the diameter varies, performance degrades — so cardinality is not the operative
+   the diameter varies, performance degrades, so cardinality is not the operative
    variable in that design (§3). The decay itself grows with diameter: 0.108 ±
    0.008 at diameter 6, rising to 0.259 ± 0.029 at diameter 10, all at 255,024
    states.
@@ -275,9 +274,9 @@ we adopt it and claim nothing for it.
 - that a ranking statistic predicting search cost is novel (Wilt & Ruml 2016);
 - that predicting search cost from an intrinsic heuristic property is novel
   (Korf–Reid–Edelkamp);
-- that required search budget is independent of state-space size — KRE implies
+- that required search budget is independent of state-space size: KRE implies
   otherwise, and our design cannot separate depth from branching factor;
-- that the profile distinguishes learned heuristics from classical ones — our
+- that the profile distinguishes learned heuristics from classical ones: our
   own strength-controlled test refutes this, and the null result is reported
   with its confidence interval rather than as a proof of equality;
 - any admissibility or optimality guarantee for a learned heuristic;
@@ -293,6 +292,6 @@ bound is attractive, but the template is published: **Clarke & Stellato
 inside MIP branch-and-bound for a distribution-free bounded-suboptimality
 guarantee, and their earlier work conformally lower-bounds the true optimum. What
 remains open is a **per-state** bound `h_lower(s) ≤ h*(s)` consumed inside node
-ordering, rather than a per-instance certificate used as a stopping rule — and the
+ordering, rather than a per-instance certificate used as a stopping rule, and the
 obstacle is that per-state marginal guarantees do not compose over the many states
 a search expands. We flag this as open rather than solved.

@@ -1,5 +1,5 @@
 // Fold the trainer's append-only metrics log into JSON the figures page can
-// import. Safe to run while training is still going — it just picks up whatever
+// import. Safe to run while training is still going, it just picks up whatever
 // has been written so far, so the figures track a run in progress.
 //
 //   node scripts/collect-metrics.mjs
@@ -12,7 +12,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 for (const task of ['centers', 'wings']) {
   const src = join(ROOT, 'mlx-solver', `metrics_${task}.jsonl`);
   if (!existsSync(src)) {
-    console.log(`  (no metrics_${task}.jsonl yet — skipping)`);
+    console.log(`  (no metrics_${task}.jsonl yet: skipping)`);
     continue;
   }
   const rows = readFileSync(src, 'utf8').trim().split('\n')

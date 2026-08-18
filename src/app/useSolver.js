@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 const WATCHDOG_MS = 45000;
 const SLOW_MESSAGE =
   'The solver is taking much longer than expected. This usually means the scanned '
-  + 'state is valid but unusually hard — try again, or re-scan.';
+  + 'state is valid but unusually hard: try again, or re-scan.';
 
 export function useSolver() {
   const workerRef = useRef(null);

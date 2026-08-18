@@ -4,10 +4,9 @@ For every configuration where exact ground truth exists, pair two measurements
 that are made independently of each other:
 
   from resolution/profiles   ranking accuracy per true-distance shell, and in
-                             particular the accuracy near the problem's diameter
-                             — computed WITHOUT running any search
+                             particular the accuracy near the problem's diameter: computed WITHOUT running any search
   from budget_curve          the smallest beam width reaching a target solve
-                             rate — the search cost, with the algorithm's own
+                             rate, the search cost, with the algorithm's own
                              budget divided out
 
 If the first predicts the second, a trained heuristic can be graded cheaply and
@@ -111,7 +110,7 @@ def main():
     ok = [r for r in rows if r["w90"] is not None]
     print(f"\n{len(rows)} configs measured, {len(ok)} reached 90% solve\n")
     if len(ok) < 4:
-        print("too few to correlate — need more configs that discriminate")
+        print("too few to correlate: need more configs that discriminate")
         return
 
     y = np.log([r["w90"] for r in ok])

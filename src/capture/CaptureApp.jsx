@@ -1,7 +1,7 @@
-// Dataset capture tool — DEV ONLY, deliberately not part of the app's UI.
+// Dataset capture tool: DEV ONLY, deliberately not part of the app's UI.
 //
 // Point the camera at a cube, click its four corners, save. Or click "No cube
-// in frame" to bank a negative — an empty room, curtains, your hands, a
+// in frame" to bank a negative, an empty room, curtains, your hands, a
 // bookshelf. Negatives matter as much as positives: two of the detector's three
 // real-world failures were false positives on background clutter.
 //
@@ -246,7 +246,7 @@ export default function CaptureApp() {
             <Pill>
               <span style={{ ...mono, fontSize: 10.5, color: '#8A929C' }}>DETECTOR</span>
               <span style={{ ...mono, fontSize: 10.5, color: pred && pred.cx !== undefined ? ACCENT : '#6E7681' }}>
-                {pred && pred.cx !== undefined ? `FOUND ${pred.score.toFixed(2)}` : `NONE ${pred ? pred.score.toFixed(2) : '—'}`}
+                {pred && pred.cx !== undefined ? `FOUND ${pred.score.toFixed(2)}` : `NONE ${pred ? pred.score.toFixed(2) : ': '}`}
               </span>
             </Pill>
           </div>
@@ -255,7 +255,7 @@ export default function CaptureApp() {
         <div style={{ marginTop: 12, fontSize: 13, color: '#9AA2AC' }}>
           {corners.length < 4
             ? <>Click the <strong style={{ color: '#E8EAED' }}>{CORNER_NAMES[corners.length]}</strong> corner of the cube face ({corners.length}/4).</>
-            : <>Four corners set — press <strong style={{ color: '#E8EAED' }}>Save</strong>, or Backspace to undo.</>}
+            : <>Four corners set: press <strong style={{ color: '#E8EAED' }}>Save</strong>, or Backspace to undo.</>}
           {' '}The dashed teal box is what the detector currently thinks.
         </div>
       </div>
@@ -291,7 +291,7 @@ export default function CaptureApp() {
           Save with corners ⏎
         </Btn>
         <Btn onClick={() => save(true)} style={{ border: `1px solid ${WARN}55`, color: WARN }}>
-          No cube in frame — save negative (N)
+          No cube in frame: save negative (N)
         </Btn>
         <Btn onClick={() => setCorners([])} style={{ border: '1px solid rgba(255,255,255,0.12)', color: '#9AA2AC' }}>
           Clear corners
@@ -310,7 +310,7 @@ export default function CaptureApp() {
         <div style={{ flex: 1 }} />
         <div style={{ fontSize: 11, color: '#5C636D', lineHeight: 1.6 }}>
           Aim for variety over volume: different cubes, rooms, lighting, angles,
-          distances — and plenty of negatives from the places it has false-fired.
+          distances, and plenty of negatives from the places it has false-fired.
           Then run <code style={{ ...mono, color: '#9AA2AC' }}>npm run eval</code>.
         </div>
       </div>

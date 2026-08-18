@@ -12,7 +12,7 @@
 // than the model's box on its own.
 //
 // The service is optional. If it is not running, callers fall back to the
-// classical search — nothing here is required for the app to work.
+// classical search: nothing here is required for the app to work.
 
 const DEFAULT_URL = 'http://127.0.0.1:8765';
 
@@ -44,8 +44,7 @@ export function serviceAvailable() { return available; }
 // -> array of PROPOSAL boxes in frame pixels, best-guess first, or [].
 //
 // Deliberately plural. Measured on real frames: the VLM's box and each of SAM's
-// masks are all plausible, and which one is actually the FACE varies per frame —
-// SAM's top-scoring mask is usually the whole 3D cube, whose silhouette includes
+// masks are all plausible, and which one is actually the FACE varies per frame: // SAM's top-scoring mask is usually the whole 3D cube, whose silhouette includes
 // the side faces. So the service proposes and the caller's cube-face scorer
 // disposes, which beat every single-proposal pipeline tried (3/4 vs 2/4).
 export async function acquireFace(frame, { url = acquireUrl(), timeoutMs = 20000 } = {}) {

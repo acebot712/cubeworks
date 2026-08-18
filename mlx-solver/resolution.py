@@ -39,7 +39,7 @@ HERE = Path(__file__).parent
 
 def spearman(a, b):
     """Rank correlation, ties averaged. Distances are heavily tied by
-    construction — whole shells share a value — so ties must be handled or the
+    construction (whole shells share a value) so ties must be handled or the
     coefficient is meaningless here."""
     if len(a) < 3:
         return float("nan")

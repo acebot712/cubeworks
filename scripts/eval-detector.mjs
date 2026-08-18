@@ -3,7 +3,7 @@
 // The unit tests are synthetic: images generated from the same assumptions the
 // detector encodes, which is circular and stayed green through every real-world
 // failure so far. This runs the same detector over frames from an actual camera
-// and reports what it actually does — including which conditions it fails in.
+// and reports what it actually does: including which conditions it fails in.
 //
 // Usage:  npm run eval  [-- --threshold 0.5] [--verbose]
 import fs from 'node:fs';
@@ -21,7 +21,7 @@ const WIDTH = Number(arg('width', DETECT_W));
 
 const LABELS = 'eval/labels.json';
 if (!fs.existsSync(LABELS)) {
-  console.error(`No dataset yet — ${LABELS} does not exist.
+  console.error(`No dataset yet: ${LABELS} does not exist.
 
 Capture some frames first:
   1. npm run dev
@@ -146,10 +146,10 @@ const missed = pos.filter((r) => !r.found);
 const mislocated = pos.filter((r) => r.found && r.iou < IOU_PASS);
 const falsePos = neg.filter((r) => r.found);
 
-const pct = (n, d) => (d ? `${((n / d) * 100).toFixed(1)}%` : '—');
+const pct = (n, d) => (d ? `${((n / d) * 100).toFixed(1)}%` : ': ');
 const med = (xs) => (xs.length ? [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] : 0);
 
-console.log(`\nDETECTOR EVAL — ${results.length} real frames  (width ${WIDTH}, acquire ${ACQUIRE}, IoU pass ${IOU_PASS})`);
+console.log(`\nDETECTOR EVAL: ${results.length} real frames  (width ${WIDTH}, acquire ${ACQUIRE}, IoU pass ${IOU_PASS})`);
 console.log('─'.repeat(64));
 console.log(`  with a cube        ${String(pos.length).padStart(4)}`);
 console.log(`    detected + located ${String(hits.length).padStart(4)}   ${pct(hits.length, pos.length)}`);
@@ -185,7 +185,7 @@ if (tagSet.size) {
 
 const bad = [...missed, ...mislocated, ...falsePos];
 if (bad.length) {
-  console.log(`\n  FAILURES — open eval/frames/<id>.jpg to see what it saw`);
+  console.log(`\n  FAILURES: open eval/frames/<id>.jpg to see what it saw`);
   for (const r of bad.slice(0, VERBOSE ? 999 : 15)) {
     const why = !r.positive ? `false positive (score ${r.score.toFixed(3)})`
       : !r.found ? `missed (score ${r.score.toFixed(3)})`

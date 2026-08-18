@@ -1,7 +1,7 @@
 """Exact distance-to-solved for individual states on rungs too big to enumerate.
 
 exact.py enumerates a whole rung and stops working around k=6 (96.9M states).
-The rungs where the learned heuristic actually fails start at k=8 — so ground
+The rungs where the learned heuristic actually fails start at k=8, so ground
 truth ran out exactly where it became interesting. That is not bad luck; it is
 the same wall the whole field hits, and it is why papers in this area report
 solve rates rather than optimality gaps on large problems.
@@ -13,8 +13,7 @@ point gives a path through it, so
 
     distance(s) = min over meetings of (forward depth + backward depth)
 
-and iterating b upward lets us stop as soon as b exceeds the best total found —
-no further level can beat it. Reaching depth f+b costs storage that grows with
+and iterating b upward lets us stop as soon as b exceeds the best total found, no further level can beat it. Reaching depth f+b costs storage that grows with
 f only, and per-query time that grows with b only, so the split is a knob:
 a big one-time table buys cheap queries.
 
@@ -22,7 +21,7 @@ Every move set here is closed under inverses (U' is present whenever U is), so
 walking outward from the query state is the same as walking backward towards it,
 and no inverse permutation table is needed.
 
-    # verify against exhaustive ground truth first — always
+    # verify against exhaustive ground truth first: always
     ../.venv-mlx/bin/python probe_exact.py --k 6 --verify 300
 
     # then use it where enumeration cannot reach
@@ -146,7 +145,7 @@ def main():
     rng = np.random.default_rng(args.seed)
 
     print(f"rung k={args.k} ({args.moves}, {task.n_moves} moves), "
-          f"{task.size:.3e} states — enumeration "
+          f"{task.size:.3e} states: enumeration "
           f"{'feasible' if task.size < 3e8 else 'INFEASIBLE'}, meeting in the middle\n")
 
     t0 = time.time()
@@ -177,7 +176,7 @@ def main():
         print(f"  verify: {args.verify - bad}/{args.verify} agree with exhaustive BFS"
               f"  {'OK' if bad == 0 else '*** BROKEN ***'}\n")
         if bad:
-            raise SystemExit("prober disagrees with ground truth — do not use")
+            raise SystemExit("prober disagrees with ground truth: do not use")
 
     # --- probe ---------------------------------------------------------------
     st = np.tile(task.solved, (args.n, 1))
@@ -202,7 +201,7 @@ def main():
               f"min {min(dists)}  max {max(dists)}")
         print("  " + "  ".join(f"d={a}:{b}" for a, b in zip(u, c)))
     if unresolved:
-        print(f"  {unresolved} beyond reach {f_used + args.back} — raise --forward or --back")
+        print(f"  {unresolved} beyond reach {f_used + args.back}: raise --forward or --back")
 
     out = Path(args.out) if args.out else \
         RESULTS / f"probe-k{args.k}{'' if args.moves=='all' else '-'+args.moves}.json"

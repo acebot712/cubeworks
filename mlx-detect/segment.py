@@ -3,7 +3,7 @@
 The VLM is a good *finder* and a poor *measurer*: measured on real frames it
 located the cube in 4/4 but its boxes sat at IoU 0.31-0.57 against the actual
 face. Brute-forcing the classical search inside those boxes did not close the
-gap either — the limit is precision, not search effort.
+gap either, the limit is precision, not search effort.
 
 SAM is the opposite instrument. Prompted with a box it returns a pixel-exact
 mask, and a mask has something a box does not: a boundary. Fitting a quad to
@@ -20,7 +20,7 @@ _state = {"model": None, "processor": None, "device": None, "error": None}
 
 # vit-base, not vit-huge. Measured: huge gave IDENTICAL results on every real
 # frame (0.75/0.69/0.29/0.76 vs 0.75/0.70/0.29/0.76) for 2.7x the latency
-# (4s -> 10.8s). Mask boundary quality was never the bottleneck — SAM-base
+# (4s -> 10.8s). Mask boundary quality was never the bottleneck: SAM-base
 # already returns masks at 0.95-1.00 confidence. The limit is WHAT it segments
 # (the whole cube, not the face), and a bigger encoder does not change that.
 # Switch with:  npm run mlx -- --sam facebook/sam-vit-huge
@@ -47,7 +47,7 @@ def load(name=MODEL):
 
 
 def _largest_component(mask):
-    """Keep only the biggest blob — SAM occasionally returns specks alongside
+    """Keep only the biggest blob: SAM occasionally returns specks alongside
     the object, and a stray speck would drag a corner across the frame."""
     h, w = mask.shape
     seen = np.zeros_like(mask, dtype=bool)
@@ -99,7 +99,7 @@ def quad_from_mask(mask):
     """Largest-area quadrilateral inscribed in the mask's convex hull.
 
     A cube face photographed at an angle is a general quadrilateral, so we do
-    NOT fit a rotated rectangle — that would reintroduce the very assumption
+    NOT fit a rotated rectangle, that would reintroduce the very assumption
     the perspective work removed.
     """
     m = _largest_component(mask)
@@ -170,7 +170,7 @@ def refine(image, box_norm):
     order = np.argsort(-scores)
 
     # Return EVERY plausible quad rather than guessing which one is the face.
-    # SAM's highest-scoring mask is usually the whole 3D cube — its silhouette
+    # SAM's highest-scoring mask is usually the whole 3D cube, its silhouette
     # includes the side faces, which is why that quad scores badly as a "face".
     # SAM proposes; the caller's cube-face scorer disposes. Each component is
     # then used for what it is actually good at.
