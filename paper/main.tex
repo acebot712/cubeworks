@@ -797,9 +797,17 @@ failure and a hard problem look identical without it.
 
 Every number in this paper is written by a script into a JSON file and read from
 there; none is transcribed by hand. Code, exact commands, pinned dependencies,
-runtimes, and the seeds used are documented in the supplementary material,
-including a list of superseded results (retained rather than deleted) and of
-measurements the apparatus could not obtain.
+runtimes and the seeds used, together with a list of superseded results (retained
+rather than deleted) and of measurements the apparatus could not obtain, are at
+\begin{center}
+\url{https://github.com/acebot712/cubeworks}
+\end{center}
+
+One directory is deliberately absent. The detector's real-frame evaluation set is
+photographs of a person and a home interior, so it is excluded from the
+repository permanently. No result in this paper reads it, the remaining tests
+pass without it, and \texttt{eval/README.md} gives the capture tool and the label
+schema for anyone wanting to rebuild an equivalent set.
 
 \bibliography{refs}
 \bibliographystyle{tmlr}
