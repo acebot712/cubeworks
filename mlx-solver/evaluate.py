@@ -27,6 +27,7 @@ import mlx.core as mx
 import numpy as np
 
 from davi import Task, ValueNet, read_ckpt
+from domains import make_task
 from exact import indexer
 
 HERE = Path(__file__).parent
@@ -48,7 +49,7 @@ def wilson(successes, n, z=1.96):
 def load(task_name, tag=""):
     stem = f"{task_name}{tag}"
     meta = json.loads((HERE / f"ckpt_{stem}.json").read_text())
-    task = Task(task_name, moves=meta.get("moves", "all"))
+    task = make_task(task_name, moves=meta.get("moves", "all"))
     net = ValueNet(task.n_in, tuple(meta["hidden"]))
     mx.eval(net.parameters())
     net.update(read_ckpt(np.load(HERE / f"ckpt_{stem}.npz"), "net.") or {})

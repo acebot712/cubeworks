@@ -1,0 +1,94 @@
+{
+  "task": "tile-3x3-k2",
+  "rows": 3,
+  "cols": 3,
+  "k": 2,
+  "n_track": 3,
+  "cells": 504,
+  "states": 504,
+  "diameter": 19,
+  "seconds": 0.0014410018920898438,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 2
+    },
+    {
+      "depth": 2,
+      "count": 4
+    },
+    {
+      "depth": 3,
+      "count": 7
+    },
+    {
+      "depth": 4,
+      "count": 10
+    },
+    {
+      "depth": 5,
+      "count": 8
+    },
+    {
+      "depth": 6,
+      "count": 13
+    },
+    {
+      "depth": 7,
+      "count": 17
+    },
+    {
+      "depth": 8,
+      "count": 27
+    },
+    {
+      "depth": 9,
+      "count": 29
+    },
+    {
+      "depth": 10,
+      "count": 46
+    },
+    {
+      "depth": 11,
+      "count": 53
+    },
+    {
+      "depth": 12,
+      "count": 74
+    },
+    {
+      "depth": 13,
+      "count": 59
+    },
+    {
+      "depth": 14,
+      "count": 64
+    },
+    {
+      "depth": 15,
+      "count": 32
+    },
+    {
+      "depth": 16,
+      "count": 27
+    },
+    {
+      "depth": 17,
+      "count": 15
+    },
+    {
+      "depth": 18,
+      "count": 14
+    },
+    {
+      "depth": 19,
+      "count": 2
+    }
+  ],
+  "mean_distance": 11.579365079365079
+}

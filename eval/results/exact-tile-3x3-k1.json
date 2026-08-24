@@ -1,0 +1,66 @@
+{
+  "task": "tile-3x3-k1",
+  "rows": 3,
+  "cols": 3,
+  "k": 1,
+  "n_track": 2,
+  "cells": 72,
+  "states": 72,
+  "diameter": 12,
+  "seconds": 0.0008859634399414062,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 2
+    },
+    {
+      "depth": 2,
+      "count": 4
+    },
+    {
+      "depth": 3,
+      "count": 6
+    },
+    {
+      "depth": 4,
+      "count": 7
+    },
+    {
+      "depth": 5,
+      "count": 4
+    },
+    {
+      "depth": 6,
+      "count": 7
+    },
+    {
+      "depth": 7,
+      "count": 9
+    },
+    {
+      "depth": 8,
+      "count": 9
+    },
+    {
+      "depth": 9,
+      "count": 5
+    },
+    {
+      "depth": 10,
+      "count": 8
+    },
+    {
+      "depth": 11,
+      "count": 6
+    },
+    {
+      "depth": 12,
+      "count": 4
+    }
+  ],
+  "mean_distance": 6.833333333333333
+}

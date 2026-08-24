@@ -272,7 +272,8 @@ def probe(task, net, rng, depths=PROBE_DEPTHS):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--task", default="centers",
-                    help="centers | wings | wings-k<N> for a ladder rung, N in 2..24")
+                    help="centers | wings | wings-k<N> for a cube ladder rung, "
+                         "N in 2..24 | tile-RxC or tile-RxC-kN for a sliding tile")
     ap.add_argument("--seed", type=int, default=0,
                     help="seeds the scramble stream AND the weight init, so a "
                          "sweep over seeds measures real run-to-run variance")
@@ -331,7 +332,11 @@ def main():
                     help="minimum steps to spend at each curriculum level")
     args = ap.parse_args()
 
-    task = Task(args.task, moves=args.moves)
+    # Local import: domains imports this module for Task, so a module-level
+    # import here would be circular. The indirection buys the sliding-tile
+    # domain without davi.py having to know anything about it.
+    from domains import make_task
+    task = make_task(args.task, moves=args.moves)
     is_wing = args.task != "centers"
     kmax = args.kmax or (24 if not is_wing else 40)
     # Every rung gets the SAME architecture. Sizing each one to its own state

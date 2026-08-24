@@ -1,0 +1,138 @@
+{
+  "task": "tile-3x3-k5",
+  "rows": 3,
+  "cols": 3,
+  "k": 5,
+  "n_track": 6,
+  "cells": 60480,
+  "states": 60480,
+  "diameter": 30,
+  "seconds": 0.048501014709472656,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 2
+    },
+    {
+      "depth": 2,
+      "count": 4
+    },
+    {
+      "depth": 3,
+      "count": 8
+    },
+    {
+      "depth": 4,
+      "count": 16
+    },
+    {
+      "depth": 5,
+      "count": 20
+    },
+    {
+      "depth": 6,
+      "count": 39
+    },
+    {
+      "depth": 7,
+      "count": 62
+    },
+    {
+      "depth": 8,
+      "count": 114
+    },
+    {
+      "depth": 9,
+      "count": 148
+    },
+    {
+      "depth": 10,
+      "count": 271
+    },
+    {
+      "depth": 11,
+      "count": 353
+    },
+    {
+      "depth": 12,
+      "count": 640
+    },
+    {
+      "depth": 13,
+      "count": 848
+    },
+    {
+      "depth": 14,
+      "count": 1505
+    },
+    {
+      "depth": 15,
+      "count": 1892
+    },
+    {
+      "depth": 16,
+      "count": 3219
+    },
+    {
+      "depth": 17,
+      "count": 3713
+    },
+    {
+      "depth": 18,
+      "count": 5787
+    },
+    {
+      "depth": 19,
+      "count": 5789
+    },
+    {
+      "depth": 20,
+      "count": 7976
+    },
+    {
+      "depth": 21,
+      "count": 6663
+    },
+    {
+      "depth": 22,
+      "count": 7945
+    },
+    {
+      "depth": 23,
+      "count": 5134
+    },
+    {
+      "depth": 24,
+      "count": 4713
+    },
+    {
+      "depth": 25,
+      "count": 1952
+    },
+    {
+      "depth": 26,
+      "count": 1252
+    },
+    {
+      "depth": 27,
+      "count": 290
+    },
+    {
+      "depth": 28,
+      "count": 117
+    },
+    {
+      "depth": 29,
+      "count": 6
+    },
+    {
+      "depth": 30,
+      "count": 1
+    }
+  ],
+  "mean_distance": 19.919444444444444
+}

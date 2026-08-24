@@ -36,23 +36,11 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import kendalltau
 
-from davi import DONT_CARE, Task
+from domains import domain_of, is_tile, load_table, project, rank, rungs, abstract
 from evaluate import RESULTS, j_of, load
-from exact import indexer
 from resolution import sample_states
 
 HERE = Path(__file__).parent
-
-
-def project(states, j):
-    """A rung-k state seen as a rung-j state: keep pieces 0..j-1, forget the rest.
-
-    This is exactly a pattern-database abstraction, so the resulting distance is
-    an admissible lower bound on the true rung-k distance.
-    """
-    out = states.copy()
-    out[out >= j] = DONT_CARE
-    return out
 
 
 def sweep_sample(task, per_len, max_len, rng):
@@ -148,36 +136,30 @@ def main():
     args = ap.parse_args()
 
     task, net, meta = load(args.task, args.tag)
-    msuf = "" if task.moveset == "all" else f"-{task.moveset}"
-    tbl = HERE / f"exact_k{task.k}{msuf}.npy"
-    if not tbl.exists():
-        raise SystemExit(f"need {tbl.name}; run exact.py --k {task.k} --moves {task.moveset} --save-table")
+    exact = load_table(task)
 
-    if args.pdb_k:
-        pdb_ks = [int(x) for x in args.pdb_k.split(",")]
-    else:
-        pdb_ks = [j for j in range(2, task.k)
-                  if (HERE / f"exact_k{j}{msuf}.npy").exists()]
+    pdb_ks = rungs(task, args.pdb_k)
     if not pdb_ks:
         raise SystemExit("no abstraction tables available for a PDB baseline")
 
     rng = np.random.default_rng(args.seed)
-    exact, index = np.load(tbl), indexer(task.k)
 
     states = (sweep_sample(task, args.per_len, args.max_len, rng)
               if args.sampler == "sweep"
               else sample_states(task, args.n, args.walk, rng))
-    true_d = exact[index(states)].astype(np.int32)
+    true_d = exact[rank(task, states)].astype(np.int32)
 
     hs = {"learned": j_of(task, net, states).astype(np.float64)}
     for j in pdb_ks:
-        tab = np.load(HERE / f"exact_k{j}{msuf}.npy")
-        hs[f"PDB(k={j})"] = tab[indexer(j)(project(states, j))].astype(np.float64)
+        sub = abstract(task, j)
+        tab = load_table(sub)
+        hs[f"PDB(k={j})"] = tab[rank(sub, project(task, states, j))].astype(np.float64)
     hs["random"] = rng.random(states.shape[0])
 
     uniq, cnt = np.unique(true_d, return_counts=True)
     shells = [int(d) for d, c in zip(uniq, cnt) if d > 0 and c >= args.min_shell]
     res = {"task": args.task, "tag": args.tag, "k": task.k, "moves": task.moveset,
+           "domain": domain_of(task),
            "states": task.size, "step": meta.get("step"), "pdb_k": pdb_ks,
            "sampler": args.sampler, "n": int(states.shape[0]),
            "shells": shells, "heuristics": {}}

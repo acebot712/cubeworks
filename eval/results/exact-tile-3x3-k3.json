@@ -1,0 +1,114 @@
+{
+  "task": "tile-3x3-k3",
+  "rows": 3,
+  "cols": 3,
+  "k": 3,
+  "n_track": 4,
+  "cells": 3024,
+  "states": 3024,
+  "diameter": 24,
+  "seconds": 0.003268718719482422,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 2
+    },
+    {
+      "depth": 2,
+      "count": 4
+    },
+    {
+      "depth": 3,
+      "count": 7
+    },
+    {
+      "depth": 4,
+      "count": 11
+    },
+    {
+      "depth": 5,
+      "count": 10
+    },
+    {
+      "depth": 6,
+      "count": 18
+    },
+    {
+      "depth": 7,
+      "count": 28
+    },
+    {
+      "depth": 8,
+      "count": 49
+    },
+    {
+      "depth": 9,
+      "count": 61
+    },
+    {
+      "depth": 10,
+      "count": 108
+    },
+    {
+      "depth": 11,
+      "count": 133
+    },
+    {
+      "depth": 12,
+      "count": 217
+    },
+    {
+      "depth": 13,
+      "count": 238
+    },
+    {
+      "depth": 14,
+      "count": 346
+    },
+    {
+      "depth": 15,
+      "count": 316
+    },
+    {
+      "depth": 16,
+      "count": 403
+    },
+    {
+      "depth": 17,
+      "count": 299
+    },
+    {
+      "depth": 18,
+      "count": 328
+    },
+    {
+      "depth": 19,
+      "count": 188
+    },
+    {
+      "depth": 20,
+      "count": 152
+    },
+    {
+      "depth": 21,
+      "count": 57
+    },
+    {
+      "depth": 22,
+      "count": 40
+    },
+    {
+      "depth": 23,
+      "count": 5
+    },
+    {
+      "depth": 24,
+      "count": 3
+    }
+  ],
+  "mean_distance": 15.048280423280424
+}

@@ -82,6 +82,32 @@ def perm_rank(states):
     return c @ fact
 
 
+def perm_count(n, m):
+    """P(n, m) = n! / (n-m)!, the number of ordered m-subsets of n slots."""
+    return math.factorial(n) // math.factorial(n - m)
+
+
+def partial_rank(pos, n):
+    """Rank an injective map from m tracked symbols to n slots, onto [0, P(n,m)).
+
+    This is what an abstraction needs. Once some tiles are indistinguishable the
+    state is no longer a permutation of n symbols, so perm_rank does not apply,
+    and the only information left is WHERE each tracked symbol sits. `pos[b, i]`
+    is the slot holding tracked symbol i.
+
+    rank = sum_i c_i * P(n-1-i, m-1-i), with c_i the slot index of symbol i less
+    the number of EARLIER symbols already occupying a lower slot. Same trick as
+    perm_rank, lower triangle this time because the correction looks backwards.
+    """
+    B, m = pos.shape
+    earlier = np.tril(np.ones((m, m), dtype=bool), -1)       # j < i
+    smaller = pos[:, :, None] > pos[:, None, :]              # pos[i] > pos[j]
+    c = pos - (smaller & earlier).sum(axis=2)
+    radix = np.array([perm_count(n - 1 - i, m - 1 - i) for i in range(m)],
+                     dtype=np.int64)
+    return c @ radix
+
+
 def perm_unrank(ranks, n):
     """Inverse of perm_rank. Only used by the self-test, so it may loop."""
     ranks = np.asarray(ranks, dtype=np.int64)
@@ -125,22 +151,42 @@ class TileTask:
         if not name.startswith("tile-"):
             raise ValueError(f"not a tile task name: {name!r}")
         spec = name[len("tile-"):]
+        rung = None
+        if "-k" in spec:
+            spec, rung = spec.split("-k", 1)
+            rung = int(rung)
         try:
             rows, cols = (int(x) for x in spec.split("x"))
         except ValueError:
-            raise ValueError(f"expected tile-RxC, got {name!r}") from None
+            raise ValueError(f"expected tile-RxC or tile-RxC-kN, got {name!r}") from None
         if rows < 2 or cols < 2:
             raise ValueError(f"board must be at least 2x2, got {rows}x{cols}")
 
         self.name = name
         self.rows, self.cols = rows, cols
         self.n_slots = rows * cols
-        self.k = self.n_slots
-        # One symbol per tile including the blank. Unlike the cube ladder there
-        # is no DONT_CARE symbol yet: abstractions come later and will add one.
-        self.n_sym = self.n_slots
+
+        # ABSTRACTION. `k` is how many numbered tiles are tracked; the blank is
+        # always tracked on top of that, because the move set is defined by
+        # where the blank is and an abstraction that forgot it would not be a
+        # deterministic system. Untracked tiles all become DONT_CARE and are
+        # interchangeable. This is the same projection the cube ladder uses, and
+        # it is admissible for the same reason: any solution of the full puzzle
+        # is a solution of the abstraction with the same number of moves, so the
+        # abstract distance can never exceed the real one.
+        self.k = self.n_slots - 1 if rung is None else rung
+        if not 1 <= self.k <= self.n_slots - 1:
+            raise ValueError(f"rung k must be in 1..{self.n_slots - 1}, got {self.k}")
+        self.n_track = self.k + 1                    # tracked symbols, blank included
+        self.DONT_CARE = self.n_slots
+
+        # Width is held constant across rungs, exactly as on the cube ladder, so
+        # that the only thing separating two rungs is how many tiles are real
+        # rather than how wide the network's input is.
+        self.n_sym = self.n_slots + 1
         self.n_in = self.n_slots * self.n_sym
-        self.solved = np.arange(self.n_slots, dtype=np.int8)
+        self.solved = np.full(self.n_slots, self.DONT_CARE, dtype=np.int8)
+        self.solved[:self.n_track] = np.arange(self.n_track, dtype=np.int8)
 
         self.moveset = moves
         if moves != "all":
@@ -162,9 +208,35 @@ class TileTask:
                 if 0 <= nr < rows and 0 <= nc < cols:
                     self.dest[slot, m] = nr * cols + nc
 
-        # Exactly half of the n! arrangements satisfy the parity invariant.
-        self.size = math.factorial(self.n_slots) // 2
-        self.cells = math.factorial(self.n_slots)
+        # Index space is P(n_slots, n_track): where each tracked symbol sits.
+        self.cells = perm_count(self.n_slots, self.n_track)
+
+        # PREDICTED reachable count, which BFS then checks rather than trusts.
+        # On the full board exactly half the arrangements satisfy the parity
+        # invariant. With two or more untracked tiles that constraint vanishes,
+        # because swapping two untracked tiles fixes parity and is invisible in
+        # the abstraction, so every arrangement becomes reachable. One untracked
+        # tile is no freedom at all, since its position is forced by the others,
+        # and the halving comes back. The cube ladder has the same structure and
+        # says so in rung_size: the untracked pieces absorb parity.
+        self.size = (self.cells // 2 if self.n_track >= self.n_slots - 1
+                     else self.cells)
+
+    # ---------------------------------------------------------------- indexing
+    def rank(self, states):
+        """Unique index per state, in [0, self.cells)."""
+        if self.n_track == self.n_slots:
+            return perm_rank(states)
+        pos = np.empty((states.shape[0], self.n_track), dtype=np.int64)
+        for sym in range(self.n_track):
+            pos[:, sym] = np.argmax(states == sym, axis=1)
+        return partial_rank(pos, self.n_slots)
+
+    def project(self, states, k):
+        """A rung-k view of these states: keep the blank and tiles 1..k."""
+        out = states.copy()
+        out[out > k] = self.DONT_CARE
+        return out
 
     # ---------------------------------------------------------------- dynamics
     def blank_of(self, states):
@@ -218,7 +290,7 @@ def bfs(task, chunk=1_000_000, verbose=True):
     """Exact distance to solved for every reachable state, by breadth-first search."""
     dist = np.full(task.cells, UNSEEN, dtype=np.uint8)
     frontier = task.solved[None, :].copy()
-    dist[perm_rank(frontier)] = 0
+    dist[task.rank(frontier)] = 0
     seen, levels = 1, [1]
     t0 = time.time()
 
@@ -229,7 +301,7 @@ def bfs(task, chunk=1_000_000, verbose=True):
         for lo in range(0, frontier.shape[0], chunk):
             part = frontier[lo:lo + chunk]
             kids = task.children(part).reshape(-1, task.n_slots)
-            idx = perm_rank(kids)
+            idx = task.rank(kids)
             fresh = dist[idx] == UNSEEN
             if not fresh.any():
                 continue
@@ -315,13 +387,49 @@ def selftest():
               f"{'OK' if good else '*** FAIL ***'}   {secs:.1f}s")
         ok &= good
 
+    # 5. abstractions. The predicted reachable count is the interesting part:
+    # it claims parity stops binding as soon as two tiles are untracked, and
+    # BFS is what decides whether that reasoning was right.
+    print()
+    for k in range(1, 8):
+        at = TileTask(f"tile-3x3-k{k}")
+        dist, levels, seen, diameter, secs = bfs(at, verbose=False)
+        good = seen == at.size
+        print(f"  tile-3x3-k{k}: {seen:>7,} states (predicted {at.size:,}), "
+              f"{at.cells:>7,} cells, diameter {diameter:>2}   "
+              f"{'OK' if good else '*** FAIL ***'}")
+        ok &= good
+
+    # 6. an abstraction is admissible: its distance never exceeds the real one.
+    # This is the property the whole PDB comparison rests on, so it is measured
+    # rather than argued.
+    full = TileTask("tile-3x3")
+    fdist, *_ = bfs(full, verbose=False)
+    rng2 = np.random.default_rng(7)
+    probe, _ = full.scramble(20000, 60, rng2)
+    real = fdist[full.rank(probe)].astype(np.int32)
+    for k in (3, 5, 7):
+        at = TileTask(f"tile-3x3-k{k}")
+        adist, *_ = bfs(at, verbose=False)
+        abs_d = adist[at.rank(full.project(probe, k))].astype(np.int32)
+        adm = bool((abs_d <= real).all())
+        print(f"  k={k} admissible on {probe.shape[0]:,} states "
+              f"(max abstract {abs_d.max()}, max real {real.max()})   "
+              f"{'OK' if adm else '*** FAIL ***'}")
+        ok &= adm
+
     print("\n  ALL CHECKS PASSED" if ok else "\n  *** SELFTEST FAILED ***")
     return 0 if ok else 1
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--board", default="", help="RxC, e.g. 3x3")
+    ap.add_argument("--board", default="", help="RxC, e.g. 3x3 (the full board)")
+    ap.add_argument("--task", default="", help="a full task name, e.g. tile-3x3-k5, "
+                    "which is how abstraction rungs are built")
+    ap.add_argument("--all-rungs", action="store_true",
+                    help="also build every rung 1..k-1 of --board, which is what "
+                         "the PDB baselines in profiles.py read")
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--chunk", type=int, default=1_000_000)
     ap.add_argument("--save-table", action="store_true")
@@ -329,33 +437,46 @@ def main():
 
     if args.selftest:
         raise SystemExit(selftest())
-    if not args.board:
-        raise SystemExit("give --board RxC or --selftest")
+    if not args.board and not args.task:
+        raise SystemExit("give --board RxC, --task tile-RxC-kN, or --selftest")
 
-    task = TileTask(f"tile-{args.board}")
+    if args.all_rungs:
+        full = TileTask(f"tile-{args.board}")
+        for j in range(1, full.k):
+            build(TileTask(f"tile-{args.board}-k{j}"), args.chunk, args.save_table)
+        build(full, args.chunk, args.save_table)
+        return
+
+    task = TileTask(args.task or f"tile-{args.board}")
+    build(task, args.chunk, args.save_table)
+
+
+def build(task, chunk, save_table):
     print(f"{task.name}: {task.size:,} reachable states, "
           f"{task.cells:,} index cells ({task.cells/1e6:.0f} MB)\n")
 
-    dist, levels, seen, diameter, secs = bfs(task, args.chunk)
+    dist, levels, seen, diameter, secs = bfs(task, chunk)
 
     ok = seen == task.size
     print(f"\n  reached {seen:,} of {task.size:,} expected   "
           f"{'OK' if ok else '*** MISMATCH ***'}")
     print(f"  diameter {diameter}   built in {secs:.0f}s")
     if not ok:
-        raise SystemExit("reachable-set size disagrees with n!/2: bug, not a result")
+        raise SystemExit("reachable-set size disagrees with the prediction: "
+                         "bug, not a result")
 
     out = HERE.parent / "eval" / "results" / f"exact-{task.name}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({
         "task": task.name, "rows": task.rows, "cols": task.cols,
+        "k": task.k, "n_track": task.n_track, "cells": task.cells,
         "states": seen, "diameter": diameter, "seconds": secs,
         "histogram": [{"depth": d, "count": n} for d, n in enumerate(levels)],
         "mean_distance": float(sum(d * n for d, n in enumerate(levels)) / seen),
     }, indent=2) + "\n")
     print(f"  -> {out.relative_to(HERE.parent)}")
 
-    if args.save_table:
+    if save_table:
         np.save(HERE / f"exact_{task.name}.npy", dist)
         print(f"  -> exact_{task.name}.npy  ({dist.nbytes/1e6:.0f} MB)")
 
