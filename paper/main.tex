@@ -1,9 +1,14 @@
 \documentclass{article}
-\usepackage{tmlr}
-% SUBMISSION-READY AS IS. TMLR review is double-blind: without the [accepted]
-% option the author block below is ignored and the title page reads "Anonymous
-% authors / Paper under double-blind review". Add [accepted] only for the
-% camera-ready version, which is also the only mode where \openreview is printed.
+\usepackage[preprint]{tmlr}
+% PREPRINT MODE, for arXiv. [preprint] implies [accepted], so the author block
+% below is printed. It also clears the running head and suppresses the "Reviewed
+% on OpenReview" line, which is why \openreview stays at XXXXXX and is never
+% consulted in this mode.
+%
+% TO GO BACK TO AN ANONYMOUS TMLR SUBMISSION: drop the option, so plain
+% \usepackage{tmlr}, and comment the author block out again. Both, not one.
+% Without the option the PDF is anonymous whatever the source says, but the
+% source is not the PDF, and reviewers may be sent the project archive.
 
 \usepackage{booktabs}
 \usepackage{graphicx}
@@ -15,13 +20,10 @@
 \title{Learned Heuristics Decay With Distance to Goal:\\
 So Do Pattern Databases, by the Same Two-Moment Law}
 
-% AUTHOR BLOCK IS COMMENTED OUT ON PURPOSE. tmlr.sty ignores it without the
-% [accepted] option, so the compiled PDF was anonymous either way -- but the
-% SOURCE is not the PDF. Reviewers who are sent the project archive, or anyone
-% the Overleaf project is shared with, would have read the name straight out of
-% this file. Restore it for the camera-ready, together with [accepted] on line 2.
-% \author{\name AUTHOR NAME \email author@example.com \\
-%         \addr Affiliation}
+% Live in preprint mode, ignored if the [preprint] option on line 2 is removed.
+% Comment this back out whenever the anonymous submission build is rebuilt.
+\author{\name Abhijoy Sarkar \email abhijoy.sar@gmail.com \\
+        \addr Independent Researcher}
 
 \def\month{08}
 \def\year{2026}
