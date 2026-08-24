@@ -1,13 +1,13 @@
 {
-  "task": "tile-2x4",
+  "task": "tile-2x4-k5",
   "rows": 2,
   "cols": 4,
-  "k": 7,
-  "n_track": 8,
-  "cells": 40320,
+  "k": 5,
+  "n_track": 6,
+  "cells": 20160,
   "states": 20160,
   "diameter": 36,
-  "seconds": 0.02699899673461914,
+  "seconds": 0.02381420135498047,
   "histogram": [
     {
       "depth": 0,

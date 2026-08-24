@@ -117,7 +117,11 @@ def load_insample(p3=False):
         if ("_p3-" in f.stem) != p3:
             continue
         d = json.load(open(f))
-        if d["k"] <= 2:
+        # Drop rungs too small to have a profile worth fitting. The threshold is
+        # a statement about how many shells the task has, so it is expressed per
+        # domain rather than as one number: a cube rung k=2 has 552 states, a
+        # tile task's k counts tiles and its k=2 board does not exist.
+        if domain_of_result(d) == "cube" and d["k"] <= 2:
             continue
         for name, h in d["heuristics"].items():
             if p3 and name != "learned":
@@ -135,8 +139,19 @@ def load_insample(p3=False):
             seen.add(key)
             rows += rows_of(h["profile"],
                             {"file": f.stem, "k": d["k"], "moves": d["moves"],
-                             "tag": d["tag"], "name": name, "kind": kind})
+                             "tag": d["tag"], "name": name, "kind": kind,
+                             "domain": domain_of_result(d)})
     return rows
+
+
+def domain_of_result(d):
+    """Which state space a profile came from.
+
+    Profiles written before the sliding-tile domain existed carry no `domain`
+    field, so it is inferred from the task name, which is the same rule
+    domains.make_task dispatches on. Every one of those is a cube run.
+    """
+    return d.get("domain") or ("tile" if str(d["task"]).startswith("tile-") else "cube")
 
 
 def load_heldout():
@@ -226,6 +241,20 @@ def main():
             p3, "Held out (heuristics trained under other objectives)")
         out["held_out_objectives_split"] = report(
             p3, "Held out (other objectives), split sample", split=True)
+    # BY DOMAIN. This is the external-validity check and the reason the tile
+    # code exists. Pooling the two state spaces into one mean absolute error
+    # would hide exactly the failure it is meant to expose: a law that holds on
+    # the cube and not on the tile would still look respectable pooled, because
+    # the cube supplies most of the observations. Reported separately, on the
+    # split sample, so each domain stands or falls on its own.
+    domains_present = sorted({r["domain"] for r in ins})
+    if len(domains_present) > 1:
+        out["by_domain_split"] = {}
+        for dom in domains_present:
+            sub = [r for r in ins if r["domain"] == dom]
+            out["by_domain_split"][dom] = report(
+                sub, f"SPLIT SAMPLE, {dom} only (external validity)", split=True)
+
     fp = free_parameter_check(ins)
     out["free_parameter_check"] = fp
     print(f"\n  Is the form right, or merely monotone?")

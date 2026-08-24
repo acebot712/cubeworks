@@ -1,13 +1,13 @@
 {
-  "task": "tile-2x4",
+  "task": "tile-2x4-k4",
   "rows": 2,
   "cols": 4,
-  "k": 7,
-  "n_track": 8,
-  "cells": 40320,
-  "states": 20160,
-  "diameter": 36,
-  "seconds": 0.02699899673461914,
+  "k": 4,
+  "n_track": 5,
+  "cells": 6720,
+  "states": 6720,
+  "diameter": 30,
+  "seconds": 0.008050203323364258,
   "histogram": [
     {
       "depth": 0,
@@ -43,120 +43,96 @@
     },
     {
       "depth": 8,
-      "count": 42
+      "count": 41
     },
     {
       "depth": 9,
-      "count": 61
+      "count": 57
     },
     {
       "depth": 10,
-      "count": 85
+      "count": 77
     },
     {
       "depth": 11,
-      "count": 119
+      "count": 106
     },
     {
       "depth": 12,
-      "count": 161
+      "count": 137
     },
     {
       "depth": 13,
-      "count": 215
+      "count": 177
     },
     {
       "depth": 14,
-      "count": 293
+      "count": 230
     },
     {
       "depth": 15,
-      "count": 396
+      "count": 288
     },
     {
       "depth": 16,
-      "count": 506
+      "count": 347
     },
     {
       "depth": 17,
-      "count": 632
+      "count": 415
     },
     {
       "depth": 18,
-      "count": 788
+      "count": 490
     },
     {
       "depth": 19,
-      "count": 985
+      "count": 566
     },
     {
       "depth": 20,
-      "count": 1194
+      "count": 616
     },
     {
       "depth": 21,
-      "count": 1414
+      "count": 641
     },
     {
       "depth": 22,
-      "count": 1664
+      "count": 643
     },
     {
       "depth": 23,
-      "count": 1884
+      "count": 592
     },
     {
       "depth": 24,
-      "count": 1999
+      "count": 470
     },
     {
       "depth": 25,
-      "count": 1958
+      "count": 324
     },
     {
       "depth": 26,
-      "count": 1770
+      "count": 207
     },
     {
       "depth": 27,
-      "count": 1463
+      "count": 120
     },
     {
       "depth": 28,
-      "count": 1076
+      "count": 64
     },
     {
       "depth": 29,
-      "count": 667
+      "count": 24
     },
     {
       "depth": 30,
-      "count": 361
-    },
-    {
-      "depth": 31,
-      "count": 190
-    },
-    {
-      "depth": 32,
-      "count": 88
-    },
-    {
-      "depth": 33,
-      "count": 39
-    },
-    {
-      "depth": 34,
-      "count": 19
-    },
-    {
-      "depth": 35,
-      "count": 7
-    },
-    {
-      "depth": 36,
-      "count": 1
+      "count": 5
     }
   ],
-  "mean_distance": 22.677579365079364
+  "mean_distance": 19.504761904761907
 }
