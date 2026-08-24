@@ -2,9 +2,12 @@
   "task": "tile-3x3",
   "rows": 3,
   "cols": 3,
+  "k": 8,
+  "n_track": 9,
+  "cells": 362880,
   "states": 181440,
   "diameter": 31,
-  "seconds": 0.16260695457458496,
+  "seconds": 0.1600337028503418,
   "histogram": [
     {
       "depth": 0,
