@@ -34,3 +34,7 @@ paper/*.log
 # own with capture.html (see eval/README.md) to run the detector eval.
 eval/frames/
 paper/supplementary-anonymous.zip
+
+# Personal: carries the arXiv endorsement code and a draft email. The repo is
+# public, and neither belongs in it.
+paper/ENDORSEMENT-REQUEST.md

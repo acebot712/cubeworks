@@ -1,0 +1,159 @@
+{
+  "task": "tile-2x4",
+  "rows": 2,
+  "cols": 4,
+  "states": 20160,
+  "diameter": 36,
+  "seconds": 0.017400026321411133,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 2
+    },
+    {
+      "depth": 2,
+      "count": 3
+    },
+    {
+      "depth": 3,
+      "count": 6
+    },
+    {
+      "depth": 4,
+      "count": 10
+    },
+    {
+      "depth": 5,
+      "count": 14
+    },
+    {
+      "depth": 6,
+      "count": 19
+    },
+    {
+      "depth": 7,
+      "count": 28
+    },
+    {
+      "depth": 8,
+      "count": 42
+    },
+    {
+      "depth": 9,
+      "count": 61
+    },
+    {
+      "depth": 10,
+      "count": 85
+    },
+    {
+      "depth": 11,
+      "count": 119
+    },
+    {
+      "depth": 12,
+      "count": 161
+    },
+    {
+      "depth": 13,
+      "count": 215
+    },
+    {
+      "depth": 14,
+      "count": 293
+    },
+    {
+      "depth": 15,
+      "count": 396
+    },
+    {
+      "depth": 16,
+      "count": 506
+    },
+    {
+      "depth": 17,
+      "count": 632
+    },
+    {
+      "depth": 18,
+      "count": 788
+    },
+    {
+      "depth": 19,
+      "count": 985
+    },
+    {
+      "depth": 20,
+      "count": 1194
+    },
+    {
+      "depth": 21,
+      "count": 1414
+    },
+    {
+      "depth": 22,
+      "count": 1664
+    },
+    {
+      "depth": 23,
+      "count": 1884
+    },
+    {
+      "depth": 24,
+      "count": 1999
+    },
+    {
+      "depth": 25,
+      "count": 1958
+    },
+    {
+      "depth": 26,
+      "count": 1770
+    },
+    {
+      "depth": 27,
+      "count": 1463
+    },
+    {
+      "depth": 28,
+      "count": 1076
+    },
+    {
+      "depth": 29,
+      "count": 667
+    },
+    {
+      "depth": 30,
+      "count": 361
+    },
+    {
+      "depth": 31,
+      "count": 190
+    },
+    {
+      "depth": 32,
+      "count": 88
+    },
+    {
+      "depth": 33,
+      "count": 39
+    },
+    {
+      "depth": 34,
+      "count": 19
+    },
+    {
+      "depth": 35,
+      "count": 7
+    },
+    {
+      "depth": 36,
+      "count": 1
+    }
+  ],
+  "mean_distance": 22.677579365079364
+}

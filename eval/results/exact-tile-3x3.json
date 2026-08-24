@@ -1,0 +1,139 @@
+{
+  "task": "tile-3x3",
+  "rows": 3,
+  "cols": 3,
+  "states": 181440,
+  "diameter": 31,
+  "seconds": 0.16260695457458496,
+  "histogram": [
+    {
+      "depth": 0,
+      "count": 1
+    },
+    {
+      "depth": 1,
+      "count": 2
+    },
+    {
+      "depth": 2,
+      "count": 4
+    },
+    {
+      "depth": 3,
+      "count": 8
+    },
+    {
+      "depth": 4,
+      "count": 16
+    },
+    {
+      "depth": 5,
+      "count": 20
+    },
+    {
+      "depth": 6,
+      "count": 39
+    },
+    {
+      "depth": 7,
+      "count": 62
+    },
+    {
+      "depth": 8,
+      "count": 116
+    },
+    {
+      "depth": 9,
+      "count": 152
+    },
+    {
+      "depth": 10,
+      "count": 286
+    },
+    {
+      "depth": 11,
+      "count": 396
+    },
+    {
+      "depth": 12,
+      "count": 748
+    },
+    {
+      "depth": 13,
+      "count": 1024
+    },
+    {
+      "depth": 14,
+      "count": 1893
+    },
+    {
+      "depth": 15,
+      "count": 2512
+    },
+    {
+      "depth": 16,
+      "count": 4485
+    },
+    {
+      "depth": 17,
+      "count": 5638
+    },
+    {
+      "depth": 18,
+      "count": 9529
+    },
+    {
+      "depth": 19,
+      "count": 10878
+    },
+    {
+      "depth": 20,
+      "count": 16993
+    },
+    {
+      "depth": 21,
+      "count": 17110
+    },
+    {
+      "depth": 22,
+      "count": 23952
+    },
+    {
+      "depth": 23,
+      "count": 20224
+    },
+    {
+      "depth": 24,
+      "count": 24047
+    },
+    {
+      "depth": 25,
+      "count": 15578
+    },
+    {
+      "depth": 26,
+      "count": 14560
+    },
+    {
+      "depth": 27,
+      "count": 6274
+    },
+    {
+      "depth": 28,
+      "count": 3910
+    },
+    {
+      "depth": 29,
+      "count": 760
+    },
+    {
+      "depth": 30,
+      "count": 221
+    },
+    {
+      "depth": 31,
+      "count": 2
+    }
+  ],
+  "mean_distance": 21.972398589065257
+}
