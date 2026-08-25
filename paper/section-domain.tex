@@ -33,7 +33,7 @@ with distance is not a fingerprint of bootstrapping in this state space either,
 which is the claim of Section~\ref{sec:profile} surviving a change of domain.
 
 \paragraph{The law is worse here.} Split-sample mean absolute error is $0.0117$
-over 252 cube observations and $0.0465$ over 117 sliding-tile observations,
+over 252 cube observations and $0.0429$ over 239 sliding-tile observations,
 against an estimator noise floor near $0.002$ in both. Read as a domain split
 that says Equation~\ref{eq:law} does not generalise, and we first wrote it down
 that way.
@@ -58,12 +58,23 @@ model.}
 \label{tab:domain}
 \end{table}
 
-The class breakdown says the same thing from the other side. Learned heuristics
-fit at $0.0103$ on the tile against $0.0068$ on the cube, essentially unchanged;
-pattern databases fit at $0.0621$ against $0.0200$. A learned value function is
-smooth and close to symmetric within a shell. A coarse abstraction is not, and
-the sliding tile's abstractions are more skewed than the cube's, which is why
-the cube alone could not have located this boundary.
+The class breakdown says the same thing from the other side
+(Table~\ref{tab:domainclass}). Moving to the sliding tile costs learned
+heuristics a factor of $1.9$ in mean absolute error and pattern databases a
+factor of $3.3$. A learned value function is smooth and close to symmetric
+within a shell; a coarse abstraction is not, and the sliding tile's abstractions
+are the more skewed of the two. That is why the cube alone could not have
+located this boundary: its abstractions never reach the skew where the law
+begins to fail.
+
+\begin{table}[t]
+\centering
+\input{tables/domainclass}
+\caption{Where the domain gap lives. Every class is worse on the sliding tile,
+but pattern databases are worse by nearly twice the factor learned heuristics
+are, which is the split the skew account predicts.}
+\label{tab:domainclass}
+\end{table}
 
 \paragraph{Four explanations we tested and rejected.} Three are backwards from
 the prediction, and we record them because a ruled-out explanation is the

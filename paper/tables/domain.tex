@@ -1,0 +1,18 @@
+\begin{tabular}{lrrrr}
+\toprule
+task & $n$ & median $|$skew$|$ & mean $|$error$|$ & bias \\
+\midrule
+cube, $k\!=\!6$ & 24 & 0.599 & 0.0221 & -0.0220 \\
+sliding tile, $3\times3$ & 64 & 0.858 & 0.0508 & +0.0465 \\
+sliding tile, $2\times4$ & 46 & 1.557 & 0.0718 & +0.0666 \\
+\midrule
+\multicolumn{5}{l}{\emph{Matched on skew, the domain gap closes below $|\mathrm{skew}| = 1$:}} \\
+$|$skew$|$ range & cube $n$ & cube $|$err$|$ & tile $n$ & tile $|$err$|$ \\
+0 to 0.4 & 5 & 0.0089 & 29 & 0.0065 \\
+0.4 to 0.7 & 9 & 0.0199 & 12 & 0.0138 \\
+0.7 to 1 & 2 & 0.0272 & 15 & 0.0243 \\
+1 to $\infty$ & 8 & 0.0315 & 54 & 0.1080 \\
+\midrule
+\multicolumn{5}{l}{Reweighting the cube to the tile's skew mix gives 0.0237, against the tile's 0.0595.} \\
+\bottomrule
+\end{tabular}
