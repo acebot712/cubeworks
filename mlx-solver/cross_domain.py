@@ -1,56 +1,71 @@
-"""Does the two-moment law hold outside the Rubik's cube?
+"""Does the two-moment law hold outside the Rubik's cube? Not everywhere, and
+the boundary is not the one the domain split suggests.
 
-This is the external-validity test the paper needs, and the honest answer is
-NO, NOT CLEANLY. The law predicts adjacent-shell ordering accuracy as
-Phi(gap / (sd * sqrt(2))) with nothing fitted, and on cube sub-problems it does
-that to a mean absolute error of 0.012 against an estimator noise floor of
-0.002. On the 8-puzzle the same measurement, through the same code path, gives
-0.047. The gap is real and it is not an artifact of measurement.
+The law predicts adjacent-shell ordering accuracy as Phi(gap / (sd * sqrt(2)))
+with nothing fitted. Measured through one code path, on the full corpus, it does
+that to a mean absolute error of 0.0117 over 252 cube observations and 0.0465
+over 117 sliding-tile observations, against an estimator noise floor near 0.002.
+Read as a domain split, that says the law does not generalise. Read properly, it
+says something more useful.
 
-WHERE IT SURVIVES. Learned heuristics: tile 0.010 against the cube's 0.007.
-Pattern databases are where it breaks, at 0.062 against the cube's 0.020.
+WHAT THE ERROR ACTUALLY TRACKS. Skewness of the within-shell value distribution,
+Spearman +0.74, and the relationship is monotone across all three tasks:
 
-FOUR EXPLANATIONS TESTED AND REJECTED. Each is recorded because a rejected
-hypothesis is the cheapest thing a later reader can be given, and three of these
-are the ones anybody would reach for first.
+    task        median |skew|    MAE
+    wings-k6        0.599      0.0221
+    tile-3x3        0.858      0.0508
+    tile-2x4        1.557      0.0718
 
-  Saturation. A weak abstraction tops out at its own small diameter long before
-  the real one, so deep shells pile up against a ceiling. Predicted: the weakest
-  rungs misfit worst. Measured: exactly backwards, Spearman +1.000 between the
-  abstraction-to-task diameter ratio and the error. The STRONGEST rung, k=5 at a
-  ratio of 0.97, is the worst fit at 0.122; the weakest, k=1 at 0.39, is the
-  best at 0.035.
+Matched on skew, the domain gap disappears below |skew| = 1 and the tile fits
+slightly BETTER than the cube in every bin: ratios 0.73, 0.70 and 0.89 across
+bins 0 to 0.4, 0.4 to 0.7 and 0.7 to 1.0. Above 1.0 the tile is still 3.4 times
+worse, so skew accounts for the gap over most of the range but leaves a residual
+this file does not explain.
 
-  Near-determinism. A heuristic that is nearly a function of true distance has a
-  within-shell spike, which is the least normal shape available. Predicted:
-  error grows with d'. Measured: error FALLS with d', Spearman -0.53, reaching
-  0.0003 above d' = 5.
+So the honest claim is not "the law is a cube fact". It is that the law is
+accurate where the within-shell distribution is close to symmetric and degrades
+as that distribution skews, in both state spaces. The sliding tile matters
+because its pattern databases are skewed and the cube's are not, which is why
+the cube alone could never have revealed the boundary.
 
-  A strength confound. The tile's heuristics are much weaker per shell, median
-  d' 0.25 against the cube's 1.24, and the law is worst at low d' in both
-  domains. This is the paper's own warning about unmatched baselines pointed
-  back at itself, so it had to be checked. Reweighting the cube to the tile's d'
-  composition moves it from 0.0117 to 0.0114, nowhere near the tile's 0.0465,
-  and within every matched d' bin below 2 the tile is 2.5x to 7x worse.
+The class breakdown says the same thing. Learned heuristics fit at 0.0103 on the
+tile against 0.0068 on the cube, essentially unchanged; pattern databases fit at
+0.0621 against 0.0200. Learned value functions are smooth and near-symmetric
+within a shell; a coarse abstraction is not.
 
-  Ties. The equal-variance binormal identity is a statement about continuous
-  variables, and this project already measures a tie bias in tau-b. Measured:
-  backwards again. The CUBE has a median tie rate of 0.331 and the tile 0.000,
-  because tile pattern-database values spread over many integers while cube ones
-  concentrate on a few.
+FOUR EXPLANATIONS TESTED AND REJECTED, three of them backwards from the
+prediction. Recorded because a ruled-out explanation is the cheapest thing to
+hand the next reader, and these are the ones anybody reaches for first.
 
-WHAT DOES CARRY SIGNAL. Skewness of the within-shell distribution, Spearman
-+0.71 against the error, and it is a partial explanation rather than a full one.
-Below |skew| = 1 the two domains fit equally well, ratios 0.76, 1.18 and 1.06
-across three bins. Above it the tile is still 3.15x worse, and reweighting the
-cube to the tile's skew composition moves it only 0.0221 to 0.0224. Note that
-equal variance, the assumption the paper actually names, is NOT the problem: the
-tile's variance ratio of 1.195 is better behaved than the cube's 1.428.
+  Saturation, that a weak abstraction tops out at its own small diameter long
+  before the real one. Predicted the weakest rungs would misfit worst. Measured
+  Spearman +1.000 the other way: the strongest rung, at a diameter ratio of
+  0.97, is the worst fit at 0.122, and the weakest, at 0.39, is the best at
+  0.035.
 
-So the law's parameter-free form is not domain-general. It survives on learned
-heuristics in both domains and on everything at low skew, and it degrades on
-skewed within-shell distributions, with a residual on the sliding tile that
-these four hypotheses do not account for.
+  Near-determinism, that a within-shell spike is the least normal shape
+  available. Predicted error growing with d'. Measured error FALLING with d',
+  Spearman -0.53, reaching 0.0003 above d' = 5.
+
+  A strength confound. Tile heuristics are much weaker per shell, median d' 0.27
+  against the cube's 0.90, and the law is worst at low d' in both domains. This
+  is this project's own warning about unmatched baselines turned on itself, so
+  it had to be checked. Reweighting the cube to the tile's d' composition moves
+  it to 0.0160 against the tile's 0.0595, and inside matched d' bins the tile is
+  still several times worse.
+
+  Ties, which the equal-variance binormal identity does assume away, and which
+  this project already measures a bias from in tau-b. Backwards again: the CUBE
+  has a median tie rate of 0.325 and the tile 0.000, because tile
+  pattern-database values spread over many integers while cube ones concentrate
+  on a few.
+
+Note also that equal variance, the assumption the paper names explicitly, is not
+the culprit. The tile's variance ratio is 1.258 against the cube's 1.428, better
+behaved, and reweighting on it closes almost none of the gap.
+
+Pattern databases only, so this reproduces without a trained model on either
+domain.
 
     ../.venv-mlx/bin/python cross_domain.py
 """
@@ -69,7 +84,13 @@ SQ2 = np.sqrt(2.0)
 
 # (task, abstraction rungs, scramble depth). The depth is set past each task's
 # diameter so the deep shells are populated rather than sampled twice.
-SPECS = [("wings-k6", [2, 3, 4, 5], 20), ("tile-3x3", [1, 2, 3, 4, 5], 45)]
+SPECS = [("wings-k6", [2, 3, 4, 5], 20),
+         ("tile-3x3", [1, 2, 3, 4, 5], 45),
+         # A second board, to separate "the sliding tile" from "the 8-puzzle".
+         # If the misfit is a property of the domain it should appear here too;
+         # if it only appears on 3x3 then the finding is about one board and
+         # says much less than it looks like it does.
+         ("tile-2x4", [1, 2, 3, 4], 50)]
 
 
 def shell_rows(name, ks, max_len, per_len, rng):
@@ -185,6 +206,25 @@ def main():
         print(f"  {dom:>5}  n={b['n']:>3}  MAE {b['mae']:.4f}  bias {b['bias']:+.4f}   "
               f"median skew {b['median_skew']:.3f}  tie {b['median_tie']:.3f}  "
               f"d' {b['median_dprime']:.2f}  var ratio {b['median_var_ratio']:.3f}")
+
+    # PER BOARD. Pooling the two tile boards would let one of them carry the
+    # other, and the whole point of the second board is to ask whether the
+    # misfit belongs to the domain or to the 8-puzzle specifically.
+    res["by_task"] = {}
+    print("\n  per board, since a domain-level number can hide a single bad board:")
+    for name, _, _ in SPECS:
+        rs = [r for r in rows if r["task"] == name]
+        if not rs:
+            continue
+        res["by_task"][name] = {
+            "n": len(rs), "mae": mae(rs),
+            "bias": float(np.mean([r["acc"] - r["pred"] for r in rs])),
+            "median_skew": float(np.median([r["skew"] for r in rs])),
+            "median_dprime": float(np.median([r["dprime"] for r in rs])),
+        }
+        b = res["by_task"][name]
+        print(f"    {name:>10}  n={b['n']:>3}  MAE {b['mae']:.4f}  bias {b['bias']:+.4f}   "
+              f"median skew {b['median_skew']:.3f}   d' {b['median_dprime']:.2f}")
 
     err = np.array([abs(r["acc"] - r["pred"]) for r in rows])
     print("\n  what predicts the error, pooled over both domains:")
