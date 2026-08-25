@@ -1,1 +1,32 @@
-A heuristic is useful to a search only insofar as it orders the states that search compares. Wilt & Ruml (2016) measure this as Goal Distance Rank Correlation: a single Kendall τ against exact distance-to-goal, pooled over every pair of states. We measure it stratiﬁed by distance instead, against exhaustive ground truth, on Rubik’s-cube sub-problems spanning 5.5 × 102 to 3.1 × 1023 states. Call the set of states at exact distance d from the goal the shell at d. A search compares adjacent shells, and we ﬁnd that a heuristic’s accuracy at that comparison is Φ(∆/(σ √ 2)), where ∆ is the diﬀerence in mean heuristic value between the two shells, σ the spread of values within them, and Φ the standard normal distribution function. Nothing here is ﬁtted. Estimating the moments and measuring accuracy on disjoint halves of each shell gives a mean absolute error of 0.012 over 252 shell observations, against an estimator noise ﬂoor of 0.002. It holds on a sub-problem 300 times larger whose ground truth comes from a diﬀerent apparatus, and on heuristics trained under three further objectives. Injecting noise of known tail weight degrades it monotonically, and Cauchy noise, which has no ﬁnite variance, breaks it by a factor of 36, so the normal form, not mere monotonicity, carries the prediction. Three consequences follow. Ordering quality is invariant to rescaling. Decay with distance occurs exactly when σ grows, which is why it is not particular to learned heuristics: pattern databases on the same states decay as much, and matched on strength the two classes are indistinguishable. And σ is the one term an objective can act on, but every objective we built to act on it produced a worse heuristic, monotonically in the penalty weight. We also show that τ -b rewards a heuristic for being coarse-valued, by enough ( 0.084) to reverse the learned-versus-classical comparisons this statistic is used to make. The identity is classical; the measurement against exact ground truth is our contribution. We report three claims made by earlier versions of this work that our own controls subsequently refuted.
+A heuristic is useful to a search only insofar as it orders the states that
+search compares. Wilt & Ruml (2016) measure this as Goal Distance Rank Correlation:
+one Kendall tau against exact distance-to-goal, pooled over every pair. We
+measure it stratified by distance instead, against exhaustive ground
+truth, on Rubik's-cube sub-problems from 5.5x10^2 to
+3.1x10^23 states and on sliding-tile boards.
+
+Call the states at exact distance d the shell at d.
+Search compares adjacent shells, and a heuristic's accuracy there is
+Phi(Delta/(sigma sqrt(2))), for Delta the gap in mean heuristic
+value between shells and sigma the spread within them. Nothing is fitted.
+On disjoint halves of each shell it gives mean absolute error 0.012 over 252
+observations against a noise floor of 0.002, and it survives a
+300x larger sub-problem, three further objectives, and injected noise.
+
+Three consequences. Ordering quality is invariant to rescaling. Decay with
+distance occurs exactly when sigma grows, so it is not particular to
+learned heuristics: pattern databases on the same states decay as much, in both
+domains, and matched on strength the two classes are indistinguishable. And
+sigma is the one term an objective can act on, yet every objective built to act on it
+produced a worse heuristic.
+
+The second domain bounds the law rather than confirming it. Error is four times larger on the
+sliding tile, but that is not a fact about the state space:
+the error tracks within-shell skewness, monotonically across three tasks, and
+matched on skew the domains agree below |skew|=1. The law is
+skew-limited, not domain-limited.
+
+We also show tau-b rewards coarse-valued heuristics by enough (0.084) to
+reverse comparisons it is used for. The identity is classical; the
+measurement against exact ground truth is ours. We report three claims from
+earlier versions that our own controls refuted.

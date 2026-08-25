@@ -1,0 +1,93 @@
+\section{A second domain, and where the law stops}
+\label{sec:domain}
+
+Every measurement so far is a Rubik's-cube sub-problem, so every claim above is
+one state space seen through several sub-problems of itself. This section adds
+the sliding-tile puzzle: the $3\times3$ board, which is the 8-puzzle, and the
+$2\times4$. Exact distances come from breadth-first search over a Lehmer ranking
+of the board. The implementation is checked against numbers it cannot influence:
+it reproduces $n!/2$ reachable states on every board, the published diameters of
+6, 21, 36 and 31 for $2\times2$, $2\times3$, $2\times4$ and $3\times3$, and the
+known count of exactly two states at distance 31 on the 8-puzzle.
+
+Abstractions are built as they are on the cube: track the blank and tiles
+$1..j$, forget the rest. The measurement code is not duplicated. Both domains go
+through one implementation of shell binning, pair sampling and tie counting,
+because two scripts that merely resemble each other would let any difference
+between them surface as a domain effect.
+
+One trap is worth recording, because it would have flattered the classical
+baseline rather than harming it. On the 8-puzzle, $j = 6$ leaves two tiles
+untracked, and the parity invariant then fixes which way round those two go, so
+the abstraction still separates every state and its table \emph{is} the exact
+distance. As a baseline it scores $1.000$ at every shell and a GDRC of exactly
+one. That is an oracle, not a strong heuristic. We exclude any rung whose
+reachable count has not fallen below the full task's.
+
+\paragraph{The profile results replicate.} On the 8-puzzle the learned heuristic
+reaches GDRC $+0.965$, with adjacent-shell accuracy falling from $1.000$ to
+$0.711$ across the measured shells. The nearest abstraction in strength, $j = 5$
+at GDRC $+0.995$, falls from $1.000$ to $0.690$: slightly stronger overall and
+decaying slightly \emph{more}. The random control stays flat at chance. Decay
+with distance is not a fingerprint of bootstrapping in this state space either,
+which is the claim of Section~\ref{sec:profile} surviving a change of domain.
+
+\paragraph{The law is worse here.} Split-sample mean absolute error is $0.0117$
+over 252 cube observations and $0.0465$ over 117 sliding-tile observations,
+against an estimator noise floor near $0.002$ in both. Read as a domain split
+that says Equation~\ref{eq:law} does not generalise, and we first wrote it down
+that way.
+
+\paragraph{It is not a domain fact.} What the error tracks is the skewness of the
+within-shell value distribution, Spearman $+0.74$, and the relationship is
+monotone across all three tasks (Table~\ref{tab:domain}). Matched on skew, the
+domain gap disappears below $|\mathrm{skew}| = 1$, where the tile fits slightly
+\emph{better} than the cube in every bin. Reweighting the cube to the tile's skew
+composition moves it only from $0.0221$ to $0.0237$, nowhere near the tile's
+$0.0595$, which says the cube and the tile are not two populations with different
+laws but one population indexed by skew.
+
+\begin{table}[t]
+\centering
+\input{tables/domain}
+\caption{The law's error tracks within-shell skewness rather than the state
+space. Top: the three tasks in increasing order of median skew. Bottom: matched
+on skew, the cube and the sliding tile agree below $|\mathrm{skew}| = 1$ and
+diverge above it. Pattern databases only, so this reproduces without a trained
+model.}
+\label{tab:domain}
+\end{table}
+
+The class breakdown says the same thing from the other side. Learned heuristics
+fit at $0.0103$ on the tile against $0.0068$ on the cube, essentially unchanged;
+pattern databases fit at $0.0621$ against $0.0200$. A learned value function is
+smooth and close to symmetric within a shell. A coarse abstraction is not, and
+the sliding tile's abstractions are more skewed than the cube's, which is why
+the cube alone could not have located this boundary.
+
+\paragraph{Four explanations we tested and rejected.} Three are backwards from
+the prediction, and we record them because a ruled-out explanation is the
+cheapest thing to hand a reader who would otherwise reach for it first.
+\emph{Saturation}, that a weak abstraction tops out at its own small diameter:
+predicted the weakest rungs would misfit worst, measured Spearman $+1.000$ the
+other way, the strongest rung being the worst fit at $0.122$ and the weakest the
+best at $0.035$. \emph{Near-determinism}, that a within-shell spike is the least
+normal shape available: error \emph{falls} with $d'$, Spearman $-0.53$, reaching
+$0.0003$ above $d' = 5$. \emph{A strength confound}, which is this paper's own
+warning about unmatched baselines turned on itself and so had to be checked:
+reweighting the cube to the tile's $d'$ composition gives $0.0160$ against the
+tile's $0.0595$, and within matched $d'$ bins the tile remains several times
+worse. \emph{Ties}, which the equal-variance binormal identity assumes away and
+which Section~\ref{sec:pooled} shows biases $\tau$-b: backwards again, since the
+cube has a median tie rate of $0.325$ and the tile $0.000$.
+
+Equal variance, the assumption we named explicitly when deriving
+Equation~\ref{eq:law}, is not the culprit either. The tile's variance ratio is
+$1.258$ against the cube's $1.428$, better behaved, and reweighting on it closes
+almost none of the gap. The assumption that fails is normality, and specifically
+its third moment, which we had not singled out.
+
+\paragraph{What remains unexplained.} Above $|\mathrm{skew}| = 1$ the tile is
+still $3.4$ times worse than the cube at matched skew. Skewness accounts for the
+gap over most of the range and leaves a residual we cannot attribute. We report
+the boundary we can demonstrate, not a mechanism we cannot.

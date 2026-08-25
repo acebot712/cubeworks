@@ -236,6 +236,26 @@ def main():
         print(f"    |error| vs {key:>9}   Pearson {c['pearson']:+.3f}   "
               f"Spearman {c['spearman']:+.3f}")
 
+    # The class split comes from the full corpus rather than this script's
+    # pattern-database-only rows, because the learned side needs checkpoints.
+    # It is copied in here so one file carries the whole comparison.
+    try:
+        law = json.load(open(RESULTS / "dprime-law.json"))
+        from dprime_law import load_insample
+        ins = [r for r in load_insample() if "split_acc" in r]
+        res["by_class"] = {}
+        for cls in ("learned", "PDB", "random"):
+            res["by_class"][cls] = {}
+            for dom in ("cube", "tile"):
+                rs = [r for r in ins if r["kind"] == cls and r["domain"] == dom]
+                if rs:
+                    res["by_class"][cls][dom] = {
+                        "n": len(rs),
+                        "mae": float(np.mean([abs(r["split_acc"] - r["split_pred"])
+                                              for r in rs]))}
+    except Exception as exc:                       # no profiles yet, or no checkpoints
+        print(f"  (class split skipped: {exc})")
+
     for key, edges in (("dprime", [0, .25, .5, 1, 2, 1e9]),
                        ("skew", [0, .4, .7, 1.0, 1e9]),
                        ("var_ratio", [1, 1.5, 3, 10, 1e9])):

@@ -167,3 +167,51 @@ L += [r"\midrule",
       r"\multicolumn{5}{l}{unperturbed within-shell spread. \emph{Forward} uses only "
       r"the $\lambda\!=\!0$ moments.} \\"]
 w("noise", "\n".join(L + [r"\bottomrule", r"\end{tabular}"]))
+
+
+# ---------------------------------------------------------------- second domain
+# Two panels rather than two tables: the top says the law is worse on the
+# sliding tile, the bottom says that is not a fact about the domain. Split
+# apart, a reader can take the first without the second.
+cd = json.load(open(R/'cross-domain-law.json'))
+law2 = json.load(open(R/'dprime-law.json'))
+NAME = {"wings-k6": r"cube, $k\!=\!6$", "tile-3x3": r"sliding tile, $3\times3$",
+        "tile-2x4": r"sliding tile, $2\times4$"}
+L = [r"\begin{tabular}{lrrrr}", r"\toprule",
+     r"task & $n$ & median $|$skew$|$ & mean $|$error$|$ & bias \\", r"\midrule"]
+for k, v in cd['by_task'].items():
+    L.append(f"{NAME.get(k, k)} & {v['n']} & {v['median_skew']:.3f} & "
+             f"{v['mae']:.4f} & {v['bias']:+.4f}" r" \\")
+L += [r"\midrule",
+      r"\multicolumn{5}{l}{\emph{Matched on skew, the domain gap closes below "
+      r"$|\mathrm{skew}| = 1$:}} \\"]
+sk = cd['stratified']['skew']
+L.append(r"$|$skew$|$ range & cube $n$ & cube $|$err$|$ & tile $n$ & tile $|$err$|$ \\")
+for b in sk['bins']:
+    if not (b['cube_n'] and b['tile_n']):
+        continue
+    hi = r"$\infty$" if b['hi'] > 1e8 else f"{b['hi']:g}"
+    L.append(f"{b['lo']:g} to {hi} & {b['cube_n']} & {b['cube_mae']:.4f} & "
+             f"{b['tile_n']} & {b['tile_mae']:.4f}" r" \\")
+L += [r"\midrule",
+      r"\multicolumn{5}{l}{Reweighting the cube to the tile's skew mix gives "
+      f"{sk['cube_reweighted_to_tile']:.4f}, against the tile's " 
+      f"{sk['tile_mae']:.4f}." r"} \\"]
+w("domain", "\n".join(L + [r"\bottomrule", r"\end{tabular}"]))
+
+# The class split, which is the reason the tile exposes the boundary at all.
+bd = law2.get('by_domain_split') or {}
+if bd:
+    L = [r"\begin{tabular}{lrrrr}", r"\toprule",
+         r" & \multicolumn{2}{c}{cube} & \multicolumn{2}{c}{sliding tile} \\",
+         r"\cmidrule(lr){2-3}\cmidrule(l){4-5}",
+         r"heuristic class & $n$ & mean $|$error$|$ & $n$ & mean $|$error$|$ \\",
+         r"\midrule"]
+    rows = cd.get('by_class') or {}
+    for cls in ("learned", "PDB", "random"):
+        c, t = rows.get(cls, {}).get('cube'), rows.get(cls, {}).get('tile')
+        if not (c and t):
+            continue
+        L.append(f"{cls} & {c['n']} & {c['mae']:.4f} & {t['n']} & {t['mae']:.4f}" r" \\")
+    if len(L) > 6:
+        w("domainclass", "\n".join(L + [r"\bottomrule", r"\end{tabular}"]))
