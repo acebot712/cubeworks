@@ -63,6 +63,17 @@ def table_path(task):
     return HERE / f"exact_k{task.k}{_cube_suffix(task)}.npy"
 
 
+def cells_of(task):
+    """Size of the index space `rank` maps into, and so the closed list's length.
+
+    Also the hard bound on expansions: a search with a closed list cannot expand
+    a state twice, so it terminates within this many.
+    """
+    if is_tile(task):
+        return task.cells
+    return 24 ** task.k
+
+
 def rank(task, states):
     """Unique int64 index per state, matching the layout of table_path(task)."""
     if is_tile(task):

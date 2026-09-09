@@ -92,6 +92,24 @@ instance difficulty is held constant rather than averaged over. Deliberately not
 the swept sample `profiles.py` uses: that sample is non-uniform by design, and
 reusing it would correlate the predictor with the outcome through the sampling.
 
+Uniform is produced by deep random walk, `resolution.sample_states`, at walk
+length 500. Every move set here is regular, illegal tile moves being self-loops
+and the cube being a group action, so a long walk converges to the uniform
+distribution over reachable states. The walk length is verified against the BFS
+histogram rather than assumed, because the two domains mix at very different
+rates:
+
+| | true mean distance | walk 30 | walk 200 | walk 500 |
+|---|---|---|---|---|
+| tile-3x3 | 21.972 | 6.49 | 19.84 | **21.974** |
+| wings-k4 | 4.707 | 4.681 | 4.714 | **4.706** |
+
+The tile has 4 generators to the cube's 63 and mixes correspondingly slower.
+`Task.scramble` is NOT the sampler: its scramble lengths are uniform on
+`[1, k_max]`, which samples a mean distance of 4.84 on `tile-3x3` against the
+true 21.97, concentrating the instance set near the goal where every heuristic
+looks good.
+
 **Population.** Every available pattern-database rung, every final learned
 checkpoint, per task. Roughly 80 observations across the six tasks. Intermediate
 `@step` checkpoints are excluded because they are not independent of their final
