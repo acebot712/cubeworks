@@ -712,17 +712,47 @@ why rungs above $k=8$ are reported by solve rate alone.
 branching factor as it increases diameter. The design rules out cardinality; it
 cannot apportion the remainder.
 
-\paragraph{We do not show that any of this makes a search cheaper.} This is the
-most important limitation and we state it first. An earlier version of this work
-reported that the stratified measure predicts required beam width where pooled
-GDRC does not. It does not survive its own censoring: 11 of 19 configurations
-reach the target at beam width 1, and on the 8 where the outcome varies the
-ordering reverses in favour of pooled GDRC. We removed the section rather than
-report a correlation that inverts on the subset carrying the information.
-Establishing predictive value needs an outcome with no floor (nodes expanded
-at a fixed generous width, rather than the width required to hit a target) and
-a censored-data estimator. Until then the contribution here is diagnostic: it
-says what a heuristic's ordering quality is made of, not what it will cost you.
+\paragraph{The profile does not predict search cost better than pooled GDRC, and
+the test that says so was pre-registered.} This is the most important limitation
+and we state it first. An earlier version of this work reported that the
+stratified measure predicts required beam width where pooled GDRC does not. That
+did not survive its own censoring, 11 of 19 configurations reaching the target at
+beam width 1, and it had also chosen its predictor after seeing the data. We
+removed the section, then ran the question again with the predictor, the outcome,
+the test and the threshold all fixed in a pre-registration committed before any
+search ran.
+
+Greedy best-first counting expansions, chosen because under beam search at a
+fixed width the expansion count is width times branching times levels, which is
+solution length in disguise. A closed list bounds the search at $|S|$
+expansions, so on tasks this size nothing is censored and no censored-data
+estimator is needed. Six tasks across the two domains, 1000 uniform instances
+each shared by every heuristic so the comparison is paired, and the statistic is
+the \emph{difference} of two Spearman correlations against cost, because either
+one alone is large merely because both track strength.
+
+Table~\ref{tab:costpredict} reports it. Both statistics predict cost, and the
+difference between them is small, varies in sign across tasks, and has a combined
+interval containing zero. The pre-registered criterion asked for a positive
+difference in at least 4 of 6 tasks together with a combined interval excluding
+zero: the difference is positive in 3 and the interval touches zero, and under
+the declared robustness check it is positive in 2. The result is null on both.
+
+\begin{table}[t]
+\centering
+\input{tables/costpredict}
+\caption{Does the distance-stratified profile predict search cost better than
+pooled GDRC? Correlations are against median expansions under greedy best-first,
+negated so that positive means a better predictor of cheapness. Both statistics
+predict cost; the difference between them does not clear the pre-registered
+threshold. Design and criteria fixed in advance, before any search ran.}
+\label{tab:costpredict}
+\end{table}
+
+So ordering quality does predict search cost, which \citet{wilt2016} established
+and we do not claim, and stratifying it by distance buys nothing measurable on
+top of the pooled coefficient. The contribution here stays diagnostic: it says
+what a heuristic's ordering quality is made of, not what it will cost you.
 
 \paragraph{The law is an approximation, and we can now say where it degrades.}
 On the cube, split-sample mean absolute error is $0.012$ against an estimator
@@ -805,6 +835,13 @@ and the boundary was invisible from the cube alone because cube abstractions are
 not skewed enough to reach it. We tested four other explanations, three of which
 came out backwards from the prediction, and a residual above
 $|\mathrm{skew}|=1$ remains unaccounted for.
+
+We also asked, with the design fixed in advance, whether the profile predicts
+search cost better than the pooled coefficient does. It does not. Both predict
+the expansions a greedy best-first search needs, and the difference between them
+is null on the pre-registered test and on its declared robustness check. That is
+worth stating plainly because the previous version of this work claimed the
+opposite from a measure that inverted on the subset carrying the information.
 
 The practical recommendations are narrow and cheap. Report the profile rather
 than the scalar. Match heuristics on overall strength before comparing their

@@ -199,5 +199,20 @@ separates. That is the forking path that produced the removed section.
 
 ## Deviations from this pre-registration
 
-None yet. Anything that changes after the first run is recorded here, dated, with
-the reason.
+**2026-09-09, no protocol change, one finding about the primary outcome.** The
+run was executed exactly as specified above and the result is reported from the
+primary outcome. But the median of 1000 expansion counts turns out to be a small
+integer on these tasks, so it quantises hard: 12 heuristics land on as few as 3
+distinct costs on `wings-k4/oi-q`, and a rank statistic has almost no resolution
+left to separate two predictors that are themselves highly correlated. Three
+tasks return a gap of exactly zero for that reason rather than because the
+predictors tie on the merits.
+
+The geometric mean, pre-registered above as a robustness check, restores full
+resolution: distinct cost values equal the number of heuristics in every task.
+It is reported alongside the primary rather than in place of it, and it reaches
+the same verdict, so the conclusion does not depend on which is read. Had they
+disagreed, the primary would have stood.
+
+Nothing else changed. The predictor, the tasks, the instances, the search, the
+test and the 4-of-6 threshold are all as written before the run.

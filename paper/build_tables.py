@@ -219,3 +219,25 @@ if bd:
         L.append(f"{cls} & {c['n']} & {c['mae']:.4f} & {t['n']} & {t['mae']:.4f}" r" \\")
     if len(L) > 6:
         w("domainclass", "\n".join(L + [r"\bottomrule", r"\end{tabular}"]))
+
+# ------------------------------------------------- pre-registered search cost
+cp = json.load(open(R/'cost-predict.json'))
+NICE = {"tile-2x4/all": r"sliding tile $2\times4$", "tile-3x3/all": r"sliding tile $3\times3$",
+        "wings-k4/all": r"cube $k\!=\!4$, all", "wings-k4/oi-q": r"cube $k\!=\!4$, oi-q",
+        "wings-k4/oi-q3": r"cube $k\!=\!4$, oi-q3", "wings-k4/oi-q4": r"cube $k\!=\!4$, oi-q4"}
+prim = cp['median_expansions']
+L = [r"\begin{tabular}{lrrrrr}", r"\toprule",
+     r"task & $n$ & $r$ profile & $r$ GDRC & difference & 95\% CI \\", r"\midrule"]
+for k, v in prim['per_task'].items():
+    L.append(f"{NICE.get(k, k)} & {v['n']} & {v['r_predictor']:+.3f} & {v['r_gdrc']:+.3f} & "
+             f"{v['gap']:+.3f} & $[{v['ci95'][0]:+.3f}, {v['ci95'][1]:+.3f}]$ \\\\")
+c = prim['combined']
+L += [r"\midrule",
+      r"\multicolumn{6}{l}{combined difference "
+      f"${c['mean']:+.4f}$, 95\\% CI $[{c['lo']:+.4f}, {c['hi']:+.4f}]$; positive in "
+      f"{prim['tasks_positive']} of {prim['n_tasks']} tasks, 4 required" r"} \\"]
+g = cp['geomean_expansions']['combined']
+gp = cp['geomean_expansions']['tasks_positive']
+L += [r"\multicolumn{6}{l}{\emph{robustness check}, geometric mean: "
+      f"${g['mean']:+.4f}$, $[{g['lo']:+.4f}, {g['hi']:+.4f}]$; positive in {gp} of 6" r"} \\"]
+w("costpredict", "\n".join(L + [r"\bottomrule", r"\end{tabular}"]))

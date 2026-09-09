@@ -1,0 +1,975 @@
+{
+  "preregistration": "eval/PREREGISTRATION-search-cost.md",
+  "predictor": "adjacent-shell accuracy weighted by n_d*n_(d+1)",
+  "n_instances": 1000,
+  "seed": 17,
+  "rows": [
+    {
+      "task": "tile-2x4/all",
+      "name": "PDB(k=1)",
+      "kind": "PDB",
+      "gdrc": 0.6355048858385416,
+      "predictor": 0.4984787567676592,
+      "median_expansions": 3950.0,
+      "geomean_expansions": 2449.7658145987466,
+      "mean_suboptimality": 7.058,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-2x4/all",
+      "name": "PDB(k=2)",
+      "kind": "PDB",
+      "gdrc": 0.8759279586603589,
+      "predictor": 0.5482787035755387,
+      "median_expansions": 1443.0,
+      "geomean_expansions": 918.9839274416348,
+      "mean_suboptimality": 22.186,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-2x4/all",
+      "name": "PDB(k=3)",
+      "kind": "PDB",
+      "gdrc": 0.9853666790378683,
+      "predictor": 0.6473112454865793,
+      "median_expansions": 403.5,
+      "geomean_expansions": 265.4405304407447,
+      "mean_suboptimality": 14.298,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-2x4/all",
+      "name": "PDB(k=4)",
+      "kind": "PDB",
+      "gdrc": 0.9961859477298947,
+      "predictor": 0.856171870859814,
+      "median_expansions": 123.0,
+      "geomean_expansions": 71.02640327973951,
+      "mean_suboptimality": 5.946,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-2x4/all",
+      "name": "learned_s0",
+      "kind": "learned",
+      "gdrc": 0.9633025927047881,
+      "predictor": 0.9563913852493703,
+      "median_expansions": 37.5,
+      "geomean_expansions": 77.128477467381,
+      "mean_suboptimality": 9.74,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-2x4/all",
+      "name": "random",
+      "kind": "random",
+      "gdrc": -0.0015637429973137274,
+      "predictor": 0.506009981531063,
+      "median_expansions": 10334.0,
+      "geomean_expansions": 7651.959064687993,
+      "mean_suboptimality": 143.172,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-3x3/all",
+      "name": "PDB(k=1)",
+      "kind": "PDB",
+      "gdrc": 0.5407122779482499,
+      "predictor": 0.5075560396892644,
+      "median_expansions": 17185.0,
+      "geomean_expansions": 13218.383241210155,
+      "mean_suboptimality": 19.062,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-3x3/all",
+      "name": "PDB(k=2)",
+      "kind": "PDB",
+      "gdrc": 0.6740851332869006,
+      "predictor": 0.5444331931327093,
+      "median_expansions": 3206.5,
+      "geomean_expansions": 2376.4005792235293,
+      "mean_suboptimality": 10.79,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-3x3/all",
+      "name": "PDB(k=3)",
+      "kind": "PDB",
+      "gdrc": 0.7436479243075175,
+      "predictor": 0.560805177679825,
+      "median_expansions": 501.5,
+      "geomean_expansions": 375.53594864537143,
+      "mean_suboptimality": 6.696,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-3x3/all",
+      "name": "PDB(k=4)",
+      "kind": "PDB",
+      "gdrc": 0.8977051039173467,
+      "predictor": 0.5982347911618261,
+      "median_expansions": 751.0,
+      "geomean_expansions": 330.39412739401473,
+      "mean_suboptimality": 7.206,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-3x3/all",
+      "name": "PDB(k=5)",
+      "kind": "PDB",
+      "gdrc": 0.9942854074025462,
+      "predictor": 0.7688712807719393,
+      "median_expansions": 219.0,
+      "geomean_expansions": 117.9883505040093,
+      "mean_suboptimality": 6.508,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-3x3/all",
+      "name": "learned",
+      "kind": "learned",
+      "gdrc": 0.964852047917192,
+      "predictor": 0.8942558203737149,
+      "median_expansions": 26.0,
+      "geomean_expansions": 26.53519858776964,
+      "mean_suboptimality": 2.408,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-3x3/all",
+      "name": "learned_s1",
+      "kind": "learned",
+      "gdrc": 0.964851436389492,
+      "predictor": 0.8975348844998311,
+      "median_expansions": 26.0,
+      "geomean_expansions": 26.380278294043364,
+      "mean_suboptimality": 2.408,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-3x3/all",
+      "name": "learned_s2",
+      "kind": "learned",
+      "gdrc": 0.9648518260396413,
+      "predictor": 0.8987608034187275,
+      "median_expansions": 26.0,
+      "geomean_expansions": 26.90080757085092,
+      "mean_suboptimality": 2.574,
+      "n_unsolved": 0
+    },
+    {
+      "task": "tile-3x3/all",
+      "name": "random",
+      "kind": "random",
+      "gdrc": 5.784584215663177e-05,
+      "predictor": 0.5003242615831115,
+      "median_expansions": 94761.0,
+      "geomean_expansions": 69574.83145918652,
+      "mean_suboptimality": 273.846,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "PDB(k=2)",
+      "kind": "PDB",
+      "gdrc": 0.5637301648212553,
+      "predictor": 0.6742493148354596,
+      "median_expansions": 346.0,
+      "geomean_expansions": 259.5927823561292,
+      "mean_suboptimality": 1.211,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "PDB(k=3)",
+      "kind": "PDB",
+      "gdrc": 0.7045870292236083,
+      "predictor": 0.7354622432582737,
+      "median_expansions": 21.0,
+      "geomean_expansions": 19.935440332734213,
+      "mean_suboptimality": 1.037,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s0",
+      "kind": "learned",
+      "gdrc": 0.7330979190808902,
+      "predictor": 0.8823178161923131,
+      "median_expansions": 6.0,
+      "geomean_expansions": 6.090586036596956,
+      "mean_suboptimality": 0.428,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s1",
+      "kind": "learned",
+      "gdrc": 0.733715571256097,
+      "predictor": 0.8851233000092886,
+      "median_expansions": 6.0,
+      "geomean_expansions": 6.118571337793836,
+      "mean_suboptimality": 0.438,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s2",
+      "kind": "learned",
+      "gdrc": 0.7496745640924452,
+      "predictor": 0.9026883517653238,
+      "median_expansions": 6.0,
+      "geomean_expansions": 5.938883028909278,
+      "mean_suboptimality": 0.28,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s3",
+      "kind": "learned",
+      "gdrc": 0.7324983289656906,
+      "predictor": 0.8819715927683773,
+      "median_expansions": 6.0,
+      "geomean_expansions": 6.066826502674547,
+      "mean_suboptimality": 0.403,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s4",
+      "kind": "learned",
+      "gdrc": 0.7486189086582216,
+      "predictor": 0.9020234564329896,
+      "median_expansions": 6.0,
+      "geomean_expansions": 5.936462703943354,
+      "mean_suboptimality": 0.274,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s5",
+      "kind": "learned",
+      "gdrc": 0.7320223349582942,
+      "predictor": 0.8811564325711938,
+      "median_expansions": 6.0,
+      "geomean_expansions": 6.0386367499197044,
+      "mean_suboptimality": 0.377,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s6",
+      "kind": "learned",
+      "gdrc": 0.7377477207697059,
+      "predictor": 0.886436035077102,
+      "median_expansions": 6.0,
+      "geomean_expansions": 6.035677534327571,
+      "mean_suboptimality": 0.376,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s7",
+      "kind": "learned",
+      "gdrc": 0.74089017497457,
+      "predictor": 0.8918384285775894,
+      "median_expansions": 6.0,
+      "geomean_expansions": 6.013985968413419,
+      "mean_suboptimality": 0.366,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s8",
+      "kind": "learned",
+      "gdrc": 0.7486237190936103,
+      "predictor": 0.9001788407412445,
+      "median_expansions": 6.0,
+      "geomean_expansions": 5.9246028294119215,
+      "mean_suboptimality": 0.264,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_dv-all_s9",
+      "kind": "learned",
+      "gdrc": 0.74058422699584,
+      "predictor": 0.893028096038195,
+      "median_expansions": 6.0,
+      "geomean_expansions": 5.9941918417493465,
+      "mean_suboptimality": 0.344,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_pilot",
+      "kind": "learned",
+      "gdrc": 0.6151294921079349,
+      "predictor": 0.7483023151723939,
+      "median_expansions": 9.0,
+      "geomean_expansions": 9.178656617290631,
+      "mean_suboptimality": 2.001,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_s0",
+      "kind": "learned",
+      "gdrc": 0.7524503152089999,
+      "predictor": 0.9039337199022494,
+      "median_expansions": 6.0,
+      "geomean_expansions": 5.881608357635909,
+      "mean_suboptimality": 0.22,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_s1",
+      "kind": "learned",
+      "gdrc": 0.755951895667803,
+      "predictor": 0.9098332552755556,
+      "median_expansions": 6.0,
+      "geomean_expansions": 5.879406314353051,
+      "mean_suboptimality": 0.215,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "learned_s2",
+      "kind": "learned",
+      "gdrc": 0.7754813403824533,
+      "predictor": 0.9338783585265825,
+      "median_expansions": 6.0,
+      "geomean_expansions": 5.7950256607063615,
+      "mean_suboptimality": 0.128,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/all",
+      "name": "random",
+      "kind": "random",
+      "gdrc": -0.0036042925681179887,
+      "predictor": 0.4908728192627982,
+      "median_expansions": 143114.0,
+      "geomean_expansions": 108232.72515269124,
+      "mean_suboptimality": 61.951,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "PDB(k=2)",
+      "kind": "PDB",
+      "gdrc": 0.6363358769543777,
+      "predictor": 0.6781311538534677,
+      "median_expansions": 260.0,
+      "geomean_expansions": 193.4388897701931,
+      "mean_suboptimality": 1.194,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "PDB(k=3)",
+      "kind": "PDB",
+      "gdrc": 0.744614114248278,
+      "predictor": 0.7263464643003649,
+      "median_expansions": 17.0,
+      "geomean_expansions": 15.289451292505754,
+      "mean_suboptimality": 1.277,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s0",
+      "kind": "learned",
+      "gdrc": 0.8120303709408122,
+      "predictor": 0.8875031412367428,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.219871508126216,
+      "mean_suboptimality": 0.267,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s1",
+      "kind": "learned",
+      "gdrc": 0.8030283072655698,
+      "predictor": 0.8756506377500841,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.299732049197361,
+      "mean_suboptimality": 0.354,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s2",
+      "kind": "learned",
+      "gdrc": 0.7995503167966498,
+      "predictor": 0.8715083340559167,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.341747674935055,
+      "mean_suboptimality": 0.392,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s3",
+      "kind": "learned",
+      "gdrc": 0.8008545617401971,
+      "predictor": 0.8734957821763266,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.327494319242879,
+      "mean_suboptimality": 0.382,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s4",
+      "kind": "learned",
+      "gdrc": 0.8053193730254807,
+      "predictor": 0.8789600971870699,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.273030719080152,
+      "mean_suboptimality": 0.33,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s5",
+      "kind": "learned",
+      "gdrc": 0.8102696388129697,
+      "predictor": 0.8859493930377179,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.27348177127461,
+      "mean_suboptimality": 0.32,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s6",
+      "kind": "learned",
+      "gdrc": 0.8106251514877184,
+      "predictor": 0.8864697985268766,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.250178702990896,
+      "mean_suboptimality": 0.306,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s7",
+      "kind": "learned",
+      "gdrc": 0.8103734360355929,
+      "predictor": 0.8858112022125207,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.21911444279721,
+      "mean_suboptimality": 0.265,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s8",
+      "kind": "learned",
+      "gdrc": 0.8089924756630645,
+      "predictor": 0.8832224688511048,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.2434411003775665,
+      "mean_suboptimality": 0.294,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "learned_dv-oi-q_s9",
+      "kind": "learned",
+      "gdrc": 0.8030264233576713,
+      "predictor": 0.8769462169825386,
+      "median_expansions": 7.0,
+      "geomean_expansions": 7.312669490926804,
+      "mean_suboptimality": 0.377,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q",
+      "name": "random",
+      "kind": "random",
+      "gdrc": -0.001206423225115487,
+      "predictor": 0.4999585061905405,
+      "median_expansions": 127383.5,
+      "geomean_expansions": 92630.42387575508,
+      "mean_suboptimality": 79.104,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "PDB(k=2)",
+      "kind": "PDB",
+      "gdrc": 0.6946506595256624,
+      "predictor": 0.6178740802517614,
+      "median_expansions": 1676.0,
+      "geomean_expansions": 1243.2767781317395,
+      "mean_suboptimality": 4.258,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "PDB(k=3)",
+      "kind": "PDB",
+      "gdrc": 0.8275792124567278,
+      "predictor": 0.7202271296322431,
+      "median_expansions": 16.0,
+      "geomean_expansions": 15.871119900364713,
+      "mean_suboptimality": 1.279,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s0",
+      "kind": "learned",
+      "gdrc": 0.565916719327111,
+      "predictor": 0.5565274766604665,
+      "median_expansions": 212.0,
+      "geomean_expansions": 151.4736093274354,
+      "mean_suboptimality": 22.61,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s1",
+      "kind": "learned",
+      "gdrc": 0.9058918380311358,
+      "predictor": 0.7914077602596654,
+      "median_expansions": 11.0,
+      "geomean_expansions": 11.548519807292184,
+      "mean_suboptimality": 1.264,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s2",
+      "kind": "learned",
+      "gdrc": 0.898601529049056,
+      "predictor": 0.775828171548964,
+      "median_expansions": 11.0,
+      "geomean_expansions": 13.365569976798788,
+      "mean_suboptimality": 1.812,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s3",
+      "kind": "learned",
+      "gdrc": 0.8894213039341177,
+      "predictor": 0.7513743569354088,
+      "median_expansions": 11.5,
+      "geomean_expansions": 14.149578860969172,
+      "mean_suboptimality": 2.176,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s4",
+      "kind": "learned",
+      "gdrc": 0.9184122400126569,
+      "predictor": 0.8212932771226302,
+      "median_expansions": 10.0,
+      "geomean_expansions": 10.528876394939703,
+      "mean_suboptimality": 0.63,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s5",
+      "kind": "learned",
+      "gdrc": 0.9016262168655567,
+      "predictor": 0.7775170041126076,
+      "median_expansions": 11.0,
+      "geomean_expansions": 11.447882336458362,
+      "mean_suboptimality": 1.18,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s6",
+      "kind": "learned",
+      "gdrc": 0.8940538598378582,
+      "predictor": 0.7568819686979753,
+      "median_expansions": 11.0,
+      "geomean_expansions": 11.75696581819746,
+      "mean_suboptimality": 1.57,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s7",
+      "kind": "learned",
+      "gdrc": 0.9087934608239477,
+      "predictor": 0.8029206402894786,
+      "median_expansions": 11.0,
+      "geomean_expansions": 11.452254376409515,
+      "mean_suboptimality": 1.04,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s8",
+      "kind": "learned",
+      "gdrc": 0.9034162288460917,
+      "predictor": 0.7869942864298357,
+      "median_expansions": 11.0,
+      "geomean_expansions": 12.290806724472425,
+      "mean_suboptimality": 1.502,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "learned_dv-oi-q3_s9",
+      "kind": "learned",
+      "gdrc": 0.8937448222003639,
+      "predictor": 0.7594886101719776,
+      "median_expansions": 11.0,
+      "geomean_expansions": 12.333472722316557,
+      "mean_suboptimality": 1.534,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q3",
+      "name": "random",
+      "kind": "random",
+      "gdrc": -0.0026595217123919633,
+      "predictor": 0.5051207411004335,
+      "median_expansions": 136273.0,
+      "geomean_expansions": 106994.09765908854,
+      "mean_suboptimality": 109.681,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "PDB(k=2)",
+      "kind": "PDB",
+      "gdrc": 0.6248381740075974,
+      "predictor": 0.6355881950593756,
+      "median_expansions": 250.5,
+      "geomean_expansions": 192.4206857041371,
+      "mean_suboptimality": 1.766,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "PDB(k=3)",
+      "kind": "PDB",
+      "gdrc": 0.7610552151542022,
+      "predictor": 0.6994732530202667,
+      "median_expansions": 15.0,
+      "geomean_expansions": 14.582359099705549,
+      "mean_suboptimality": 1.391,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s0",
+      "kind": "learned",
+      "gdrc": 0.7864719219425041,
+      "predictor": 0.7540956412683758,
+      "median_expansions": 10.0,
+      "geomean_expansions": 11.287411741270208,
+      "mean_suboptimality": 2.109,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s1",
+      "kind": "learned",
+      "gdrc": 0.8331757695416308,
+      "predictor": 0.8213755873697112,
+      "median_expansions": 9.0,
+      "geomean_expansions": 8.916943850785458,
+      "mean_suboptimality": 0.649,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s2",
+      "kind": "learned",
+      "gdrc": 0.8459278906221621,
+      "predictor": 0.8441408348177833,
+      "median_expansions": 9.0,
+      "geomean_expansions": 8.8157021457476,
+      "mean_suboptimality": 0.551,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s3",
+      "kind": "learned",
+      "gdrc": 0.8428992945733347,
+      "predictor": 0.8390869599903222,
+      "median_expansions": 9.0,
+      "geomean_expansions": 8.995527659197897,
+      "mean_suboptimality": 0.653,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s4",
+      "kind": "learned",
+      "gdrc": 0.8469532643843247,
+      "predictor": 0.8442737244658403,
+      "median_expansions": 9.0,
+      "geomean_expansions": 8.716893384860972,
+      "mean_suboptimality": 0.49,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s5",
+      "kind": "learned",
+      "gdrc": 0.8431463819761433,
+      "predictor": 0.8394302269418312,
+      "median_expansions": 9.0,
+      "geomean_expansions": 8.772936700121056,
+      "mean_suboptimality": 0.563,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s6",
+      "kind": "learned",
+      "gdrc": 0.8186252092515883,
+      "predictor": 0.801073290467023,
+      "median_expansions": 9.0,
+      "geomean_expansions": 9.306517404150178,
+      "mean_suboptimality": 0.956,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s7",
+      "kind": "learned",
+      "gdrc": 0.8405192409030556,
+      "predictor": 0.8350385939422378,
+      "median_expansions": 9.0,
+      "geomean_expansions": 8.836628852730197,
+      "mean_suboptimality": 0.629,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s8",
+      "kind": "learned",
+      "gdrc": 0.8329245865394275,
+      "predictor": 0.8189389302836242,
+      "median_expansions": 9.0,
+      "geomean_expansions": 8.958158903328249,
+      "mean_suboptimality": 0.732,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "learned_dv-oi-q4_s9",
+      "kind": "learned",
+      "gdrc": 0.8391545249215485,
+      "predictor": 0.8312527289696416,
+      "median_expansions": 9.0,
+      "geomean_expansions": 9.033781645066313,
+      "mean_suboptimality": 0.656,
+      "n_unsolved": 0
+    },
+    {
+      "task": "wings-k4/oi-q4",
+      "name": "random",
+      "kind": "random",
+      "gdrc": -0.003951209311511552,
+      "predictor": 0.49749070175821525,
+      "median_expansions": 132565.5,
+      "geomean_expansions": 100545.07133259696,
+      "mean_suboptimality": 97.837,
+      "n_unsolved": 0
+    }
+  ],
+  "median_expansions": {
+    "role": "primary",
+    "per_task": {
+      "tile-2x4/all": {
+        "n": 5,
+        "distinct_costs": 5,
+        "gap": 0.29999999999999993,
+        "r_predictor": 0.9999999999999999,
+        "r_gdrc": 0.7,
+        "ci95": [
+          0.0,
+          1.8749999999999998
+        ],
+        "degenerate_resamples": 20,
+        "evaluable": true
+      },
+      "tile-3x3/all": {
+        "n": 8,
+        "distinct_costs": 6,
+        "gap": 0.14638501094227996,
+        "r_predictor": 0.95150257112482,
+        "r_gdrc": 0.80511756018254,
+        "ci95": [
+          0.0,
+          0.7022468831767834
+        ],
+        "degenerate_resamples": 4,
+        "evaluable": true
+      },
+      "wings-k4/all": {
+        "n": 16,
+        "distinct_costs": 4,
+        "gap": 0.0043145151469302645,
+        "r_predictor": 0.6816933932149711,
+        "r_gdrc": 0.6773788780680409,
+        "ci95": [
+          0.0,
+          0.049278027261603796
+        ],
+        "degenerate_resamples": 366,
+        "evaluable": true
+      },
+      "wings-k4/oi-q": {
+        "n": 12,
+        "distinct_costs": 3,
+        "gap": 0.0,
+        "r_predictor": 0.6504436355879909,
+        "r_gdrc": 0.6504436355879909,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "degenerate_resamples": 1147,
+        "evaluable": true
+      },
+      "wings-k4/oi-q3": {
+        "n": 12,
+        "distinct_costs": 6,
+        "gap": 0.0,
+        "r_predictor": 0.8889716525099387,
+        "r_gdrc": 0.8889716525099387,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "degenerate_resamples": 15,
+        "evaluable": true
+      },
+      "wings-k4/oi-q4": {
+        "n": 12,
+        "distinct_costs": 4,
+        "gap": 0.0,
+        "r_predictor": 0.7618527288259722,
+        "r_gdrc": 0.7618527288259722,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "degenerate_resamples": 308,
+        "evaluable": true
+      }
+    },
+    "combined": {
+      "mean": 0.08844962168821063,
+      "lo": 0.0,
+      "hi": 0.3333333333333333,
+      "reps": 10000
+    },
+    "tasks_positive": 3,
+    "n_tasks": 6,
+    "tasks_evaluable": 6,
+    "success": false
+  },
+  "geomean_expansions": {
+    "role": "robustness check",
+    "per_task": {
+      "tile-2x4/all": {
+        "n": 5,
+        "distinct_costs": 5,
+        "gap": 0.0,
+        "r_predictor": 0.8999999999999998,
+        "r_gdrc": 0.8999999999999998,
+        "ci95": [
+          -0.8888888888888888,
+          0.8888888888888888
+        ],
+        "degenerate_resamples": 20,
+        "evaluable": true
+      },
+      "tile-3x3/all": {
+        "n": 8,
+        "distinct_costs": 8,
+        "gap": 0.1428571428571429,
+        "r_predictor": 0.9285714285714287,
+        "r_gdrc": 0.7857142857142858,
+        "ci95": [
+          -0.15384615384615363,
+          0.7594936708860761
+        ],
+        "degenerate_resamples": 0,
+        "evaluable": true
+      },
+      "wings-k4/all": {
+        "n": 16,
+        "distinct_costs": 16,
+        "gap": 0.002941176470588225,
+        "r_predictor": 0.9588235294117649,
+        "r_gdrc": 0.9558823529411766,
+        "ci95": [
+          -0.03035248343758093,
+          0.04754829123328386
+        ],
+        "degenerate_resamples": 0,
+        "evaluable": true
+      },
+      "wings-k4/oi-q": {
+        "n": 12,
+        "distinct_costs": 12,
+        "gap": -0.04195804195804209,
+        "r_predictor": 0.8951048951048951,
+        "r_gdrc": 0.9370629370629372,
+        "ci95": [
+          -0.19999999999999996,
+          0.0
+        ],
+        "degenerate_resamples": 0,
+        "evaluable": true
+      },
+      "wings-k4/oi-q3": {
+        "n": 12,
+        "distinct_costs": 12,
+        "gap": -0.013986013986014068,
+        "r_predictor": 0.8951048951048951,
+        "r_gdrc": 0.9090909090909092,
+        "ci95": [
+          -0.10831305917438401,
+          0.0
+        ],
+        "degenerate_resamples": 0,
+        "evaluable": true
+      },
+      "wings-k4/oi-q4": {
+        "n": 12,
+        "distinct_costs": 12,
+        "gap": 0.0,
+        "r_predictor": 0.9160839160839163,
+        "r_gdrc": 0.9160839160839163,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "degenerate_resamples": 0,
+        "evaluable": true
+      }
+    },
+    "combined": {
+      "mean": 0.01766205072571233,
+      "lo": -0.13768190858802012,
+      "hi": 0.18782065211603807,
+      "reps": 10000
+    },
+    "tasks_positive": 2,
+    "n_tasks": 6,
+    "tasks_evaluable": 6,
+    "success": false
+  }
+}
