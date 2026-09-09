@@ -74,7 +74,11 @@ for n, g, a in rows:
              f"{b}{a[0]-a[-1]:+.3f}{e} \\\\")
 w("matched", "\n".join(L + [r"\bottomrule", r"\end{tabular}"]))
 
-s = json.load(open(R/'strength-control.json')); rt, mp = s['residual_test'], s['matched_pairs']
+# The cube explicitly, not whatever sits at the top level. Decay is not
+# comparable across tasks with different shell coverage, so this control is
+# reported per domain; the paper's claim is the cube one. See docs/adr/0001.
+s = json.load(open(R/'strength-control.json'))['by_domain']['cube']
+rt, mp = s['residual_test'], s['matched_pairs']
 L = [r"\begin{tabular}{lrrr}", r"\toprule",
      r"heuristic class & $n$ & mean GDRC & mean decay \\", r"\midrule"]
 for kd in ('random', 'PDB', 'learned'):

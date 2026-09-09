@@ -38,6 +38,10 @@ def kind_of(name):
     return "learned" if name == "learned" else ("random" if name == "random" else "PDB")
 
 
+def domain_of(task):
+    return "tile" if str(task).startswith("tile-") else "cube"
+
+
 def summarise(h):
     """Pooled strength, and how much ordering accuracy falls across the shells."""
     accs = [r["acc"] for r in h["profile"]]
@@ -80,6 +84,7 @@ def load():
             kind = kind_of(name)
             s |= {"file": f.stem, "task": d["task"], "tag": d["tag"], "k": d["k"],
                   "moves": d["moves"], "name": name, "kind": kind,
+                  "domain": domain_of(d["task"]),
                   "final": "@" not in d["tag"]}
             rows[name] = s
             key = (d["task"], d["moves"], name) + ((d["tag"],) if kind == "learned" else ())
@@ -90,14 +95,23 @@ def load():
     return obs, per_file
 
 
-def main():
-    obs, per_file = load()
+def analyse(obs, per_file, label):
+    """The three tests, inside ONE domain. Never across.
+
+    Decay is first-minus-last MEASURED shell (docs/adr/0001), so a task profiled
+    over 20 shells has more room to fall than one profiled over 4. Pooling the
+    two compares measurement ranges rather than heuristics: the sliding tile
+    averages 0.390 over a median 20 shells against the cube's 0.155 over 7, and
+    pooling them once inverted this file's own null from Welch p = 0.478 to
+    p = 0.042 with no new evidence behind it.
+    """
     g = np.array([o["gdrc"] for o in obs])
     y = np.array([o["decay"] for o in obs])
     kinds = np.array([o["kind"] for o in obs])
 
+    print(f"\n=== {label} ===")
     print(f"{len(obs)} observations from {len(per_file)} profiles "
-          f"(k=2 excluded: no proper abstraction exists there)\n")
+          f"(k=2 excluded: no proper abstraction exists there)")
 
     by_kind = {}
     for kd in ("random", "PDB", "learned"):
@@ -159,8 +173,11 @@ def main():
     print(f"    PDB decays more in {pdb_more}/{len(pairs)}; "
           f"mean decay learned {d_l.mean():+.3f} vs PDB {d_p.mean():+.3f}")
 
-    out = {
+    return {
+        "domain": label,
         "n_obs": len(obs), "n_profiles": len(per_file), "by_kind": by_kind,
+        "median_shells_note": "decay endpoints are the measured shells; "
+                              "see docs/adr/0001",
         "decay_vs_strength_r": r, "decay_vs_strength_p": p_r,
         "fit": {"slope": float(slope), "intercept": float(intercept)},
         "residual_test": {"t": float(tt.statistic), "p": float(tt.pvalue),
@@ -174,10 +191,31 @@ def main():
                           "mean_decay_learned": float(d_l.mean()),
                           "mean_decay_pdb": float(d_p.mean()),
                           "pairs": pairs},
-        "observations": obs,
     }
+
+
+def main():
+    obs, per_file = load()
+    out = {"primary": "cube",
+           "why_split": "Decay is not comparable across tasks with different "
+                        "shell coverage; pooling inverted this control's null "
+                        "result. See docs/adr/0001.",
+           "by_domain": {}, "observations": obs}
+
+    for dom in sorted({o["domain"] for o in obs}):
+        sub = [o for o in obs if o["domain"] == dom]
+        subf = {k: v for k, v in per_file.items()
+                if v and next(iter(v.values()))["domain"] == dom}
+        kinds = {o["kind"] for o in sub}
+        if not {"learned", "PDB"} <= kinds:
+            print(f"\n=== {dom} ===\n  skipped: needs both learned and PDB "
+                  f"observations, has {sorted(kinds)}")
+            continue
+        out["by_domain"][dom] = analyse(sub, subf, dom)
+
     (RESULTS / "strength-control.json").write_text(json.dumps(out, indent=2) + "\n")
-    print(f"\n  -> strength-control.json")
+    print(f"\n  -> strength-control.json  (domains: "
+          f"{', '.join(out['by_domain']) or 'none'})")
 
 
 if __name__ == "__main__":
