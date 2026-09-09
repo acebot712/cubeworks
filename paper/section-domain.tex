@@ -32,6 +32,15 @@ decaying slightly \emph{more}. The random control stays flat at chance. Decay
 with distance is not a fingerprint of bootstrapping in this state space either,
 which is the claim of Section~\ref{sec:profile} surviving a change of domain.
 
+Repeating that section's matched-strength control here, the abstraction decays
+more than the learned heuristic in all 4 of the nearest-strength pairs available,
+at a median GDRC gap of $0.030$ and a mean decay of $0.351$ against $0.296$. Four
+pairs is too few to attach a significance test to, and the four learned models
+are near-identical in decay, so we report the count and stop there. Note also
+that decay is not comparable between the two domains: it is the first measured
+shell's accuracy minus the last, and the tile is profiled over 20 shells against
+the cube's 7, so the control is run within each domain and never pooled.
+
 \paragraph{The law is worse here.} Split-sample mean absolute error is $0.0117$
 over 252 cube observations and $0.0429$ over 239 sliding-tile observations,
 against an estimator noise floor near $0.002$ in both. Read as a domain split
