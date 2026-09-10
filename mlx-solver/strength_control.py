@@ -184,7 +184,16 @@ def main():
            "why_split": "Decay is not comparable across tasks with different "
                         "shell coverage; pooling inverted this control's null "
                         "result. See docs/adr/0001.",
-           "by_domain": {}, "observations": obs}
+           "by_domain": {},
+           # Nested by domain, not flat. A flat list invites exactly one mistake,
+           # and tau_theory made it: reading every observation and fitting a
+           # single curve across both state spaces. Decay is not comparable
+           # across tasks measured over different shells (docs/adr/0001), so the
+           # shape of this file now makes that read impossible rather than
+           # merely discouraged.
+           "observations_by_domain": {
+               dom: [o for o in obs if o["domain"] == dom]
+               for dom in sorted({o["domain"] for o in obs})}}
 
     for dom in sorted({o["domain"] for o in obs}):
         sub = [o for o in obs if o["domain"] == dom]

@@ -255,6 +255,30 @@ def check_prediction():
     return rows, ties, vc
 
 
+def fit_turnover(rows):
+    """Quadratic fit of Decay against Strength, WITHIN one domain.
+
+    Never across. Decay is first-minus-last measured Shell (docs/adr/0001), so
+    two Decays are comparable only over the same Shells, which two domains are
+    not. Pooling is not merely imprecise here, it inverts: the cube curves upward
+    at +0.56 and the sliding tile downward at -2.47, and pooling the two reports
+    +3.46, which is larger than either and matches neither.
+
+    Reports whether the fit is a PEAK, because the theory predicts one. A
+    positive curvature has a minimum, not a turnover, and calling that a turnover
+    is what the pooled version did.
+    """
+    g = np.array([x["gdrc"] for x in rows], float)
+    y = np.array([x["decay"] for x in rows], float)
+    if len(rows) < 3 or len(np.unique(g)) < 3:
+        return {"n": len(rows), "apex": float("nan"), "curvature": float("nan"),
+                "is_peak": False}
+    quad = np.polyfit(g, y, 2)
+    apex = -quad[1] / (2 * quad[0]) if quad[0] != 0 else float("nan")
+    return {"n": len(rows), "apex": float(apex), "curvature": float(quad[0]),
+            "is_peak": bool(quad[0] < 0)}
+
+
 def inverted_u(n, beta=0.35, D=None):
     """Trace (tau, decay) as overall quality sweeps from chance to perfect."""
     D = D or len(n)
@@ -349,6 +373,9 @@ def main():
     meas = np.array([x["measured"] for x in rows if x["kind"] != "random"])
     lo, hi = float(meas.min()), float(meas.max())
     print(f"  every informative heuristic we measured sits at tau {lo:+.3f} to {hi:+.3f}")
+    # Bound before the branch. `vc` was bound inside one and referenced outside,
+    # which was a NameError nobody saw for as long as an earlier crash hid it.
+    fits = {}
     if hi < peak["tau"]:
         print("  -> all of them are on the rising limb, so decay and strength")
         print("     correlate positively HERE and would reverse beyond the peak.")
@@ -358,15 +385,26 @@ def main():
         print("     theory therefore predicts the measured decay-vs-strength cloud")
         print("     should already bend over rather than rise throughout, and a")
         print("     single correlation coefficient is the wrong summary of it.")
-        # test that prediction against the measurement rather than asserting it
-        dec = np.array([x for x in json.load(
-            open(RESULTS / "strength-control.json"))["observations"]
-            if x["kind"] != "random"])
-        g = np.array([x["gdrc"] for x in dec]); y = np.array([x["decay"] for x in dec])
-        quad = np.polyfit(g, y, 2)
-        apex = -quad[1] / (2 * quad[0]) if quad[0] != 0 else float("nan")
-        print(f"     measured: quadratic fit turns over at tau {apex:+.3f} "
-              f"(curvature {quad[0]:+.3f}), theory says {peak['tau']:+.3f}")
+        # Test that prediction against the measurement, within each domain.
+        # Never pooled: see fit_turnover and docs/adr/0001.
+        sc = json.load(open(RESULTS / "strength-control.json"))
+        if "observations_by_domain" not in sc:
+            raise SystemExit(
+                "strength-control.json predates the per-domain split and has only "
+                "a flat observation list, which is the shape this analysis must "
+                "not read (docs/adr/0001). Re-run strength_control.py first.")
+        by_dom = sc["observations_by_domain"]
+        fits = {}
+        for dom, obs in sorted(by_dom.items()):
+            fits[dom] = fit_turnover([x for x in obs if x["kind"] != "random"])
+            f = fits[dom]
+            shape = "peaks" if f["is_peak"] else "has a MINIMUM, not a peak,"
+            print(f"     measured, {dom} only (n={f['n']}): quadratic {shape} at tau "
+                  f"{f['apex']:+.3f} (curvature {f['curvature']:+.3f}), "
+                  f"theory says {peak['tau']:+.3f}")
+        print("     The two domains curve in OPPOSITE directions, so a fit across")
+        print("     both describes neither. Decay is first-minus-last measured")
+        print("     shell (ADR-0001) and is comparable only over the same shells.")
         print("     These do not agree, and we do not claim they do. The curve is")
         print("     drawn for one shell histogram and one beta, while the measured")
         print("     cloud mixes rungs, diameters and both heuristic classes -- whose")
@@ -375,7 +413,7 @@ def main():
         print("     that a single correlation cannot summarise it; locating the peak")
         print("     would need heuristics spanning the range on one fixed problem.")
 
-    out = {"prediction": rows,
+    out = {"prediction": rows, "turnover_by_domain": fits,
            "ceiling_verified": vc, "ceiling_note": "tau-b cannot reach 1; the cap is set by shell sizes",
            "flat_spread_max_decay": max(r["decay"] for r in flat),
            "beta_by_class": bstats, "tie_inflation": ties, "curve": curve, "peak": peak,
@@ -384,5 +422,64 @@ def main():
     print("\n  -> tau-theory.json")
 
 
+def selftest():
+    """Checks on fit_turnover, the seam this analysis turns on."""
+    ok = True
+
+    def rows(apex, curv, n=12, lo=0.2, hi=1.0):
+        g = np.linspace(lo, hi, n)
+        return [{"gdrc": float(x), "decay": float(curv * (x - apex) ** 2),
+                 "kind": "PDB"} for x in g]
+
+    f = fit_turnover(rows(0.70, -1.0))
+    good = abs(f["apex"] - 0.70) < 1e-6 and f["is_peak"]
+    print(f"  recovers a known peak: apex {f['apex']:+.4f} (want +0.7000), "
+          f"is_peak {f['is_peak']}   {'OK' if good else '*** FAIL ***'}")
+    ok &= good
+
+    f = fit_turnover(rows(0.45, +1.0))
+    good = abs(f["apex"] - 0.45) < 1e-6 and not f["is_peak"]
+    print(f"  a positive curvature is NOT a peak: apex {f['apex']:+.4f}, "
+          f"is_peak {f['is_peak']}   {'OK' if good else '*** FAIL ***'}")
+    ok &= good
+
+    # The reason for the split, demonstrated rather than asserted. Two domains
+    # curving in opposite directions, pooled, produce a fit whose curvature has
+    # the opposite SIGN to one of them, which is to say it disagrees about
+    # whether decay turns over at all. Two earlier versions of this check
+    # asserted stronger things, that the pooled value lands outside both and
+    # that it flips is_peak, and neither is true in general; the sign flip
+    # against at least one input is.
+    def offset_rows(apex, curv, lo, hi, off):
+        return [{"gdrc": float(x), "decay": float(off + curv * (x - apex) ** 2),
+                 "kind": "PDB"} for x in np.linspace(lo, hi, 12)]
+
+    a = offset_rows(0.45, +0.6, 0.20, 0.90, 0.15)   # cube-like: low, wide
+    b = offset_rows(0.70, -2.5, 0.55, 1.00, 0.39)   # tile-like: high, narrow
+    fa, fb, fp = fit_turnover(a), fit_turnover(b), fit_turnover(a + b)
+    # Strictly opposite, not merely unequal. A perfectly flat fit has curvature
+    # zero and no sign at all, and treating that as a third sign would let this
+    # check pass for a reason that is not a sign flip.
+    flipped = any(fp["curvature"] * f["curvature"] < 0 for f in (fa, fb))
+    print(f"  pooling {fa['curvature']:+.2f} with {fb['curvature']:+.2f} gives "
+          f"{fp['curvature']:+.2f}, opposite in sign to one of them   "
+          f"{'OK' if flipped else '*** FAIL, pooling looks harmless ***'}")
+    ok &= flipped
+
+    f = fit_turnover(rows(0.5, -1.0, n=2))
+    good = f["n"] == 2 and not f["is_peak"] and np.isnan(f["apex"])
+    print(f"  too few points to fit reports nan rather than raising   "
+          f"{'OK' if good else '*** FAIL ***'}")
+    ok &= good
+
+    print("\n  ALL CHECKS PASSED" if ok else "\n  *** SELFTEST FAILED ***")
+    return 0 if ok else 1
+
+
 if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--selftest", action="store_true")
+    if ap.parse_args().selftest:
+        raise SystemExit(selftest())
     main()

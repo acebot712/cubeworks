@@ -541,6 +541,20 @@
       "coverage": 0.9999744238983094
     }
   ],
+  "turnover_by_domain": {
+    "cube": {
+      "n": 34,
+      "apex": 0.45217668440312253,
+      "curvature": 0.5640948544608902,
+      "is_peak": false
+    },
+    "tile": {
+      "n": 13,
+      "apex": 0.7033264940349022,
+      "curvature": -2.465886860783635,
+      "is_peak": true
+    }
+  },
   "ceiling_verified": {
     "task": "wings-k6",
     "moves": "all",
