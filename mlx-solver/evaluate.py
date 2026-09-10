@@ -27,8 +27,7 @@ import mlx.core as mx
 import numpy as np
 
 from davi import Task, ValueNet, read_ckpt
-from domains import make_task
-from exact import indexer
+from domains import load_table, make_task, missing_table
 
 HERE = Path(__file__).parent
 RESULTS = HERE.parent / "eval" / "results"
@@ -115,10 +114,13 @@ def main():
     slope = ((deep[-1][1] - deep[0][1]) / (deep[-1][0] - deep[0][0])) if len(deep) > 1 else 0.0
 
     # --- ground truth, where it exists --------------------------------------
-    msuf = "" if task.moveset == "all" else f"-{task.moveset}"
-    table_path = HERE / f"exact_k{task.k}{msuf}.npy" if task.k else None
-    exact = np.load(table_path) if table_path and table_path.exists() else None
-    index = indexer(task.k) if exact is not None else None
+    # The task says where its table lives. Composing the name here meant
+    # composing the CUBE's name, and a board's rung number lives in the cube's
+    # rung namespace: handed tile-3x3 this asked for exact_k8.npy, a cube rung's
+    # table rather than an absent one. The optimality block then vanished in
+    # silence, so a sliding-tile evaluation reported no gap and never said why.
+    no_table = missing_table(task)
+    exact = None if no_table else load_table(task)
 
     # --- solving ------------------------------------------------------------
     lens, opts, solved, t0 = [], [], 0, time.time()
@@ -136,7 +138,14 @@ def main():
         solved += 1
         lens.append(len(sol))
         if exact is not None:
-            true_d = int(exact[index(st)[0]])
+            true_d = int(exact[task.rank(st)[0]])
+            # A solution shorter than the shortest is impossible, so a negative
+            # excess means the table being read is not this task's, or the cell
+            # is one BFS never reached and still holds its sentinel. Either way
+            # the number would be silently wrong rather than absent.
+            assert len(sol) >= true_d, (
+                f"{task.name} read {true_d} from {task.table_path().name} for a "
+                f"state solved in {len(sol)}: wrong table, or an unreached cell")
             opts.append(len(sol) - true_d)
 
     p, lo, hi = wilson(solved, args.n)
@@ -155,6 +164,12 @@ def main():
             "exact_rate": float(np.mean([o == 0 for o in opts])),
             "worst_excess": int(max(opts)),
         }
+    elif no_table:
+        # An absent optimality block used to be indistinguishable from one that
+        # was never asked for. Recording the reason means a reader of the JSON,
+        # or of the console, is told which table is missing rather than left to
+        # infer it from a key that is not there.
+        res["optimality_unavailable"] = no_table
 
     print(f"{args.task}{args.tag}  states {task.size:.2e}  step {res['step']:,}")
     print(f"  solved {solved}/{args.n} = {p*100:.1f}%  (95% CI {lo*100:.1f}–{hi*100:.1f}%)")
@@ -164,6 +179,8 @@ def main():
         o = res["optimality"]
         print(f"  OPTIMAL {o['exact_rate']*100:.1f}% of solves   "
               f"mean excess {o['mean_excess']:+.2f}   worst {o['worst_excess']:+d}")
+    elif no_table:
+        print(f"  no optimality gap: {no_table}")
     print(f"  J deep-band slope {slope:+.4f} per move   "
           f"J({depths[0]})={curve[0][1]:.2f} -> J({depths[-1]})={curve[-1][1]:.2f}")
 

@@ -161,6 +161,28 @@ Both return exact agreement (200/200 and 300/300). Then:
 
 → `eval/results/probeprofile-wings-k8_s0.json`
 
+### Solve quality on both domains (`evaluate.py`, `resolution.py`)
+
+Solve rate, saturation and, where an exact table exists, the optimality gap.
+Both take a task of either domain and ask it where its table lives, so a board
+reads a board's table:
+
+```bash
+../.venv-mlx/bin/python evaluate.py --task wings-k4 --tag _s0 --n 200 --width 100
+../.venv-mlx/bin/python evaluate.py --task tile-3x3 --tag _s1 --n 200 --width 100
+../.venv-mlx/bin/python resolution.py --task tile-3x3 --tag _s1
+```
+
+→ `eval/results/eval-<task><tag>.json`, `eval/results/resolution-<task><tag>.json`
+
+The sliding-tile checkpoints solve 200/200 and are optimal on 98-99% of solves,
+worst excess +1. Those numbers were unobtainable until the table path stopped
+being composed by hand: a board's rung number lives in the cube's rung
+namespace, so `tile-3x3` asked for `exact_k8.npy`, a cube rung's table. It is
+absent, the optimality block was skipped, and nothing said so. A rung with no
+table now names the table and the command that builds it, in the console and in
+the JSON's `optimality_unavailable`.
+
 ### E6: the two-moment law (`dprime_law.py`)
 
 Tests whether per-shell ordering accuracy is `Phi(gap / (sd * sqrt(2)))`, with no

@@ -35,8 +35,7 @@ from pathlib import Path
 
 import numpy as np
 
-from davi import DONT_CARE as CUBE_DONT_CARE, Task
-from exact import indexer
+from davi import Task
 from tile import TileTask
 
 HERE = Path(__file__).parent
@@ -51,13 +50,6 @@ def make_task(name, moves="all"):
 def domain_of(task):
     """A short label for result files, so a mixed set of runs stays sortable."""
     return task.domain
-
-
-def _cube_suffix(task):
-    # The restricted generating sets change the distances, so they get their own
-    # tables. "all" keeps the bare name for backwards compatibility with every
-    # table already on disk.
-    return "" if task.moveset == "all" else f"-{task.moveset}"
 
 
 def table_path(task):
@@ -130,11 +122,33 @@ def rungs(task, spec=""):
     return out
 
 
+def missing_table(task):
+    """Why this task has no exact distance table, or None when it has one.
+
+    Returned rather than raised because not every caller has to stop. An
+    evaluation still has a solve rate and a saturation curve without ground
+    truth; only the optimality block needs it. What a caller must not do is drop
+    that block in silence, and one holding the sentence can say why instead.
+
+    Two reasons, one shape: the task carries no index at all, or the file for its
+    index is absent. `table_path` raises the first as a ValueError, which is the
+    only thing it raises, so catching it here turns both into a message.
+    """
+    try:
+        p = task.table_path()
+    except ValueError as exc:
+        return str(exc)
+    if p.exists():
+        return None
+    return f"no {p.name}; build it with {task.rebuild_hint()}"
+
+
 def load_table(task):
-    p = table_path(task)
-    if not p.exists():
-        raise SystemExit(f"need {p.name}; run {task.rebuild_hint()}")
-    return np.load(p)
+    """The exact distance table, or exit naming what is missing and what builds it."""
+    why = missing_table(task)
+    if why:
+        raise SystemExit(why)
+    return np.load(task.table_path())
 
 
 # ------------------------------------------------------------------- selftest
@@ -205,6 +219,32 @@ def selftest():
     print(f"  a missing table names its rebuild command   "
           f"{'OK' if named else '*** FAIL ***'}")
     ok &= named
+
+    # THE NAMESPACE COLLISION. A board's rung number lives in the cube's rung
+    # namespace, so a caller composing the cube's name for tile-3x3 asks for
+    # exact_k8.npy: not a missing file but a DIFFERENT task's table. Every table
+    # a task names must therefore belong to that task.
+    named_right = True
+    for name in ("wings-k4", "wings-k6", "tile-3x3", "tile-2x4", "tile-2x3"):
+        t = make_task(name)
+        stem = t.table_path().stem
+        want = name.startswith("tile-")
+        named_right &= (stem.startswith("exact_tile-") == want)
+    print(f"  a table name belongs to the domain that asked for it   "
+          f"{'OK' if named_right else '*** FAIL ***'}")
+    ok &= named_right
+
+    # missing_table answers where load_table exits, and stays silent where the
+    # table is there. A caller that can carry on needs the sentence, not a raise.
+    have = make_task("tile-3x3")
+    gone = make_task("wings-k20")
+    none_at_all = make_task("centers")
+    reasons = (missing_table(have) is None
+               and gone.table_path().name in (missing_table(gone) or "")
+               and "no numbered pieces" in (missing_table(none_at_all) or ""))
+    print(f"  missing_table names the reason and is silent when there is none   "
+          f"{'OK' if reasons else '*** FAIL ***'}")
+    ok &= reasons
 
     print("\n  ALL CHECKS PASSED" if ok else "\n  *** SELFTEST FAILED ***")
     return 0 if ok else 1

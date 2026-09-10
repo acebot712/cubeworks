@@ -69,34 +69,56 @@ def shells_of(prof):
 
 _HIST = {}
 
+# profiles.py's sweep defaults, which are what this function reproduces:
+# --per-len 2500, --max-len 16, --seed 7. Their product is the state count a
+# profile records as `n`, and it is the only handle on whether a given profile
+# was built this way.
+SWEEP_PER_LEN, SWEEP_MAX_LEN, SWEEP_SEED = 2500, 16, 7
+SWEEP_N = SWEEP_PER_LEN * SWEEP_MAX_LEN
 
-def full_shell_sizes(task_name, tag):
-    """The distance histogram of EVERY sampled state, not just profiled shells.
+
+def full_shell_sizes(record):
+    """The distance histogram of EVERY sampled state, or why it is unavailable.
+
+    -> (histogram, None) or (None, reason).
 
     The profile drops shells thinner than --min-shell, but the pooled tau was
     computed over all of them, and the tie correction depends on the shells that
     were dropped as much as on the ones that were kept. Reproducing the sampler
-    (same seed, same construction as profiles.py) recovers the full histogram
-    without needing the network, so no GPU work and no regeneration.
+    recovers the full histogram without needing the network, so no GPU work and
+    no regeneration.
+
+    Reproducing it means matching it exactly, and that is only possible for a
+    profile built with the sweep defaults above. The sliding-tile profiles were
+    not: they sweep to 45 and 50 moves rather than 16, because a board's
+    diameter is far past a cube rung's. `n` alone does not recover the pair that
+    produced it, so rather than guess at a construction this returns the reason.
+
+    It used to build a cube `Task` from whatever name it was handed. A board's
+    name falls through that constructor to the full 24-piece cube, whose table
+    is exact_k24.npy, so every sliding-tile row silently took the fallback and
+    nothing said so.
     """
-    from davi import Task
-    from exact import indexer
+    from domains import load_table, make_task, missing_table
     from profiles import sweep_sample
 
-    meta = json.loads((HERE / f"ckpt_{task_name}{tag}.json").read_text())
-    key = (task_name, meta.get("moves") or "all")
+    drawn = record.get("n")
+    if drawn != SWEEP_N:
+        return None, (f"drew {drawn if drawn is not None else 'an unrecorded number of'} "
+                      f"states, not the {SWEEP_N} the sweep defaults produce, so the "
+                      f"sample cannot be reproduced")
+    key = (record["task"], record["moves"])
     if key in _HIST:
-        return _HIST[key]
-    task = Task(task_name, moves=key[1])
-    suffix = "" if task.moveset == "all" else f"-{task.moveset}"
-    tbl = HERE / f"exact_k{task.k}{suffix}.npy"
-    if not tbl.exists():
-        return None
-    rng = np.random.default_rng(7)          # profiles.py --seed default
-    states = sweep_sample(task, 2500, 16, rng)
-    d = np.load(tbl)[indexer(task.k)(states)]
+        return _HIST[key], None
+    task = make_task(record["task"], moves=record["moves"])
+    why = missing_table(task)
+    if why:
+        return None, why
+    rng = np.random.default_rng(SWEEP_SEED)
+    states = sweep_sample(task, SWEEP_PER_LEN, SWEEP_MAX_LEN, rng)
+    d = load_table(task)[task.rank(states)]
     _HIST[key] = np.bincount(d.astype(np.int64))[1:].astype(float)
-    return _HIST[key]
+    return _HIST[key], None
 
 
 def tau_from_profile(n, mu, sd, ties_h=0.0):
@@ -127,7 +149,7 @@ def ceiling(n):
     return float(np.sqrt((n0 - n1) / n0))
 
 
-def verify_ceiling(tname="wings-k6", mv="all", k=6):
+def verify_ceiling(tname="wings-k6", mv="all"):
     """Check the analytic tie-free ceiling against scipy, on a named rung.
 
     The paper previously asserted a ceiling of 0.929 "verified against the
@@ -137,14 +159,12 @@ def verify_ceiling(tname="wings-k6", mv="all", k=6):
     """
     from scipy.stats import kendalltau
 
-    from davi import Task
-    from exact import indexer
+    from domains import load_table, make_task
     from profiles import sweep_sample
 
-    suf = "" if mv == "all" else f"-{mv}"
-    task = Task(tname, moves=mv)
-    st = sweep_sample(task, 2500, 16, np.random.default_rng(7))
-    d = np.load(HERE / f"exact_k{k}{suf}.npy")[indexer(k)(st)].astype(np.int64)
+    task = make_task(tname, moves=mv)
+    st = sweep_sample(task, SWEEP_PER_LEN, SWEEP_MAX_LEN, np.random.default_rng(SWEEP_SEED))
+    d = load_table(task)[task.rank(st)].astype(np.int64)
     # every shell, INCLUDING the solved states at d=0. Dropping them changes n0
     # and the tie count, which is why an earlier version of this check produced a
     # scipy value above its own analytic ceiling.
@@ -167,27 +187,26 @@ def tie_inflation():
     """
     from scipy.stats import kendalltau
 
-    from domains import make_task, project
-    from exact import indexer
+    from domains import load_table, make_task, missing_table
     from profiles import sweep_sample
 
     rows = []
-    for tname, mv, k in (("wings-k4", "oi-q3", 4), ("wings-k4", "all", 4),
-                         ("wings-k6", "all", 6)):
-        suf = "" if mv == "all" else f"-{mv}"
-        if not (HERE / f"exact_k{k}{suf}.npy").exists():
-            continue
+    for tname, mv in (("wings-k4", "oi-q3"), ("wings-k4", "all"),
+                      ("wings-k6", "all")):
         task = make_task(tname, moves=mv)
-        st = sweep_sample(task, 2500, 16, np.random.default_rng(7))
-        d = np.load(HERE / f"exact_k{k}{suf}.npy")[indexer(k)(st)].astype(np.int64)
+        if missing_table(task):
+            continue
+        st = sweep_sample(task, SWEEP_PER_LEN, SWEEP_MAX_LEN, np.random.default_rng(SWEEP_SEED))
+        d = load_table(task)[task.rank(st)].astype(np.int64)
         rng = np.random.default_rng(3)
-        for j in range(2, k):
-            p = HERE / f"exact_k{j}{suf}.npy"
-            if not p.exists():
+        # These three configurations are all cube, but the rung ladder is asked
+        # for rather than composed, so adding a board here would read the board's
+        # tables rather than the cube rung whose number happens to match.
+        for j in range(task.min_rung, task.k):
+            sub = task.abstract(j)
+            if missing_table(sub):
                 continue
-            # project() moved to domains and takes the task first. This call is
-            # why the whole file raised a TypeError for nine commits.
-            h = np.load(p)[indexer(j)(project(task, st, j))].astype(np.float64)
+            h = load_table(sub)[sub.rank(task.project(st, j))].astype(np.float64)
             tied = float(kendalltau(h, d).statistic)
             free = float(kendalltau(h + rng.random(h.size) * 0.999, d).statistic)
             rows.append({"task": tname, "moves": mv, "pdb_k": j, "tau": tied,
@@ -206,11 +225,16 @@ def check_prediction():
         if len(prof) < 2 or "n_lo" not in prof[0]:
             continue
         n, mu, sd = shells_of(prof)
-        full = full_shell_sizes(r["task"], r["tag"])
+        full, why = full_shell_sizes(r)
         rows.append({"kind": r["kind"], "domain": r["domain"], "file": r["file"],
                      "name": r["name"], "measured": r["gdrc"],
                      "predicted": tau_from_profile(n, mu, sd),
                      "ceiling": ceiling(full if full is not None else n),
+                     # The fallback is the PROFILED shells, so the ceiling is
+                     # computed over a sample the run did not use. That was
+                     # silent before; carrying the reason means a row whose
+                     # ceiling rests on it says so.
+                     "full_hist_unavailable": why,
                      "coverage": float(n.sum() / full.sum()) if full is not None else 1.0})
 
     for kd in ("random", "PDB", "learned"):
@@ -226,6 +250,14 @@ def check_prediction():
         mm = np.array([x["measured"] for x in sub]); pp = np.array([x["predicted"] for x in sub])
         print(f"  {dom:<8} n={len(sub):>3}  r = {pearsonr(mm, pp).statistic:+.3f}   "
               f"mean |error| = {np.abs(mm - pp).mean():.4f}")
+
+    fell_back = [x for x in rows if x["full_hist_unavailable"]]
+    if fell_back:
+        reasons = sorted({x["full_hist_unavailable"] for x in fell_back})
+        print(f"\n  {len(fell_back)} of {len(rows)} rows fall back to the profiled "
+              f"shells for their ceiling and coverage:")
+        for why in reasons:
+            print(f"      {why}")
 
     print(f"\n  profile covers {np.mean([x['coverage'] for x in rows])*100:.1f}% of the "
           f"sampled states on average; the rest sit in shells too thin to profile")

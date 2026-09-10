@@ -35,6 +35,7 @@ from pathlib import Path
 import numpy as np
 
 from davi import Task
+from domains import load_table
 from exact import indexer
 
 HERE = Path(__file__).parent
@@ -156,12 +157,10 @@ def main():
 
     # --- correctness: the prober must agree with exhaustive BFS where both run --
     if args.verify:
-        suf = "" if args.moves == "all" else f"-{args.moves}"
-        path = HERE / f"exact_k{args.k}{suf}.npy"
-        if not path.exists():
-            raise SystemExit(f"--verify needs {path.name}; run exact.py --k {args.k} "
-                             f"--moves {args.moves} --save-table")
-        truth = np.load(path)
+        # The task names its own table. This tool builds a cube rung and can be
+        # handed nothing else, but composing the name from a loose k rather than
+        # from the task is how a caller ends up naming another domain's file.
+        truth = load_table(task)
         bad = 0
         st = np.tile(task.solved, (args.verify, 1))
         for _ in range(args.scramble):

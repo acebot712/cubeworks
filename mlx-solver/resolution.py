@@ -30,11 +30,8 @@ from pathlib import Path
 
 import numpy as np
 
-from davi import Task
+from domains import load_table
 from evaluate import RESULTS, j_of, load
-from exact import indexer
-
-HERE = Path(__file__).parent
 
 
 def spearman(a, b):
@@ -88,16 +85,15 @@ def main():
     args = ap.parse_args()
 
     task, net, meta = load(args.task, args.tag)
-    msuf = "" if task.moveset == "all" else f"-{task.moveset}"
-    if task.k is None or not (HERE / f"exact_k{task.k}{msuf}.npy").exists():
-        raise SystemExit(f"no exact table for {args.task}/{task.moveset}; run exact.py --k {task.k} --moves {task.moveset} --save-table")
-
-    exact = np.load(HERE / f"exact_k{task.k}{msuf}.npy")
-    index = indexer(task.k)
+    # The task owns its table's name and the command that builds it. Composing
+    # them here meant composing the CUBE's: handed a board it looked for a cube
+    # rung's table and then told the reader to run exact.py, which builds cube
+    # tables and would never produce the file it had just asked for.
+    exact = load_table(task)
     rng = np.random.default_rng(args.seed)
 
     states = sample_states(task, args.n, args.walk, rng)
-    true_d = exact[index(states)].astype(np.int32)
+    true_d = exact[task.rank(states)].astype(np.int32)
     j = j_of(task, net, states)
 
     shells = sorted(int(d) for d in np.unique(true_d) if d > 0)

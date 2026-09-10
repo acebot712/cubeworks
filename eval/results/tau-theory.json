@@ -8,6 +8,7 @@
       "measured": 0.9646982269814464,
       "predicted": 0.949150454123308,
       "ceiling": 0.9492208833657657,
+      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -18,6 +19,7 @@
       "measured": 0.6107596752683796,
       "predicted": 0.421468922727239,
       "ceiling": 0.9492208833657657,
+      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -28,6 +30,7 @@
       "measured": 0.8659522891604922,
       "predicted": 0.5990908313421772,
       "ceiling": 0.9492208833657657,
+      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -38,6 +41,7 @@
       "measured": 0.980717219589437,
       "predicted": 0.38976846018052175,
       "ceiling": 0.9492208833657657,
+      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -48,6 +52,7 @@
       "measured": 0.9943651197802026,
       "predicted": 0.30003787432835416,
       "ceiling": 0.9492208833657657,
+      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -58,6 +63,7 @@
       "measured": -0.0008950821815961631,
       "predicted": -0.0003171827383511999,
       "ceiling": 0.9492208833657657,
+      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -68,6 +74,7 @@
       "measured": 0.9649286906127696,
       "predicted": 0.9533766766237276,
       "ceiling": 0.9533897370770922,
+      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -78,6 +85,7 @@
       "measured": 0.5408821682467064,
       "predicted": 0.37651331867368126,
       "ceiling": 0.9533897370770922,
+      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -88,6 +96,7 @@
       "measured": 0.6727477305282632,
       "predicted": 0.5228047778738613,
       "ceiling": 0.9533897370770922,
+      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -98,6 +107,7 @@
       "measured": 0.7433560808795173,
       "predicted": 0.6046366907387106,
       "ceiling": 0.9533897370770922,
+      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -108,6 +118,7 @@
       "measured": 0.8980915689234161,
       "predicted": 0.6662223987907502,
       "ceiling": 0.9533897370770922,
+      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -118,6 +129,7 @@
       "measured": 0.994481907680133,
       "predicted": 0.35250445724803703,
       "ceiling": 0.9533897370770922,
+      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -128,6 +140,7 @@
       "measured": -0.002506115726115735,
       "predicted": -0.0026753918423760847,
       "ceiling": 0.9533897370770922,
+      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -138,6 +151,7 @@
       "measured": 0.9649237817839641,
       "predicted": 0.9533708968603912,
       "ceiling": 0.9533897370770922,
+      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -148,6 +162,7 @@
       "measured": 0.9649260386474021,
       "predicted": 0.9533728864766126,
       "ceiling": 0.9533897370770922,
+      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
       "coverage": 1.0
     },
     {
@@ -158,6 +173,7 @@
       "measured": 0.8523148879920038,
       "predicted": 0.8414435008893045,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -168,6 +184,7 @@
       "measured": 0.6644317734446857,
       "predicted": 0.5709443218619373,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -178,6 +195,7 @@
       "measured": 0.814198093306245,
       "predicted": 0.7249422039102773,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -188,6 +206,7 @@
       "measured": 0.002031144427122117,
       "predicted": 0.0016463706141647762,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -198,6 +217,7 @@
       "measured": 0.8501838528009049,
       "predicted": 0.8393931022755532,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -208,6 +228,7 @@
       "measured": 0.8608535677634988,
       "predicted": 0.8510416405710581,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -218,6 +239,7 @@
       "measured": 0.6603635771012253,
       "predicted": 0.5433520657585809,
       "ceiling": 0.9188484151543269,
+      "full_hist_unavailable": null,
       "coverage": 0.9997788527988942
     },
     {
@@ -228,6 +250,7 @@
       "measured": 0.6927164792445918,
       "predicted": 0.5900430450449292,
       "ceiling": 0.9188484151543269,
+      "full_hist_unavailable": null,
       "coverage": 0.9997788527988942
     },
     {
@@ -238,6 +261,7 @@
       "measured": 0.7720202802251374,
       "predicted": 0.6878794318323133,
       "ceiling": 0.9188484151543269,
+      "full_hist_unavailable": null,
       "coverage": 0.9997788527988942
     },
     {
@@ -248,6 +272,7 @@
       "measured": 0.00048775851961219586,
       "predicted": -0.0002202490143986151,
       "ceiling": 0.9188484151543269,
+      "full_hist_unavailable": null,
       "coverage": 0.9997788527988942
     },
     {
@@ -258,6 +283,7 @@
       "measured": 0.9362621539167245,
       "predicted": 0.9156833650763287,
       "ceiling": 0.9188484151543269,
+      "full_hist_unavailable": null,
       "coverage": 0.9997788527988942
     },
     {
@@ -268,6 +294,7 @@
       "measured": 0.9355104352664034,
       "predicted": 0.9147693276038715,
       "ceiling": 0.9188484151543269,
+      "full_hist_unavailable": null,
       "coverage": 0.9997788527988942
     },
     {
@@ -278,6 +305,7 @@
       "measured": 0.9109973067826724,
       "predicted": 0.8998690028129426,
       "ceiling": 0.9295990394711413,
+      "full_hist_unavailable": null,
       "coverage": 0.9999736140795271
     },
     {
@@ -288,6 +316,7 @@
       "measured": 0.660473375530742,
       "predicted": 0.5846659641774654,
       "ceiling": 0.9295990394711413,
+      "full_hist_unavailable": null,
       "coverage": 0.9999736140795271
     },
     {
@@ -298,6 +327,7 @@
       "measured": 0.8266680236116019,
       "predicted": 0.759519670992601,
       "ceiling": 0.9295990394711413,
+      "full_hist_unavailable": null,
       "coverage": 0.9999736140795271
     },
     {
@@ -308,6 +338,7 @@
       "measured": 0.0035972802952062744,
       "predicted": 0.0036671629226567286,
       "ceiling": 0.9295990394711413,
+      "full_hist_unavailable": null,
       "coverage": 0.9999736140795271
     },
     {
@@ -318,6 +349,7 @@
       "measured": 0.9216859016400061,
       "predicted": 0.9119831257371875,
       "ceiling": 0.9295990394711413,
+      "full_hist_unavailable": null,
       "coverage": 0.9999736140795271
     },
     {
@@ -328,6 +360,7 @@
       "measured": 0.9249914624876044,
       "predicted": 0.915683853043116,
       "ceiling": 0.9295990394711413,
+      "full_hist_unavailable": null,
       "coverage": 0.9999736140795271
     },
     {
@@ -338,6 +371,7 @@
       "measured": 0.9052621501336124,
       "predicted": 0.8935995622015832,
       "ceiling": 0.9165140614283916,
+      "full_hist_unavailable": null,
       "coverage": 0.9997089485103455
     },
     {
@@ -348,6 +382,7 @@
       "measured": 0.6939765353110796,
       "predicted": 0.6094775747746465,
       "ceiling": 0.9165140614283916,
+      "full_hist_unavailable": null,
       "coverage": 0.9997089485103455
     },
     {
@@ -358,6 +393,7 @@
       "measured": 0.8342424504334455,
       "predicted": 0.7560987030401051,
       "ceiling": 0.9165140614283916,
+      "full_hist_unavailable": null,
       "coverage": 0.9997089485103455
     },
     {
@@ -368,6 +404,7 @@
       "measured": 0.0033955692205618385,
       "predicted": 0.0014312833407678085,
       "ceiling": 0.9165140614283916,
+      "full_hist_unavailable": null,
       "coverage": 0.9997089485103455
     },
     {
@@ -378,6 +415,7 @@
       "measured": 0.9003469843608315,
       "predicted": 0.888171601488817,
       "ceiling": 0.9165140614283916,
+      "full_hist_unavailable": null,
       "coverage": 0.9997089485103455
     },
     {
@@ -388,6 +426,7 @@
       "measured": 0.8977904247742796,
       "predicted": 0.8851381565578939,
       "ceiling": 0.9165140614283916,
+      "full_hist_unavailable": null,
       "coverage": 0.9997089485103455
     },
     {
@@ -398,6 +437,7 @@
       "measured": 0.8639981588490155,
       "predicted": 0.8544790271522446,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -408,6 +448,7 @@
       "measured": 0.8516421376831769,
       "predicted": 0.8407805672702631,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -418,6 +459,7 @@
       "measured": 0.7999401130633225,
       "predicted": 0.7830286490379416,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -428,6 +470,7 @@
       "measured": 0.8657237379522099,
       "predicted": 0.8564335719873787,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -438,6 +481,7 @@
       "measured": 0.8767707747811119,
       "predicted": 0.8681815695585495,
       "ceiling": 0.8855454923238724,
+      "full_hist_unavailable": null,
       "coverage": 1.0
     },
     {
@@ -448,6 +492,7 @@
       "measured": 0.8422809106078771,
       "predicted": 0.8349867615278627,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     },
     {
@@ -458,6 +503,7 @@
       "measured": 0.5704587978631703,
       "predicted": 0.4932654976976324,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     },
     {
@@ -468,6 +514,7 @@
       "measured": 0.6854733363813921,
       "predicted": 0.6058169087612231,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     },
     {
@@ -478,6 +525,7 @@
       "measured": 0.788332859490129,
       "predicted": 0.7145735513693847,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     },
     {
@@ -488,6 +536,7 @@
       "measured": 0.8913987619651713,
       "predicted": 0.8236011338512288,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     },
     {
@@ -498,6 +547,7 @@
       "measured": 0.0031679414999055927,
       "predicted": 0.0036116034511972294,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     },
     {
@@ -508,6 +558,7 @@
       "measured": 0.8206244390435787,
       "predicted": 0.8122461710939706,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     },
     {
@@ -518,6 +569,7 @@
       "measured": 0.7688200516145588,
       "predicted": 0.7560832638488411,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     },
     {
@@ -528,6 +580,7 @@
       "measured": 0.8413393219838827,
       "predicted": 0.8342091844463521,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     },
     {
@@ -538,6 +591,7 @@
       "measured": 0.826266111928004,
       "predicted": 0.8177184642939821,
       "ceiling": 0.9149637078934848,
+      "full_hist_unavailable": null,
       "coverage": 0.9999744238983094
     }
   ],
