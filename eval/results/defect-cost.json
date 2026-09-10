@@ -1,0 +1,61 @@
+{
+  "baseline_rev": "ac3a246",
+  "tie_inflation": {
+    "baseline_mean": 0.08431498874059148,
+    "now_mean": 0.08431498874059148,
+    "baseline_max": 0.10122287470303082,
+    "now_max": 0.10122287470303082,
+    "delta": 0.0,
+    "moved": false
+  },
+  "prediction": {
+    "n_raw": 125,
+    "n_dedup": 54,
+    "by_kind_raw": {
+      "learned": 26,
+      "PDB": 73,
+      "random": 26
+    },
+    "by_kind_dedup": {
+      "learned": 26,
+      "PDB": 21,
+      "random": 7
+    }
+  },
+  "beta": {
+    "baseline": {
+      "learned": {
+        "n": 21,
+        "beta_median": 2.0426935044024495,
+        "beta_range": [
+          1.4166086432340443,
+          7.326732218503545
+        ],
+        "sd0_median": 0.03877645311812645
+      },
+      "PDB": {
+        "n": 11,
+        "beta_median": 0.148639973629966,
+        "beta_range": [
+          0.09463716172630286,
+          0.31681911091234005
+        ],
+        "sd0_median": 0.3991734607373518
+      }
+    },
+    "split": {
+      "cube/PDB": {
+        "n": 11,
+        "beta": 0.148639973629966
+      },
+      "cube/learned": {
+        "n": 21,
+        "beta": 2.0426935044024495
+      },
+      "tile/learned": {
+        "n": 4,
+        "beta": 32.54084549904039
+      }
+    }
+  }
+}

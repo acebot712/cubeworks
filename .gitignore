@@ -38,3 +38,6 @@ paper/supplementary-anonymous.zip
 # Personal: carries the arXiv endorsement code and a draft email. The repo is
 # public, and neither belongs in it.
 paper/ENDORSEMENT-REQUEST.md
+
+# Ticket scratch from /to-tickets. Working notes, not project history.
+.scratch/
