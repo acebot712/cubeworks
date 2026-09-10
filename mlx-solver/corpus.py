@@ -135,10 +135,14 @@ def _scan(domain, experiment, results_dir, dedup):
             records.append({
                 "file": f.stem, "task": task, "moves": moves, "tag": tag, "k": k,
                 "domain": dom, "kind": kind, "name": name,
-                # How the states were drawn. An analysis that wants to reproduce
-                # the sample rather than the summary needs this, and reading it
-                # back off the file would mean a second scan with its own rules.
+                # How the states were drawn, in enough detail to draw them
+                # again. An analysis that wants the sample rather than the
+                # summary needs this, and reading it back off the file would mean
+                # a second scan with its own rules. `n` alone will not do: it is
+                # a product, and 112500 is 2500x45 or 4500x25, which are
+                # different distributions over shells.
                 "sampler": d.get("sampler"), "n": d.get("n"),
+                "sampler_args": d.get("sampler_args"),
                 # An Intermediate snapshot is named @step and is not independent
                 # of the Final checkpoint of the run it came from.
                 "final": "@" not in tag,

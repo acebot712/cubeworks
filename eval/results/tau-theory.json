@@ -7,9 +7,9 @@
       "name": "learned",
       "measured": 0.9646982269814464,
       "predicted": 0.949150454123308,
-      "ceiling": 0.9492208833657657,
-      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9492923664762937,
+      "full_hist_unavailable": null,
+      "coverage": 0.9993131688995922
     },
     {
       "kind": "PDB",
@@ -18,9 +18,9 @@
       "name": "PDB(k=1)",
       "measured": 0.6107596752683796,
       "predicted": 0.421468922727239,
-      "ceiling": 0.9492208833657657,
-      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9492923664762937,
+      "full_hist_unavailable": null,
+      "coverage": 0.9993131688995922
     },
     {
       "kind": "PDB",
@@ -29,9 +29,9 @@
       "name": "PDB(k=2)",
       "measured": 0.8659522891604922,
       "predicted": 0.5990908313421772,
-      "ceiling": 0.9492208833657657,
-      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9492923664762937,
+      "full_hist_unavailable": null,
+      "coverage": 0.9993131688995922
     },
     {
       "kind": "PDB",
@@ -40,9 +40,9 @@
       "name": "PDB(k=3)",
       "measured": 0.980717219589437,
       "predicted": 0.38976846018052175,
-      "ceiling": 0.9492208833657657,
-      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9492923664762937,
+      "full_hist_unavailable": null,
+      "coverage": 0.9993131688995922
     },
     {
       "kind": "PDB",
@@ -51,9 +51,9 @@
       "name": "PDB(k=4)",
       "measured": 0.9943651197802026,
       "predicted": 0.30003787432835416,
-      "ceiling": 0.9492208833657657,
-      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9492923664762937,
+      "full_hist_unavailable": null,
+      "coverage": 0.9993131688995922
     },
     {
       "kind": "random",
@@ -62,9 +62,9 @@
       "name": "random",
       "measured": -0.0008950821815961631,
       "predicted": -0.0003171827383511999,
-      "ceiling": 0.9492208833657657,
-      "full_hist_unavailable": "drew 125000 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9492923664762937,
+      "full_hist_unavailable": null,
+      "coverage": 0.9993131688995922
     },
     {
       "kind": "learned",
@@ -73,9 +73,9 @@
       "name": "learned",
       "measured": 0.9649286906127696,
       "predicted": 0.9533766766237276,
-      "ceiling": 0.9533897370770922,
-      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9534280767897519,
+      "full_hist_unavailable": null,
+      "coverage": 0.9995981322718922
     },
     {
       "kind": "PDB",
@@ -84,9 +84,9 @@
       "name": "PDB(k=1)",
       "measured": 0.5408821682467064,
       "predicted": 0.37651331867368126,
-      "ceiling": 0.9533897370770922,
-      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9534280767897519,
+      "full_hist_unavailable": null,
+      "coverage": 0.9995981322718922
     },
     {
       "kind": "PDB",
@@ -95,9 +95,9 @@
       "name": "PDB(k=2)",
       "measured": 0.6727477305282632,
       "predicted": 0.5228047778738613,
-      "ceiling": 0.9533897370770922,
-      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9534280767897519,
+      "full_hist_unavailable": null,
+      "coverage": 0.9995981322718922
     },
     {
       "kind": "PDB",
@@ -106,9 +106,9 @@
       "name": "PDB(k=3)",
       "measured": 0.7433560808795173,
       "predicted": 0.6046366907387106,
-      "ceiling": 0.9533897370770922,
-      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9534280767897519,
+      "full_hist_unavailable": null,
+      "coverage": 0.9995981322718922
     },
     {
       "kind": "PDB",
@@ -117,9 +117,9 @@
       "name": "PDB(k=4)",
       "measured": 0.8980915689234161,
       "predicted": 0.6662223987907502,
-      "ceiling": 0.9533897370770922,
-      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9534280767897519,
+      "full_hist_unavailable": null,
+      "coverage": 0.9995981322718922
     },
     {
       "kind": "PDB",
@@ -128,9 +128,9 @@
       "name": "PDB(k=5)",
       "measured": 0.994481907680133,
       "predicted": 0.35250445724803703,
-      "ceiling": 0.9533897370770922,
-      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9534280767897519,
+      "full_hist_unavailable": null,
+      "coverage": 0.9995981322718922
     },
     {
       "kind": "random",
@@ -139,9 +139,9 @@
       "name": "random",
       "measured": -0.002506115726115735,
       "predicted": -0.0026753918423760847,
-      "ceiling": 0.9533897370770922,
-      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9534280767897519,
+      "full_hist_unavailable": null,
+      "coverage": 0.9995981322718922
     },
     {
       "kind": "learned",
@@ -150,9 +150,9 @@
       "name": "learned",
       "measured": 0.9649237817839641,
       "predicted": 0.9533708968603912,
-      "ceiling": 0.9533897370770922,
-      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9534280767897519,
+      "full_hist_unavailable": null,
+      "coverage": 0.9995981322718922
     },
     {
       "kind": "learned",
@@ -161,9 +161,9 @@
       "name": "learned",
       "measured": 0.9649260386474021,
       "predicted": 0.9533728864766126,
-      "ceiling": 0.9533897370770922,
-      "full_hist_unavailable": "drew 112500 states, not the 40000 the sweep defaults produce, so the sample cannot be reproduced",
-      "coverage": 1.0
+      "ceiling": 0.9534280767897519,
+      "full_hist_unavailable": null,
+      "coverage": 0.9995981322718922
     },
     {
       "kind": "learned",

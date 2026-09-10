@@ -69,12 +69,11 @@ def shells_of(prof):
 
 _HIST = {}
 
-# profiles.py's sweep defaults, which are what this function reproduces:
-# --per-len 2500, --max-len 16, --seed 7. Their product is the state count a
-# profile records as `n`, and it is the only handle on whether a given profile
-# was built this way.
-SWEEP_PER_LEN, SWEEP_MAX_LEN, SWEEP_SEED = 2500, 16, 7
-SWEEP_N = SWEEP_PER_LEN * SWEEP_MAX_LEN
+# The sample the two tie analyses below draw for themselves. Not a profile's
+# sampler: those record their own arguments and are redrawn from them. These two
+# construct a fresh sample from exact tables and never read the corpus, so the
+# construction is theirs to fix and the numbers move if it changes.
+TIE_PER_LEN, TIE_MAX_LEN, TIE_SEED = 2500, 16, 7
 
 
 def full_shell_sizes(record):
@@ -84,15 +83,16 @@ def full_shell_sizes(record):
 
     The profile drops shells thinner than --min-shell, but the pooled tau was
     computed over all of them, and the tie correction depends on the shells that
-    were dropped as much as on the ones that were kept. Reproducing the sampler
+    were dropped as much as on the ones that were kept. Redrawing the sample
     recovers the full histogram without needing the network, so no GPU work and
     no regeneration.
 
-    Reproducing it means matching it exactly, and that is only possible for a
-    profile built with the sweep defaults above. The sliding-tile profiles were
-    not: they sweep to 45 and 50 moves rather than 16, because a board's
-    diameter is far past a cube rung's. `n` alone does not recover the pair that
-    produced it, so rather than guess at a construction this returns the reason.
+    Two things make that trustworthy. The profile records the sampler's actual
+    arguments, not just its name and a state count, because n is a product and
+    112500 is 2500x45 or 4500x25, which are different distributions over shells.
+    And the redraw is CHECKED against the shell sizes the profile itself
+    measured, so a recorded argument that does not describe the sample is caught
+    here rather than quietly producing a histogram of something else.
 
     It used to build a cube `Task` from whatever name it was handed. A board's
     name falls through that constructor to the full 24-piece cube, whose table
@@ -100,22 +100,23 @@ def full_shell_sizes(record):
     nothing said so.
     """
     from domains import load_table, make_task, missing_table
-    from profiles import sweep_sample
+    from profiles import check_sample, redraw
 
-    drawn = record.get("n")
-    if drawn != SWEEP_N:
-        return None, (f"drew {drawn if drawn is not None else 'an unrecorded number of'} "
-                      f"states, not the {SWEEP_N} the sweep defaults produce, so the "
-                      f"sample cannot be reproduced")
-    key = (record["task"], record["moves"])
+    key = (record["task"], record["moves"], record["n"])
     if key in _HIST:
         return _HIST[key], None
     task = make_task(record["task"], moves=record["moves"])
     why = missing_table(task)
     if why:
         return None, why
-    rng = np.random.default_rng(SWEEP_SEED)
-    states = sweep_sample(task, SWEEP_PER_LEN, SWEEP_MAX_LEN, rng)
+    args = record.get("sampler_args")
+    if not args:
+        return None, ("the profile does not record its sampler's arguments, so the "
+                      "sample cannot be redrawn; run profiles.py --record-sampler-args")
+    good, how = check_sample(task, record, args)
+    if not good:
+        return None, f"the recorded sampler does not reproduce this profile: {how}"
+    states = redraw(task, record["sampler"], args)
     d = load_table(task)[task.rank(states)]
     _HIST[key] = np.bincount(d.astype(np.int64))[1:].astype(float)
     return _HIST[key], None
@@ -163,7 +164,7 @@ def verify_ceiling(tname="wings-k6", mv="all"):
     from profiles import sweep_sample
 
     task = make_task(tname, moves=mv)
-    st = sweep_sample(task, SWEEP_PER_LEN, SWEEP_MAX_LEN, np.random.default_rng(SWEEP_SEED))
+    st = sweep_sample(task, TIE_PER_LEN, TIE_MAX_LEN, np.random.default_rng(TIE_SEED))
     d = load_table(task)[task.rank(st)].astype(np.int64)
     # every shell, INCLUDING the solved states at d=0. Dropping them changes n0
     # and the tie count, which is why an earlier version of this check produced a
@@ -196,7 +197,7 @@ def tie_inflation():
         task = make_task(tname, moves=mv)
         if missing_table(task):
             continue
-        st = sweep_sample(task, SWEEP_PER_LEN, SWEEP_MAX_LEN, np.random.default_rng(SWEEP_SEED))
+        st = sweep_sample(task, TIE_PER_LEN, TIE_MAX_LEN, np.random.default_rng(TIE_SEED))
         d = load_table(task)[task.rank(st)].astype(np.int64)
         rng = np.random.default_rng(3)
         # These three configurations are all cube, but the rung ladder is asked

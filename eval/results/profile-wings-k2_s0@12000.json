@@ -7,6 +7,11 @@
   "step": 12000,
   "pdb_k": 2,
   "sampler": "sweep",
+  "sampler_args": {
+    "per_len": 2500,
+    "max_len": 16,
+    "seed": 7
+  },
   "n": 40000,
   "shells": [
     1,

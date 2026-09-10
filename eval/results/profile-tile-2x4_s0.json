@@ -13,6 +13,11 @@
     4
   ],
   "sampler": "sweep",
+  "sampler_args": {
+    "per_len": 2500,
+    "max_len": 50,
+    "seed": 7
+  },
   "n": 125000,
   "shells": [
     1,

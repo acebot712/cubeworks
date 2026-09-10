@@ -125,6 +125,24 @@ done
 
 → `eval/results/profile-*.json`
 
+Each Profile records the sampler's actual arguments, not just its name and the
+state count, because `n` is a product: 112500 is 2500x45 and also 4500x25, and
+those are different distributions over shells. An analysis that needs the full
+distance histogram redraws the sample from those arguments.
+
+To check that every Profile still describes the sample it was measured on, and
+to recover the arguments for one written before they were recorded:
+
+```bash
+../.venv-mlx/bin/python profiles.py --record-sampler-args          # dry run
+../.venv-mlx/bin/python profiles.py --record-sampler-args --write
+```
+
+It redraws and compares against the shell sizes the Profile itself recorded, and
+refuses to write anything it cannot reproduce. That is what makes a recovered
+argument trustworthy: a wrong pair would have to land on twenty independent shell
+counts by coincidence. `profiles.py --selftest` checks it actually rejects one.
+
 ### E4b: is the decay about training, or about strength? (`strength_control.py`)
 
 Reads every profile above and asks whether learned heuristics decay more than
