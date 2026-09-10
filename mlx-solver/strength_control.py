@@ -30,6 +30,8 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import ttest_ind
 
+import corpus
+
 HERE = Path(__file__).parent
 RESULTS = HERE.parent / "eval" / "results"
 
@@ -51,47 +53,29 @@ def summarise(h):
 
 
 def load():
-    """Every profile, plus the DEDUPLICATED observation set.
+    """Observations for the statistics, and the per-file grouping for the pairs.
 
-    A profile file is produced per learned checkpoint, and each one re-measures
-    the same abstractions and the same random control on the same states. So a
-    PDB appears once per checkpoint with an identical value every time. Counting
-    those repeats as independent observations inflates n roughly fourfold and
-    makes every p-value far too small. Identity is therefore (task, moveset,
-    heuristic) for PDB and random -- which is all those depend on -- and
-    additionally the tag for learned, whose weights differ per seed and step.
+    Two calls into the corpus rather than one, and the reason matters. The
+    statistics need every heuristic counted once; the matched-strength pairs need
+    every heuristic present on the file it was measured on, including the
+    abstractions whose values repeat across files. A repeated abstraction value
+    is still the right value for those states, so it belongs in a pair; it is
+    only invalid to count it again as an independent observation.
     """
-    obs, per_file, seen = [], {}, {}
-    for f in sorted(RESULTS.glob("profile-*.json")):
-        # The loss-comparison runs (p3_losses.py) write profiles into the same
-        # directory. They are a separate experiment with a different training
-        # objective, and folding them in here would silently change the control
-        # this file reports. dprime_law.py does include them, deliberately --
-        # its claim is about all heuristics, not about this study's sample.
-        if "_p3-" in f.stem:
-            continue
-        d = json.load(open(f))
-        # A rung-k task has proper abstractions only for j < k. On k=2 the only
-        # table available is the exact answer itself, which is not an abstraction
-        # and would enter as a perfect heuristic; those files are excluded.
-        if d["k"] <= 2:
-            continue
-        rows = {}
-        for name, h in d["heuristics"].items():
-            s = summarise(h)
-            if s is None:
-                continue
-            kind = kind_of(name)
-            s |= {"file": f.stem, "task": d["task"], "tag": d["tag"], "k": d["k"],
-                  "moves": d["moves"], "name": name, "kind": kind,
-                  "domain": domain_of(d["task"]),
-                  "final": "@" not in d["tag"]}
-            rows[name] = s
-            key = (d["task"], d["moves"], name) + ((d["tag"],) if kind == "learned" else ())
-            if key not in seen:
-                seen[key] = s
-                obs.append(s)
-        per_file[f.stem] = rows
+    def summarised(r):
+        s = summarise({"gdrc": r["gdrc"], "profile": r["profile"]})
+        if s is None:
+            return None
+        return s | {"file": r["file"], "task": r["task"], "tag": r["tag"],
+                    "k": r["k"], "moves": r["moves"], "name": r["name"],
+                    "kind": r["kind"], "domain": r["domain"], "final": r["final"]}
+
+    recs, _, grouped = corpus.load_both_views("both")
+    obs = [x for x in map(summarised, recs) if x is not None]
+    per_file = {}
+    for fname, rows in grouped.items():
+        got = {n: summarised(r) for n, r in rows.items()}
+        per_file[fname] = {n: v for n, v in got.items() if v is not None}
     return obs, per_file
 
 

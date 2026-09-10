@@ -53,6 +53,8 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import norm, pearsonr
 
+import corpus
+
 HERE = Path(__file__).parent
 RESULTS = HERE.parent / "eval" / "results"
 
@@ -165,9 +167,9 @@ def tie_inflation():
     """
     from scipy.stats import kendalltau
 
-    from davi import Task
+    from domains import make_task, project
     from exact import indexer
-    from profiles import project, sweep_sample
+    from profiles import sweep_sample
 
     rows = []
     for tname, mv, k in (("wings-k4", "oi-q3", 4), ("wings-k4", "all", 4),
@@ -175,7 +177,7 @@ def tie_inflation():
         suf = "" if mv == "all" else f"-{mv}"
         if not (HERE / f"exact_k{k}{suf}.npy").exists():
             continue
-        task = Task(tname, moves=mv)
+        task = make_task(tname, moves=mv)
         st = sweep_sample(task, 2500, 16, np.random.default_rng(7))
         d = np.load(HERE / f"exact_k{k}{suf}.npy")[indexer(k)(st)].astype(np.int64)
         rng = np.random.default_rng(3)
@@ -183,7 +185,9 @@ def tie_inflation():
             p = HERE / f"exact_k{j}{suf}.npy"
             if not p.exists():
                 continue
-            h = np.load(p)[indexer(j)(project(st, j))].astype(np.float64)
+            # project() moved to domains and takes the task first. This call is
+            # why the whole file raised a TypeError for nine commits.
+            h = np.load(p)[indexer(j)(project(task, st, j))].astype(np.float64)
             tied = float(kendalltau(h, d).statistic)
             free = float(kendalltau(h + rng.random(h.size) * 0.999, d).statistic)
             rows.append({"task": tname, "moves": mv, "pdb_k": j, "tau": tied,
@@ -197,25 +201,18 @@ def check_prediction():
     print("(no fitted parameters; tau-b ties in h are not modelled, which costs")
     print(" the integer-valued pattern databases and nothing else)\n")
     rows = []
-    for f in sorted(RESULTS.glob("profile-*.json")):
-        if "_p3-" in f.stem:      # separate experiment; see strength_control.py
+    for r in corpus.load("both")[0]:
+        prof = r["profile"]
+        if len(prof) < 2 or "n_lo" not in prof[0]:
             continue
-        d = json.load(open(f))
-        if d["k"] <= 2:
-            continue
-        for name, h in d["heuristics"].items():
-            prof = h["profile"]
-            if len(prof) < 2 or "n_lo" not in prof[0]:
-                continue
-            n, mu, sd = shells_of(prof)
-            kind = "learned" if name == "learned" else (
-                "random" if name == "random" else "PDB")
-            full = full_shell_sizes(d["task"], d["tag"])
-            rows.append({"kind": kind, "file": f.stem, "name": name,
-                         "measured": h["gdrc"],
-                         "predicted": tau_from_profile(n, mu, sd),
-                         "ceiling": ceiling(full if full is not None else n),
-                         "coverage": float(n.sum() / full.sum()) if full is not None else 1.0})
+        n, mu, sd = shells_of(prof)
+        full = full_shell_sizes(r["task"], r["tag"])
+        rows.append({"kind": r["kind"], "domain": r["domain"], "file": r["file"],
+                     "name": r["name"], "measured": r["gdrc"],
+                     "predicted": tau_from_profile(n, mu, sd),
+                     "ceiling": ceiling(full if full is not None else n),
+                     "coverage": float(n.sum() / full.sum()) if full is not None else 1.0})
+
     for kd in ("random", "PDB", "learned"):
         r = [x for x in rows if x["kind"] == kd]
         m = np.array([x["measured"] for x in r]); p = np.array([x["predicted"] for x in r])
@@ -224,6 +221,11 @@ def check_prediction():
     m = np.array([x["measured"] for x in rows]); p = np.array([x["predicted"] for x in rows])
     print(f"  {'all':<8} n={len(rows):>3}  r = {pearsonr(m, p).statistic:+.3f}   "
           f"mean |error| = {np.abs(m - p).mean():.4f}")
+    for dom in sorted({x["domain"] for x in rows}):
+        sub = [x for x in rows if x["domain"] == dom]
+        mm = np.array([x["measured"] for x in sub]); pp = np.array([x["predicted"] for x in sub])
+        print(f"  {dom:<8} n={len(sub):>3}  r = {pearsonr(mm, pp).statistic:+.3f}   "
+              f"mean |error| = {np.abs(mm - pp).mean():.4f}")
 
     print(f"\n  profile covers {np.mean([x['coverage'] for x in rows])*100:.1f}% of the "
           f"sampled states on average; the rest sit in shells too thin to profile")
@@ -250,7 +252,7 @@ def check_prediction():
     inf = np.mean([r["inflation"] for r in ties])
     print(f"     mean inflation {inf:+.4f} -- the same size as the learned-vs-classical")
     print("     differences this literature reports, and pure measurement artifact.")
-    return rows, ties
+    return rows, ties, vc
 
 
 def inverted_u(n, beta=0.35, D=None):
@@ -284,28 +286,21 @@ def measured_beta():
     much larger sd0 with a gentle slope, learned networks from a small sd0 with a
     steep one.
     """
-    per, seen = {}, set()
-    for f in sorted(RESULTS.glob("profile-*.json")):
-        if "_p3-" in f.stem:      # separate experiment; see strength_control.py
+    per = {}
+    for r in corpus.load("both")[0]:
+        if r["name"] == "random" or len(r["profile"]) < 4:
             continue
-        d = json.load(open(f))
-        if d["k"] <= 2:
+        sd = np.array([x["sd_lo"] for x in r["profile"]], float)
+        dd = np.array([x["d"] for x in r["profile"]], float)
+        if sd[0] <= 0:
             continue
-        for name, h in d["heuristics"].items():
-            if name == "random" or len(h["profile"]) < 4:
-                continue
-            kind = "learned" if name == "learned" else "PDB"
-            key = (d["task"], d["moves"], name) + ((d["tag"],) if kind == "learned" else ())
-            if key in seen:
-                continue
-            seen.add(key)
-            sd = np.array([r["sd_lo"] for r in h["profile"]], float)
-            dd = np.array([r["d"] for r in h["profile"]], float)
-            if sd[0] <= 0:
-                continue
-            per.setdefault(kind, []).append(
-                {"beta": float(np.polyfit(dd - dd[0], sd / sd[0], 1)[0]),
-                 "sd0": float(sd[0])})
+        # Keyed by domain as well as class. Pooling them moved the learned figure
+        # from 2.043 to 2.626 on four sliding-tile profiles whose own value is
+        # 32.5, which is an order of magnitude apart and not one population.
+        per.setdefault(f"{r['domain']}/{r['kind']}", []).append(
+            {"beta": float(np.polyfit(dd - dd[0], sd / sd[0], 1)[0]),
+             "sd0": float(sd[0])})
+
     out = {}
     for kind, v in per.items():
         b = np.array([x["beta"] for x in v]); s0 = np.array([x["sd0"] for x in v])
@@ -316,12 +311,12 @@ def measured_beta():
 
 
 def main():
-    rows, ties = check_prediction()
+    rows, ties, vc = check_prediction()
 
     ref = json.load(open(RESULTS / "profile-wings-k6_s0.json"))
     n, _, _ = shells_of(ref["heuristics"]["learned"]["profile"])
     bstats = measured_beta()
-    print("\n  spread growth sd ~ sd0(1 + beta d), estimated per class and "
+    print("\n  spread growth sd ~ sd0(1 + beta d), estimated per DOMAIN and class, "
           "de-duplicated:")
     for kind, v in sorted(bstats.items()):
         print(f"    {kind:<8} n={v['n']:>3}  beta {v['beta_median']:6.3f} "
@@ -331,7 +326,14 @@ def main():
     print("     of this analysis did, reported the abstraction value as if it were")
     print("     a property of the space. They reach comparable decay from opposite")
     print("     ends: large sd0 with a gentle slope, or small sd0 with a steep one.")
-    beta = float(np.median([v["beta_median"] for v in bstats.values()]))
+    print("     The DOMAINS differ by more again: the sliding tile's learned value")
+    print("     is an order of magnitude above the cube's, which is why these are")
+    print("     reported split and never pooled.")
+    # The curve below is drawn for ONE cube shell histogram, so it takes a cube
+    # beta. Taking a median across the groups made the curve depend on how many
+    # groups happened to exist: two groups gave 1.39, three give 2.04, and adding
+    # a domain would move it again with no measurement having changed.
+    beta = float(bstats["cube/learned"]["beta_median"])
 
     print("\nThe shape of decay against strength, from the identity alone:")
     flat = inverted_u(n, beta=0.0)

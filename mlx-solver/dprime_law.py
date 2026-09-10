@@ -37,6 +37,8 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import norm, pearsonr
 
+import corpus
+
 HERE = Path(__file__).parent
 RESULTS = HERE.parent / "eval" / "results"
 SQ2 = np.sqrt(2.0)
@@ -112,35 +114,15 @@ def load_insample(p3=False):
     in: if a parameter-free law survives being handed heuristics designed to
     stress it, that is worth more than a larger n.
     """
-    rows, seen = [], set()
-    for f in sorted(RESULTS.glob("profile-*.json")):
-        if ("_p3-" in f.stem) != p3:
-            continue
-        d = json.load(open(f))
-        # Drop rungs too small to have a profile worth fitting. The threshold is
-        # a statement about how many shells the task has, so it is expressed per
-        # domain rather than as one number: a cube rung k=2 has 552 states, a
-        # tile task's k counts tiles and its k=2 board does not exist.
-        if domain_of_result(d) == "cube" and d["k"] <= 2:
-            continue
-        for name, h in d["heuristics"].items():
-            if p3 and name != "learned":
-                continue      # the abstractions there are the same tables again
-            kind = kind_of(name)
-            # A profile is written per learned checkpoint and re-measures the same
-            # abstractions and the same random control on the same states, so those
-            # rows repeat verbatim. Counting them inflated n from 252 to 615 and
-            # gave pattern databases four times their true weight. This is the same
-            # identity key strength_control.py uses, and the same mistake this
-            # project has now made in three separate scripts.
-            key = (d["task"], d["moves"], name) + ((d["tag"],) if kind == "learned" else ())
-            if key in seen:
-                continue
-            seen.add(key)
-            rows += rows_of(h["profile"],
-                            {"file": f.stem, "k": d["k"], "moves": d["moves"],
-                             "tag": d["tag"], "name": name, "kind": kind,
-                             "domain": domain_of_result(d)})
+    recs, stats = corpus.load("both", experiment="losses" if p3 else "main")
+    rows = []
+    for r in recs:
+        if p3 and r["name"] != "learned":
+            continue      # the abstractions there are the same tables again
+        rows += rows_of(r["profile"],
+                        {"file": r["file"], "k": r["k"], "moves": r["moves"],
+                         "tag": r["tag"], "name": r["name"], "kind": r["kind"],
+                         "domain": r["domain"]})
     return rows
 
 
