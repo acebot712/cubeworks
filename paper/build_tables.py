@@ -241,3 +241,29 @@ gp = cp['geomean_expansions']['tasks_positive']
 L += [r"\multicolumn{6}{l}{\emph{robustness check}, geometric mean: "
       f"${g['mean']:+.4f}$, $[{g['lo']:+.4f}, {g['hi']:+.4f}]$; positive in {gp} of 6" r"} \\"]
 w("costpredict", "\n".join(L + [r"\bottomrule", r"\end{tabular}"]))
+
+# ------------------------------------------------- numbers quoted in the prose
+# Some figures belong in a sentence rather than a table, and those were the last
+# hand-typed numbers in the paper. They are macros now, so re-running the
+# measurement moves the prose the same way it moves a table.
+tt = json.load(open(R/'tau-theory.json'))
+lw = json.load(open(R/'dprime-law.json'))
+inf = [r['inflation'] for r in tt['tie_inflation']]
+if 'cube' not in lw.get('moments', {}):
+    raise SystemExit("dprime-law.json predates the per-domain split of moments, so "
+                     "its gap figures pool the cube with the sliding tile. A gap is "
+                     "measured in moves and a move is not the same thing in two "
+                     "state spaces. Re-run dprime_law.py first.")
+cube = lw['moments']['cube']
+NUMS = {
+    # tau-b tie inflation, from the analysis that builds its own cube sample
+    'tieinflationmean': f"{np.mean(inf):.3f}",
+    'tieinflationmin':  f"{min(inf):.3f}",
+    'tieinflationmax':  f"{max(inf):.3f}",
+    'tiefreeceiling':   f"{tt['ceiling_verified']['analytic_tie_free_ceiling']:.3f}",
+    # median between-shell gap per class, CUBE only: a gap is measured in moves,
+    # and a move is not the same thing in two state spaces
+    'gaplearned':       f"{cube['learned']['median_gap']:.3f}",
+    'gapabstraction':   f"{cube['PDB']['median_gap']:.3f}",
+}
+w("numbers", "\n".join(rf"\newcommand{{\{k}}}{{{v}}}" for k, v in NUMS.items()))

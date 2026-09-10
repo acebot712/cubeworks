@@ -182,20 +182,39 @@
     }
   },
   "moments": {
-    "random": {
-      "median_gap": 0.0006607785612203765,
-      "median_sd": 0.28790567578565884,
-      "median_dprime": 0.0022972403913170286
+    "cube": {
+      "random": {
+        "median_gap": 0.0012837153865483675,
+        "median_sd": 0.28720919857458826,
+        "median_dprime": 0.004488327966389363
+      },
+      "PDB": {
+        "median_gap": 0.6004976666270951,
+        "median_sd": 0.7255869993300801,
+        "median_dprime": 0.7898235793179066
+      },
+      "learned": {
+        "median_gap": 0.9173072918481449,
+        "median_sd": 0.32316980102776377,
+        "median_dprime": 2.15949264634488
+      }
     },
-    "PDB": {
-      "median_gap": 0.5786549536011503,
-      "median_sd": 1.4540688699602373,
-      "median_dprime": 0.43222433727126436
-    },
-    "learned": {
-      "median_gap": 0.9831439020279718,
-      "median_sd": 0.2710641406512544,
-      "median_dprime": 3.280886575488802
+    "tile": {
+      "random": {
+        "median_gap": 0.0005809644162207417,
+        "median_sd": 0.2882874246462438,
+        "median_dprime": 0.0020159224479818568
+      },
+      "PDB": {
+        "median_gap": 0.575234075972193,
+        "median_sd": 2.388874612925543,
+        "median_dprime": 0.23306287874716286
+      },
+      "learned": {
+        "median_gap": 1.0093825108722982,
+        "median_sd": 0.059315804404976503,
+        "median_dprime": 17.277855961032422
+      }
     }
   },
   "observations": [

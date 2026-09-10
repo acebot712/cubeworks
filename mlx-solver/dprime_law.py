@@ -275,16 +275,27 @@ def main():
 
     # The decomposition the law buys: two heuristics can share an accuracy and
     # fail for opposite reasons, and they need opposite fixes.
-    print("\n  What the two moments say about each class:")
+    # Per domain, not pooled. The gap is measured in moves, and a move means the
+    # same thing within a state space and not between two, so pooling the cube
+    # with the sliding tile mixes units. It also moved the published figures:
+    # the paper reports 0.917 for learned and 0.600 for abstractions, which are
+    # the cube values, while pooling gives 0.983 and 0.579.
+    print("\n  What the two moments say about each class, per domain:")
     out["moments"] = {}
-    for kd in ("random", "PDB", "learned"):
-        g = np.array([r["gap"] for r in ins if r["kind"] == kd])
-        s = np.array([r["sd"] for r in ins if r["kind"] == kd])
-        out["moments"][kd] = {"median_gap": float(np.median(g)),
-                              "median_sd": float(np.median(s)),
-                              "median_dprime": float(np.median(g / s))}
-        print(f"    {kd:<8} gap {np.median(g):+.3f}   spread {np.median(s):.3f}   "
-              f"d' {np.median(g/s):+.3f}")
+    for dom in sorted({r["domain"] for r in ins}):
+        out["moments"][dom] = {}
+        for kd in ("random", "PDB", "learned"):
+            g = np.array([r["gap"] for r in ins
+                          if r["kind"] == kd and r["domain"] == dom])
+            s = np.array([r["sd"] for r in ins
+                          if r["kind"] == kd and r["domain"] == dom])
+            if not g.size:
+                continue
+            out["moments"][dom][kd] = {"median_gap": float(np.median(g)),
+                                       "median_sd": float(np.median(s)),
+                                       "median_dprime": float(np.median(g / s))}
+            print(f"    {dom:<5} {kd:<8} gap {np.median(g):+.3f}   "
+                  f"spread {np.median(s):.3f}   d' {np.median(g/s):+.3f}")
 
     # Scale invariance, stated as a check rather than asserted: doubling a
     # heuristic doubles both moments and must leave the prediction alone.
