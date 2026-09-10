@@ -9,20 +9,47 @@
 Everything is built and checked. What remains needs your arXiv account, so you
 do it. No assistant types your credentials or accepts a licence in your name.
 
-## The category, and why there is no endorsement to wait for
+## The category, and the endorsement that is still blocking
 
 Submit with **`cs.LG` as the primary**, cross-listing `cs.AI`.
 
-arXiv endorsement is per category, not per account, and the author already has
-standing in `cs.LG`. The block hit earlier was `cs.AI` specifically, which needs an
-endorsement this account does not have. `cs.LG` opens with no gate.
+`cs.LG` is an honest primary rather than a door that happened to be open. Learned
+heuristics are the object of study and the central claim is a statistical law
+about how a learned predictor's values distribute within and between shells.
+`cs.AI` is the more precise home for the search lineage, ACM class I.2.8 is
+literally Problem Solving, Control Methods and Search, hence the cross-list.
 
-This is not a workaround. Learned heuristics are the object of study and the
-central claim is a statistical law about how a learned predictor's values
-distribute within and between shells, so `cs.LG` is an honest primary. `cs.AI` is
-the more precise home for the search lineage, hence the cross-list. If the
-cross-list is refused for want of a `cs.AI` endorsement, drop it: the paper is
-public under the primary either way, which is all a preprint has to be.
+**Both categories are gated, and this is the live blocker.** Tested by clicking
+Continue on the submission form, which is the only test that means anything: the
+gate fires on submit, not on choosing a category from the dropdown. Selecting
+`cs.LG` and seeing nothing happen is a false negative, and this document
+previously recorded one.
+
+The cause is not the publication record. The author has three arXiv papers,
+including one with `cs.LG` as its primary category and the author first on it.
+None of them is linked to the arXiv account, so arXiv sees a first-time submitter
+and auto-endorsement has nothing to read. The account page says as much, listing
+no articles and asking whether there are any "not listed here".
+
+Three routes, and the first two are worth running in parallel with the third:
+
+1. **Claim the papers with a paper password.** Fastest, potentially immediate. The
+   submission confirmation e-mail for each paper carries a paper password; the
+   *Claim Ownership with a password* form takes it. If the password is lost, the
+   *Recover Paper Password* form sends it to whoever submitted the paper, which
+   may be a co-author rather than the author.
+2. **Claim Authorship form** (`/auth/request-ownership`), which takes up to ten
+   arXiv IDs at once. arXiv's own warning: it "requires manual intervention, it
+   make take several days for you to get a response, so you should treat this only
+   as a last resort".
+3. **An endorsement request** to a qualified arXiv submitter. The endorser pool is
+   wider than it looks: for `cs.LG` they need three papers in ANY `cs.*` category,
+   not `cs.LG` specifically.
+
+**Routes 1 and 2 are the most promising and are not guaranteed.** arXiv's help
+says authority records "support the endorsement system" but never states that
+owning a paper in a category confers endorsement for it. Nobody should treat the
+claim as a certain fix, which is why route 3 runs alongside rather than after.
 
 ## Files
 
