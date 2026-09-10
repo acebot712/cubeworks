@@ -183,6 +183,10 @@ class TileTask:
         # Width is held constant across rungs, exactly as on the cube ladder, so
         # that the only thing separating two rungs is how many tiles are real
         # rather than how wide the network's input is.
+        self.domain = "tile"
+        # A board's rung 1 tracks the blank and one tile, which is a genuine
+        # abstraction, so the tile ladder starts one lower than the cube's.
+        self.min_rung = 1
         self.n_sym = self.n_slots + 1
         self.n_in = self.n_slots * self.n_sym
         self.solved = np.full(self.n_slots, self.DONT_CARE, dtype=np.int8)
@@ -232,11 +236,21 @@ class TileTask:
             pos[:, sym] = np.argmax(states == sym, axis=1)
         return partial_rank(pos, self.n_slots)
 
-    def project(self, states, k):
-        """A rung-k view of these states: keep the blank and tiles 1..k."""
+    def project(self, states, j):
+        """A rung-j view of these states: keep the blank and tiles 1..j."""
         out = states.copy()
-        out[out > k] = self.DONT_CARE
+        out[out > j] = self.DONT_CARE
         return out
+
+    def abstract(self, j):
+        """Rung j of this board, as a task in its own right."""
+        return TileTask(f"tile-{self.rows}x{self.cols}-k{j}")
+
+    def table_path(self):
+        return HERE / f"exact_{self.name}.npy"
+
+    def rebuild_hint(self):
+        return f"tile.py --board {self.rows}x{self.cols} --all-rungs --save-table"
 
     # ---------------------------------------------------------------- dynamics
     def blank_of(self, states):

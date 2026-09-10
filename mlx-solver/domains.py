@@ -23,6 +23,13 @@ What a domain has to supply:
 
 Naming is the only thing a caller needs to know: anything starting with `tile-`
 is a sliding-tile board, everything else is a cube sub-problem.
+
+WHERE THE BEHAVIOUR LIVES. The tasks answer for themselves now: indexing,
+projection onto a rung, index-space size, table location and how to rebuild it.
+The functions below forward to them and exist so that every current caller keeps
+working while the call sites migrate. What genuinely belongs here is what is not
+a property of either task: the naming rule that constructs one, the file read,
+and the degenerate-rung test, which is the same question in both domains.
 """
 from pathlib import Path
 
@@ -41,13 +48,9 @@ def make_task(name, moves="all"):
     return Task(name, moves)
 
 
-def is_tile(task):
-    return isinstance(task, TileTask)
-
-
 def domain_of(task):
     """A short label for result files, so a mixed set of runs stays sortable."""
-    return "tile" if is_tile(task) else "cube"
+    return task.domain
 
 
 def _cube_suffix(task):
@@ -58,9 +61,7 @@ def _cube_suffix(task):
 
 
 def table_path(task):
-    if is_tile(task):
-        return HERE / f"exact_{task.name}.npy"
-    return HERE / f"exact_k{task.k}{_cube_suffix(task)}.npy"
+    return task.table_path()
 
 
 def cells_of(task):
@@ -69,23 +70,17 @@ def cells_of(task):
     Also the hard bound on expansions: a search with a closed list cannot expand
     a state twice, so it terminates within this many.
     """
-    if is_tile(task):
-        return task.cells
-    return 24 ** task.k
+    return task.cells
 
 
 def rank(task, states):
     """Unique int64 index per state, matching the layout of table_path(task)."""
-    if is_tile(task):
-        return task.rank(states)
-    return indexer(task.k)(states)
+    return task.rank(states)
 
 
 def abstract(task, j):
     """The task object for rung j of this domain."""
-    if is_tile(task):
-        return TileTask(f"tile-{task.rows}x{task.cols}-k{j}")
-    return Task(f"wings-k{j}", moves=task.moveset)
+    return task.abstract(j)
 
 
 def project(task, states, j):
@@ -95,11 +90,7 @@ def project(task, states, j):
     distance is an admissible lower bound on the true distance. The tile version
     also keeps the blank, which the cube has no analogue of; see TileTask.
     """
-    if is_tile(task):
-        return task.project(states, j)
-    out = states.copy()
-    out[out >= j] = CUBE_DONT_CARE
-    return out
+    return task.project(states, j)
 
 
 def rungs(task, spec=""):
@@ -112,7 +103,10 @@ def rungs(task, spec=""):
     """
     if spec:
         return [int(x) for x in spec.split(",")]
-    lo = 1 if is_tile(task) else 2
+    if not task.k:
+        raise ValueError(f"{task.name} tracks no numbered pieces, so it has no "
+                         f"rung ladder beneath it")
+    lo = task.min_rung
     out = []
     for j in range(lo, task.k):
         sub = abstract(task, j)
@@ -139,7 +133,88 @@ def rungs(task, spec=""):
 def load_table(task):
     p = table_path(task)
     if not p.exists():
-        how = (f"tile.py --board {task.rows}x{task.cols} --save-table" if is_tile(task)
-               else f"exact.py --k {task.k} --moves {task.moveset} --save-table")
-        raise SystemExit(f"need {p.name}; run {how}")
+        raise SystemExit(f"need {p.name}; run {task.rebuild_hint()}")
     return np.load(p)
+
+
+# ------------------------------------------------------------------- selftest
+# This module's docstring calls itself the thing the two-domain argument rests
+# on, and it had no check at all until now.
+INTERFACE = ("domain", "cells", "min_rung", "rank", "project", "abstract",
+             "table_path", "rebuild_hint")
+
+
+def selftest():
+    import numpy as np
+    ok = True
+    pairs = [("wings-k4", "all"), ("tile-3x3", "all")]
+
+    for name, mv in pairs:
+        t = make_task(name, moves=mv)
+        missing = [a for a in INTERFACE if not hasattr(t, a)]
+        print(f"  {name:<10} answers the whole interface   "
+              f"{'OK' if not missing else '*** FAIL, missing ' + str(missing) + ' ***'}")
+        ok &= not missing
+
+    # The forwarders must agree with the tasks, or a half-migrated call site
+    # would silently get a different answer from its neighbour.
+    for name, mv in pairs:
+        t = make_task(name, moves=mv)
+        rng = np.random.default_rng(0)
+        st, _ = t.scramble(64, 12, rng)
+        j = rungs(t)[0]
+        agree = (np.array_equal(rank(t, st), t.rank(st))
+                 and np.array_equal(project(t, st, j), t.project(st, j))
+                 and cells_of(t) == t.cells
+                 and table_path(t) == t.table_path()
+                 and abstract(t, j).name == t.abstract(j).name
+                 and domain_of(t) == t.domain)
+        print(f"  {name:<10} free functions forward to the same answers   "
+              f"{'OK' if agree else '*** FAIL ***'}")
+        ok &= agree
+
+    # rank is an index, so it must be injective and inside the table it addresses
+    for name, mv in pairs:
+        t = make_task(name, moves=mv)
+        rng = np.random.default_rng(1)
+        st, _ = t.scramble(2000, 30, rng)
+        idx = rank(t, st)
+        uniq_states = len(np.unique(st, axis=0))
+        good = len(np.unique(idx)) == uniq_states and idx.min() >= 0 and idx.max() < t.cells
+        print(f"  {name:<10} rank is injective and within [0, cells)   "
+              f"{'OK' if good else '*** FAIL ***'}")
+        ok &= good
+
+    # A rung that still separates every state is the oracle, not a baseline. The
+    # test is domain-neutral, which is why it stays here and not on the tasks.
+    t = make_task("tile-3x3")
+    kept = rungs(t)
+    degenerate = [j for j in range(t.min_rung, t.k) if t.abstract(j).size >= t.size]
+    good = kept and degenerate and not (set(kept) & set(degenerate))
+    print(f"  degenerate rungs excluded: kept {kept}, dropped {degenerate}   "
+          f"{'OK' if good else '*** FAIL ***'}")
+    ok &= good
+
+    # A missing table must name the command that builds it.
+    t = make_task("tile-2x3")
+    try:
+        load_table(t.abstract(1))
+        named = False
+    except SystemExit as exc:
+        named = "tile.py" in str(exc)
+    print(f"  a missing table names its rebuild command   "
+          f"{'OK' if named else '*** FAIL ***'}")
+    ok &= named
+
+    print("\n  ALL CHECKS PASSED" if ok else "\n  *** SELFTEST FAILED ***")
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--selftest", action="store_true")
+    if ap.parse_args().selftest:
+        sys.exit(selftest())
+    raise SystemExit("give --selftest")

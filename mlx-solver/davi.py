@@ -111,6 +111,11 @@ class Task:
             self.n_sym = 24
             self.solved = np.arange(24, dtype=np.int8)
 
+        self.domain = "cube"
+        # Rung 2 is the lowest with a proper abstraction below it; rung 1 tracks
+        # a single piece and its table is not a baseline. Enforced in the rung
+        # branch above as well, which is where the bound came from.
+        self.min_rung = 2
         self.n_in = self.n_slots * self.n_sym
         self.size = rung_size(self.k) if self.k else \
             math.factorial(24) // math.factorial(4) ** 6
@@ -155,6 +160,66 @@ class Task:
             raise ValueError(f"move set '{moves}' selected nothing")
         return idx
 
+    # ------------------------------------------------------------- addressing
+    # These four answer, for this task, what domains.py used to answer by
+    # branching on which kind of task it held. The sliding tile answers the same
+    # four; neither caller nor test needs to know which it has.
+
+    @property
+    def cells(self):
+        """Index space for `rank`, and so the length of a closed list.
+
+        A property rather than an attribute so that asking for it on a task with
+        no index raises where the question was wrong. It used to be None, which
+        reached numpy as an allocation size and failed there instead.
+
+        Mixed radix base 24 spends 24^k cells on P(24,k) states, which is
+        wasteful and branch-free; see exact.py for why that trade was taken.
+        """
+        return 24 ** self._require_index("index space")
+
+    def _require_index(self, what):
+        """The centres sub-problem tracks facelets, not numbered pieces, so it has
+        no piece index and no exact table keyed by one. Every accessor that needs
+        one asks here, so the failure names the reason once rather than surfacing
+        as a None several frames away or as a filename containing the word None.
+        """
+        if not self.k:
+            raise ValueError(
+                f"{self.name} tracks no numbered pieces, so it has no {what}. "
+                f"Only the wings rungs are indexed this way.")
+        return self.k
+
+    def rank(self, states):
+        """Unique int64 index per state, into this task's exact table."""
+        self._require_index("index")
+        from exact import indexer          # exact imports davi; keep it local
+        return indexer(self.k)(states)
+
+    def project(self, states, j):
+        """A rung-j view: keep pieces 0..j-1, forget the rest.
+
+        A pattern-database abstraction, so the resulting distance is an
+        admissible lower bound on this task's true distance.
+        """
+        out = states.copy()
+        out[out >= j] = DONT_CARE
+        return out
+
+    def abstract(self, j):
+        """Rung j of this task, as a task in its own right."""
+        return Task(f"wings-k{j}", moves=self.moveset)
+
+    def table_path(self):
+        self._require_index("exact distance table")
+        suffix = "" if self.moveset == "all" else f"-{self.moveset}"
+        return HERE / f"exact_k{self.k}{suffix}.npy"
+
+    def rebuild_hint(self):
+        self._require_index("exact distance table")
+        return f"exact.py --k {self.k} --moves {self.moveset} --save-table"
+
+    # ---------------------------------------------------------------- dynamics
     def apply(self, states, move_ids):
         out = np.empty_like(states)
         for m in range(self.n_moves):

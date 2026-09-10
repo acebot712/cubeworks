@@ -36,7 +36,7 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import kendalltau
 
-from domains import domain_of, is_tile, load_table, project, rank, rungs, abstract
+from domains import domain_of, load_table, project, rank, rungs, abstract
 from evaluate import RESULTS, j_of, load
 from resolution import sample_states
 
