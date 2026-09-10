@@ -349,6 +349,22 @@ methodological fix moved a headline number substantially, which is a reason to
 distrust the original and a reason the old files are kept where they can be
 inspected.
 
+### The corpus-defect cost measurement
+
+`eval/results/defect-cost.json` has no command. It was written by
+`mlx-solver/defect_cost.py`, a harness that held the corpus defects and their
+corrections side by side so the cost of each could be measured before the
+restructuring that removed them. Measuring a missing deduplication requires being
+able to turn deduplication off, so the harness carried its own copy of the corpus
+loop, which is the thing the restructuring existed to eliminate. It was deleted
+once its numbers were recorded, as its own docstring said it should be.
+
+The findings are in `eval/FINDINGS-01-corpus-defect-cost.md`, the figures at full
+precision in the JSON, and neither regenerates, because the defects they measure
+are gone. The published figure they were checking does regenerate: `tau_theory.py`
+gives tie inflation mean +0.0843 and max +0.1012, matching the pre-restructuring
+baseline exactly.
+
 ### The single-abstraction profile comparison
 
 Profiles were originally run with `--pdb-k 2`, comparing the learned heuristic

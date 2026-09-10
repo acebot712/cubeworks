@@ -1,9 +1,22 @@
 # What the corpus defects cost the published numbers
 
 Measured 2026-09-10, before any restructuring, so that a number which moves later
-can be attributed to a fixed defect rather than to a refactor. Reproduce with
-`mlx-solver/defect_cost.py`; every figure below is written by it into
-`eval/results/defect-cost.json`.
+can be attributed to a fixed defect rather than to a refactor.
+
+**This is a frozen record, not a regenerable one.** The figures below were
+produced by `mlx-solver/defect_cost.py`, a measurement harness written to hold
+the defects and their corrections side by side. Doing that meant carrying a fifth
+copy of the corpus loop with deduplication switchable, which is exactly what the
+tickets below existed to remove, so the script said in its own docstring that it
+should be deleted once ticket 03 had landed and its numbers were recorded. It has,
+they are, and it is: deleted once tickets 01 through 08 had all landed and the
+restructuring it was measuring was finished. `git log -- mlx-solver/defect_cost.py`
+has it, if the harness itself is ever wanted again.
+
+What survives is this document and `eval/results/defect-cost.json`, which holds
+every figure below at full precision. Neither can be regenerated, because the
+defects they measure no longer exist. What CAN be re-run is the thing that
+matters, the published figure: see the last section.
 
 ## The answer
 
@@ -77,29 +90,52 @@ are not the same thing" argument the analysis already makes between classes,
 appearing again between domains. It is a finding, not a defect, and it belongs to
 whichever ticket reports the split.
 
-## The reproducibility failure
+## The reproducibility failure, and its repair
 
-`tau_theory.py` raises a `TypeError` and produces nothing. Its tie-inflation
-analysis imports `project` from `profiles`, and that function was removed in
-`ad86483` when both domains were put behind one interface. The signature that
-replaced it takes the task as its first argument.
+At the time of measurement `tau_theory.py` raised a `TypeError` and produced
+nothing. Its tie-inflation analysis imported `project` from `profiles`, and that
+function was removed in `ad86483` when both domains were put behind one
+interface. The signature that replaced it takes the task as its first argument.
 
-The script has been unrunnable for every commit since, nine of them. And
+The script had been unrunnable for every commit since, nine of them. And
 `tau-theory.json` on disk was last written at `ac3a246`, which predates the
-sliding-tile work entirely, so the file the paper's figure traces to is older than
-the break.
+sliding-tile work entirely, so the file the paper's figure traced to was older
+than the break.
 
 `REPRODUCE.md` opens by promising that every number in the paper comes from a
-command in it. For this figure that promise does not currently hold. The repair is
-one call, and `defect_cost.py` demonstrates the figure reproduces exactly once it
-is made.
+command in it. For this figure that promise did not hold. **It holds now.** The
+repair landed with ticket 03 in `ba0d68f`, and the figure has been re-derived
+through every change since:
 
-## Consequences for the tickets that follow
+```bash
+cd mlx-solver && ../.venv-mlx/bin/python tau_theory.py
+```
 
-- Ticket 03 migrates the corpus loops and will move the prediction correlations
-  and the spread-growth figure. Both are internal; neither needs a paper edit.
-- Ticket 05, wiring these numbers through the generated-table pipeline, is worth
-  doing on its own merit rather than as a correction. The figure is right; it is
-  the inability to regenerate it that is wrong.
-- The one-call repair should land before or with ticket 03, since nothing in this
-  file can be verified while it raises on import of its own dependency.
+→ `eval/results/tau-theory.json`, whose `tie_inflation` block gives mean
+**+0.0843** and max **+0.1012** over its 8 rows: the same values as the `ac3a246`
+baseline and as the recomputation recorded here. That is the check this document
+was written to make possible, and it is now a live command rather than a claim.
+
+Fixing the import also surfaced a second latent fault in the same file, a `vc`
+name bound inside `check_prediction` and referenced in `main`, wrong since the
+initial commit and unreachable while the first error fired first.
+
+## What became of the tickets that followed
+
+All eight landed. Against the predictions made here:
+
+- **Ticket 03** (`ba0d68f`) migrated the corpus loops and moved the prediction
+  correlations and the spread-growth figure, as expected. Both internal; no paper
+  edit.
+- **Ticket 05** (`5f36b1d`) wired the numbers through the generated-table
+  pipeline. It also found what this document did not: a *different* stale
+  published number, the 0.917 and 0.600 gaps, caused by the same domain-pooling
+  defect in a third file. So "no number in the paper requires correction" was true
+  of the two defects measured here and not of the family they belong to.
+- **The one-call repair** landed with ticket 03 as recommended.
+- **Tickets 06 and 07** (`141e7a7`, `9098e54`) moved the domain behaviour onto the
+  tasks and deleted the dispatch functions, which is what removes the conditions
+  for all of these defects rather than the defects themselves.
+- **Ticket 08** (`5f78f7a`) found the same shape once more in the exact-table path,
+  where a board asked for a cube rung's table and lost its optimality gap in
+  silence.
