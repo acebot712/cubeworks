@@ -1,7 +1,7 @@
 """One interface over both state spaces, so the measurements share a code path.
 
 The scripts that produce the paper's numbers were written when there was only
-the cube, and they reach for cube-specific machinery directly: `Task`,
+the cube, and they reached for cube-specific machinery directly: `Task`,
 `exact.indexer`, the `exact_k{k}.npy` naming, and a `project` that knows
 DONT_CARE is 24. None of that is true of the sliding tile.
 
@@ -10,79 +10,69 @@ The whole point of a second domain is to ask whether the SAME measurement gives
 the same answer somewhere else, and two scripts that merely look alike do not
 establish that: any difference in shell binning, in pair sampling, or in how
 ties are counted would show up as a domain effect. So the scripts stay single
-copies and the domain differences are confined to the six functions here.
+copies, and a measurement script takes whichever task it is handed.
 
-What a domain has to supply:
+WHERE THE BEHAVIOUR LIVES. On the tasks. Both kinds answer the same questions
+about themselves, and a caller asks the task rather than a function here:
 
-    make_task(name)        build it from a name
-    table_path(task)       where its exact distance table lives
-    rank(task, states)     a unique index per state, into that table
-    rungs(task)            which abstractions have a table on disk
-    project(task, s, j)    the rung-j view of these states
-    abstract(task, j)      the task object for rung j, to rank the projection
+    task.domain          a short label, so a mixed set of runs stays sortable
+    task.cells           the index space, and so a closed list's length
+    task.min_rung        the lowest rung with a proper abstraction below it
+    task.rank(states)    a unique index per state, into that task's table
+    task.project(s, j)   the rung-j view of these states
+    task.abstract(j)     rung j as a task in its own right
+    task.table_path()    where its exact distance table lives
+    task.histogram_path()  and where that table's BFS distance histogram lives
+    task.rebuild_hint()  the command that builds both
 
-Naming is the only thing a caller needs to know: anything starting with `tile-`
-is a sliding-tile board, everything else is a cube sub-problem.
+There used to be a forwarding function here for each of those. They existed so
+that call sites could migrate one at a time; every caller asks the task now, so
+they are gone. Nothing dispatches on domain any more, in this module or any
+other, which is what makes the no-branching rule easy to keep rather than a
+thing to remember.
 
-WHERE THE BEHAVIOUR LIVES. The tasks answer for themselves now: indexing,
-projection onto a rung, index-space size, table location and how to rebuild it.
-The functions below forward to them and exist so that every current caller keeps
-working while the call sites migrate. What genuinely belongs here is what is not
-a property of either task: the naming rule that constructs one, the file read,
-and the degenerate-rung test, which is the same question in both domains.
+What is left is what belongs to neither task:
+
+    make_task(name)      the naming rule, and the only place either class is
+                         named. Anything starting with `tile-` is a sliding-tile
+                         board, everything else is a cube sub-problem.
+    rungs(task)          which abstractions are usable, including the
+                         degenerate-rung test, which is the same question in
+                         both domains
+    missing_table(task)  why a task has no table, for a caller that can carry on
+    load_table(task)     the file read, or an exit naming what is missing
 """
-from pathlib import Path
-
 import numpy as np
 
 from davi import Task
 from tile import TileTask
 
-HERE = Path(__file__).parent
+
+def domain_of_name(name):
+    """Which state space a task NAME belongs to, without building the task.
+
+    `task.domain` is the answer when you hold a task. This is for the callers
+    that hold only a name: a result file being read back, a row keyed by task.
+    Building a task to read a label would mean loading a permutation table off
+    disk for a string comparison.
+
+    It is the same rule `make_task` dispatches on, deliberately, and they are
+    adjacent so they cannot drift. Five scripts had their own copy of this line,
+    each written as `str(task).startswith("tile-")`, which answers "cube" for
+    every task OBJECT because neither class defines __str__. All five happened
+    to be handed names, so none of them was wrong. With one copy left the trap
+    is worth closing rather than repeating.
+    """
+    if not isinstance(name, str):
+        raise TypeError(f"domain_of_name takes a task NAME, got {type(name).__name__}; "
+                        f"a task knows its own domain, so ask it for .domain")
+    return "tile" if name.startswith("tile-") else "cube"
 
 
 def make_task(name, moves="all"):
-    if name.startswith("tile-"):
+    if domain_of_name(name) == "tile":
         return TileTask(name, moves)
     return Task(name, moves)
-
-
-def domain_of(task):
-    """A short label for result files, so a mixed set of runs stays sortable."""
-    return task.domain
-
-
-def table_path(task):
-    return task.table_path()
-
-
-def cells_of(task):
-    """Size of the index space `rank` maps into, and so the closed list's length.
-
-    Also the hard bound on expansions: a search with a closed list cannot expand
-    a state twice, so it terminates within this many.
-    """
-    return task.cells
-
-
-def rank(task, states):
-    """Unique int64 index per state, matching the layout of table_path(task)."""
-    return task.rank(states)
-
-
-def abstract(task, j):
-    """The task object for rung j of this domain."""
-    return task.abstract(j)
-
-
-def project(task, states, j):
-    """Rung-j view: keep the first j tracked pieces, forget the rest.
-
-    This is a pattern-database abstraction in both domains, so the resulting
-    distance is an admissible lower bound on the true distance. The tile version
-    also keeps the blank, which the cube has no analogue of; see TileTask.
-    """
-    return task.project(states, j)
 
 
 def rungs(task, spec=""):
@@ -101,8 +91,8 @@ def rungs(task, spec=""):
     lo = task.min_rung
     out = []
     for j in range(lo, task.k):
-        sub = abstract(task, j)
-        if not table_path(sub).exists():
+        sub = task.abstract(j)
+        if not sub.table_path().exists():
             continue
         # DEGENERATE RUNG. An abstraction that can still tell every state apart
         # is not an abstraction, it is the oracle: its "estimate" is the exact
@@ -155,7 +145,7 @@ def load_table(task):
 # This module's docstring calls itself the thing the two-domain argument rests
 # on, and it had no check at all until now.
 INTERFACE = ("domain", "cells", "min_rung", "rank", "project", "abstract",
-             "table_path", "rebuild_hint")
+             "table_path", "histogram_path", "rebuild_hint")
 
 
 def selftest():
@@ -170,29 +160,39 @@ def selftest():
               f"{'OK' if not missing else '*** FAIL, missing ' + str(missing) + ' ***'}")
         ok &= not missing
 
-    # The forwarders must agree with the tasks, or a half-migrated call site
-    # would silently get a different answer from its neighbour.
+    # THE COMPOSITION EVERY PATTERN-DATABASE CALL SITE WRITES. Since the
+    # forwarders went, each caller spells this out itself:
+    #
+    #     sub = task.abstract(j); sub.rank(task.project(states, j))
+    #
+    # It has to work identically in both domains, because it is the one thing
+    # the shared measurement scripts do that touches a domain difference. The
+    # projected state must be a state OF the abstraction, so its index has to
+    # land inside the abstraction's own table rather than the full task's.
     for name, mv in pairs:
         t = make_task(name, moves=mv)
         rng = np.random.default_rng(0)
-        st, _ = t.scramble(64, 12, rng)
+        st, _ = t.scramble(256, 12, rng)
         j = rungs(t)[0]
-        agree = (np.array_equal(rank(t, st), t.rank(st))
-                 and np.array_equal(project(t, st, j), t.project(st, j))
-                 and cells_of(t) == t.cells
-                 and table_path(t) == t.table_path()
-                 and abstract(t, j).name == t.abstract(j).name
-                 and domain_of(t) == t.domain)
-        print(f"  {name:<10} free functions forward to the same answers   "
-              f"{'OK' if agree else '*** FAIL ***'}")
-        ok &= agree
+        sub = t.abstract(j)
+        idx = sub.rank(t.project(st, j))
+        good = (idx.min() >= 0 and idx.max() < sub.cells
+                and sub.cells <= t.cells
+                and make_task(sub.name, moves=mv).name == sub.name
+                # An abstraction forgets, so it cannot separate more states than
+                # the task it abstracts: distinct projections are never more
+                # numerous than the distinct states they came from.
+                and len(np.unique(idx)) <= len(np.unique(t.rank(st))))
+        print(f"  {name:<10} a projection indexes into its own abstraction   "
+              f"{'OK' if good else '*** FAIL ***'}")
+        ok &= good
 
     # rank is an index, so it must be injective and inside the table it addresses
     for name, mv in pairs:
         t = make_task(name, moves=mv)
         rng = np.random.default_rng(1)
         st, _ = t.scramble(2000, 30, rng)
-        idx = rank(t, st)
+        idx = t.rank(st)
         uniq_states = len(np.unique(st, axis=0))
         good = len(np.unique(idx)) == uniq_states and idx.min() >= 0 and idx.max() < t.cells
         print(f"  {name:<10} rank is injective and within [0, cells)   "
@@ -233,6 +233,15 @@ def selftest():
     print(f"  a table name belongs to the domain that asked for it   "
           f"{'OK' if named_right else '*** FAIL ***'}")
     ok &= named_right
+
+    # The histogram is written by one script per domain and read by another, so
+    # the two agree only if both go through the task. Every histogram a task
+    # names must be a file that is actually there.
+    on_disk = all(make_task(n).histogram_path().exists()
+                  for n in ("wings-k4", "wings-k6", "tile-3x3", "tile-2x4"))
+    print(f"  a task names a histogram the writer actually wrote   "
+          f"{'OK' if on_disk else '*** FAIL ***'}")
+    ok &= on_disk
 
     # missing_table answers where load_table exits, and stays silent where the
     # table is there. A caller that can carry on needs the sentence, not a raise.

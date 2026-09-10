@@ -40,17 +40,16 @@ import sys
 
 import numpy as np
 
-from domains import (abstract, cells_of, load_table, make_task, project,
-                     rank, rungs)
+from domains import load_table, make_task, rungs
 
 
 def pdb_heuristic(task, j):
     """Rung j of `task` as an admissible heuristic: one table lookup per state."""
-    sub = abstract(task, j)
+    sub = task.abstract(j)
     tab = load_table(sub)
 
     def h(states):
-        return tab[rank(sub, project(task, states, j))].astype(np.float32)
+        return tab[sub.rank(task.project(states, j))].astype(np.float32)
     return h
 
 
@@ -59,7 +58,7 @@ def exact_heuristic(task):
     tab = load_table(task)
 
     def h(states):
-        return tab[rank(task, states)].astype(np.float32)
+        return tab[task.rank(states)].astype(np.float32)
     return h
 
 
@@ -88,7 +87,10 @@ def greedy_expansions(task, h_fn, starts, cap=None, chunk=250, verbose=False):
     """
     starts = np.asarray(starts, dtype=np.int8)
     n = starts.shape[0]
-    cells = cells_of(task)
+    # The index space is also the hard bound on expansions: a search with a
+    # closed list cannot expand a state twice, so it terminates within this many
+    # whatever the heuristic does. That is why an uncapped run is safe.
+    cells = task.cells
     cap = cap if cap is not None else cells
     expansions = np.zeros(n, dtype=np.int64)
     lengths = np.full(n, -1, dtype=np.int64)
@@ -106,7 +108,7 @@ def greedy_expansions(task, h_fn, starts, cap=None, chunk=250, verbose=False):
         h0 = h_fn(starts[lo:hi])
         for k, i in enumerate(ids):
             s = starts[i]
-            closed[i][int(rank(task, s[None, :])[0])] = True
+            closed[i][int(task.rank(s[None, :])[0])] = True
             heapq.heappush(heaps[i], (float(h0[k]), tick, 0, s.tobytes()))
             tick += 1
 
@@ -148,7 +150,7 @@ def greedy_expansions(task, h_fn, starts, cap=None, chunk=250, verbose=False):
             flat = kids.reshape(-1, task.n_slots)
             owner = np.repeat(np.array(still), b)
             kid_g = np.repeat(gs + 1, b)
-            idx = rank(task, flat)
+            idx = task.rank(flat)
 
             # Drop anything already closed for ITS OWN search, then close it, so
             # a state generated twice in one round is only pushed once.
@@ -188,7 +190,7 @@ def selftest():
         exact = load_table(task)
         rng = np.random.default_rng(0)
         starts, _ = task.scramble(60, 40, rng)
-        true_d = exact[rank(task, starts)].astype(np.int64)
+        true_d = exact[task.rank(starts)].astype(np.int64)
 
         # 1. With the exact distance as the heuristic, greedy best-first walks
         # straight down the gradient: the open list's minimum is always the next

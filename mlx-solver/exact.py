@@ -110,8 +110,10 @@ def main():
     if not ok:
         raise SystemExit("reachable-set size disagrees with P(24,k): bug, not a result")
 
-    suffix = "" if args.moves == "all" else f"-{args.moves}"
-    out = HERE.parent / "eval" / "results" / f"exact-k{args.k}{suffix}.json"
+    # Both output names come from the task, so the writer and every reader agree
+    # on where a rung's results live.
+    task = Task(f"wings-k{args.k}", moves=args.moves)
+    out = task.histogram_path()
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({
         "k": args.k, "moves": args.moves, "states": seen, "diameter": diameter, "seconds": secs,
@@ -121,8 +123,8 @@ def main():
     print(f"  -> {out.relative_to(HERE.parent)}")
 
     if args.save_table:
-        np.save(HERE / f"exact_k{args.k}{suffix}.npy", dist)
-        print(f"  -> exact_k{args.k}{suffix}.npy  ({dist.nbytes/1e6:.0f} MB)")
+        np.save(task.table_path(), dist)
+        print(f"  -> {task.table_path().name}  ({dist.nbytes/1e6:.0f} MB)")
 
 
 if __name__ == "__main__":

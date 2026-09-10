@@ -215,6 +215,19 @@ class Task:
         suffix = "" if self.moveset == "all" else f"-{self.moveset}"
         return HERE / f"exact_k{self.k}{suffix}.npy"
 
+    def histogram_path(self):
+        """The BFS distance histogram, which the table is too large to ship with.
+
+        A sibling of `table_path` and here for the same reason: a rung number
+        means one thing on the cube and another on a board, so a caller
+        composing this name conditionally is a caller that can compose the wrong
+        domain's. `exact.py` writes it through this method too, so the reader and
+        the writer cannot drift.
+        """
+        self._require_index("distance histogram")
+        suffix = "" if self.moveset == "all" else f"-{self.moveset}"
+        return HERE.parent / "eval" / "results" / f"exact-k{self.k}{suffix}.json"
+
     def rebuild_hint(self):
         self._require_index("exact distance table")
         return f"exact.py --k {self.k} --moves {self.moveset} --save-table"

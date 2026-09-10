@@ -19,7 +19,7 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import kendalltau, spearmanr
 
-from domains import abstract, load_table, make_task, project, rank, rungs
+from domains import load_table, make_task, rungs
 from evaluate import j_of, load
 from profiles import sweep_sample
 from resolution import sample_states
@@ -45,10 +45,7 @@ def shell_pop(task):
     space actually contains, so the weights come from the whole space and not
     from whatever the profile happened to sample.
     """
-    stem = task.name if task.name.startswith("tile-") else f"k{task.k}"
-    suffix = "" if task.moveset == "all" else f"-{task.moveset}"
-    f = RESULTS / f"exact-{stem}{suffix}.json"
-    d = json.load(open(f))
+    d = json.load(open(task.histogram_path()))
     pops = np.zeros(max(r["depth"] for r in d["histogram"]) + 1, dtype=np.float64)
     for r in d["histogram"]:
         pops[r["depth"]] = r["count"]
@@ -130,13 +127,13 @@ def run_task(name, moves, n_inst, seed, per_len=2500, max_len=45):
     # Reusing one sample for both would correlate predictor with outcome.
     starts = sample_states(task, n_inst, WALK, rng)
     prof_states = sweep_sample(task, per_len, max_len, rng)
-    prof_d = exact[rank(task, prof_states)].astype(np.int32)
+    prof_d = exact[task.rank(prof_states)].astype(np.int32)
 
     rows = []
     for label, kind, h_fn in population(task):
         m = measure(h_fn(prof_states), prof_d, pops)
         e, L = greedy_expansions(task, h_fn, starts, chunk=250)
-        opt = exact[rank(task, starts)].astype(np.int64)
+        opt = exact[task.rank(starts)].astype(np.int64)
         # L is -1 where a search hit the cap. Averaging that in would report a
         # NEGATIVE suboptimality, which no real solution can have.
         solved = L >= 0
@@ -271,11 +268,11 @@ def selftest():
     pops = shell_pop(task)
     rng = np.random.default_rng(0)
     st = sweep_sample(task, 1500, 45, rng)
-    d = exact[rank(task, st)].astype(np.int32)
+    d = exact[task.rank(st)].astype(np.int32)
 
     # SEAM 1, the predictor. A heuristic that IS the distance orders every
     # adjacent pair correctly, so the weighted accuracy is 1 and tau-b is 1.
-    m = measure(exact[rank(task, st)].astype(np.float64), d, pops)
+    m = measure(exact[task.rank(st)].astype(np.float64), d, pops)
     perfect = abs(m["predictor"] - 1.0) < 1e-9 and abs(m["gdrc"] - 1.0) < 1e-9
     print(f"  oracle   predictor {m['predictor']:.4f} (want 1)   "
           f"GDRC {m['gdrc']:+.4f} (want +1)   {'OK' if perfect else '*** FAIL ***'}")

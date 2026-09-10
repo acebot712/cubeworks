@@ -249,6 +249,10 @@ class TileTask:
     def table_path(self):
         return HERE / f"exact_{self.name}.npy"
 
+    def histogram_path(self):
+        """The BFS distance histogram. See Task.histogram_path for why it lives here."""
+        return HERE.parent / "eval" / "results" / f"exact-{self.name}.json"
+
     def rebuild_hint(self):
         return f"tile.py --board {self.rows}x{self.cols} --all-rungs --save-table"
 
@@ -479,7 +483,7 @@ def build(task, chunk, save_table):
         raise SystemExit("reachable-set size disagrees with the prediction: "
                          "bug, not a result")
 
-    out = HERE.parent / "eval" / "results" / f"exact-{task.name}.json"
+    out = task.histogram_path()
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({
         "task": task.name, "rows": task.rows, "cols": task.cols,
@@ -491,8 +495,8 @@ def build(task, chunk, save_table):
     print(f"  -> {out.relative_to(HERE.parent)}")
 
     if save_table:
-        np.save(HERE / f"exact_{task.name}.npy", dist)
-        print(f"  -> exact_{task.name}.npy  ({dist.nbytes/1e6:.0f} MB)")
+        np.save(task.table_path(), dist)
+        print(f"  -> {task.table_path().name}  ({dist.nbytes/1e6:.0f} MB)")
 
 
 if __name__ == "__main__":

@@ -76,7 +76,7 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import norm, skew, kurtosis, pearsonr, spearmanr
 
-from domains import abstract, load_table, make_task, project, rank
+from domains import domain_of_name, load_table, make_task
 
 HERE = Path(__file__).parent
 RESULTS = HERE.parent / "eval" / "results"
@@ -113,13 +113,13 @@ def shell_rows(name, ks, max_len, per_len, rng):
         cur = task.apply(cur, rng.integers(0, task.n_moves, size=per_len))
         parts.append(cur.copy())
     states = np.concatenate(parts)
-    true_d = exact[rank(task, states)].astype(np.int32)
+    true_d = exact[task.rank(states)].astype(np.int32)
 
     rows = []
     for j in ks:
-        sub = abstract(task, j)
+        sub = task.abstract(j)
         tab = load_table(sub)
-        h = tab[rank(sub, project(task, states, j))].astype(np.float64)
+        h = tab[sub.rank(task.project(states, j))].astype(np.float64)
         for d in range(1, int(true_d.max())):
             a, b = h[true_d == d], h[true_d == d + 1]
             if len(a) < 200 or len(b) < 200:
@@ -134,7 +134,7 @@ def shell_rows(name, ks, max_len, per_len, rng):
                 continue
             centred = np.r_[a - a.mean(), b - b.mean()]
             rows.append({
-                "domain": "tile" if name.startswith("tile-") else "cube",
+                "domain": domain_of_name(name),
                 "task": name, "rung": j, "d": d,
                 "acc": acc, "pred": float(norm.cdf(gap / (sd * SQ2))),
                 "gap": gap, "sd": sd, "dprime": gap / sd, "tie": tie,

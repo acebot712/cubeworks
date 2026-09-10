@@ -37,7 +37,7 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import kendalltau
 
-from domains import domain_of, load_table, project, rank, rungs, abstract
+from domains import load_table, rungs
 from evaluate import RESULTS, j_of, load
 from resolution import sample_states
 
@@ -209,19 +209,19 @@ def main():
     states = (sweep_sample(task, args.per_len, args.max_len, rng)
               if args.sampler == "sweep"
               else sample_states(task, args.n, args.walk, rng))
-    true_d = exact[rank(task, states)].astype(np.int32)
+    true_d = exact[task.rank(states)].astype(np.int32)
 
     hs = {"learned": j_of(task, net, states).astype(np.float64)}
     for j in pdb_ks:
-        sub = abstract(task, j)
+        sub = task.abstract(j)
         tab = load_table(sub)
-        hs[f"PDB(k={j})"] = tab[rank(sub, project(task, states, j))].astype(np.float64)
+        hs[f"PDB(k={j})"] = tab[sub.rank(task.project(states, j))].astype(np.float64)
     hs["random"] = rng.random(states.shape[0])
 
     uniq, cnt = np.unique(true_d, return_counts=True)
     shells = [int(d) for d, c in zip(uniq, cnt) if d > 0 and c >= args.min_shell]
     res = {"task": args.task, "tag": args.tag, "k": task.k, "moves": task.moveset,
-           "domain": domain_of(task),
+           "domain": task.domain,
            "states": task.size, "step": meta.get("step"), "pdb_k": pdb_ks,
            "sampler": args.sampler, "sampler_args": sampler_args,
            "n": int(states.shape[0]),
@@ -287,7 +287,7 @@ def check_sample(task, record, sampler_args):
     if states.shape[0] != record.get("n"):
         return False, (f"redraw gives {states.shape[0]} states, the profile "
                        f"recorded {record.get('n')}")
-    hist = np.bincount(load_table(task)[rank(task, states)].astype(np.int64))
+    hist = np.bincount(load_table(task)[task.rank(states)].astype(np.int64))
     sizes = recorded_shell_sizes(record)
     if sizes:
         wrong = {d: (n, int(hist[d]) if d < len(hist) else 0)
@@ -371,7 +371,7 @@ def selftest():
     # A profile of a known sample, built here rather than read, so the check has
     # something with an answer we already know.
     states = redraw(task, "sweep", right)
-    hist = np.bincount(truth[rank(task, states)].astype(np.int64))
+    hist = np.bincount(truth[task.rank(states)].astype(np.int64))
     shells = [int(d) for d in range(1, len(hist)) if hist[d] >= 50]
     record = {"sampler": "sweep", "sampler_args": right, "n": int(states.shape[0]),
               "shells": shells,

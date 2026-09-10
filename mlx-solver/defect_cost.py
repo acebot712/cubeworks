@@ -26,7 +26,7 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import kendalltau, pearsonr
 
-from domains import make_task, project as domain_project
+from domains import domain_of_name, make_task
 from exact import indexer
 from profiles import sweep_sample
 from tau_theory import shells_of, tau_from_profile
@@ -49,10 +49,6 @@ TIE_CONFIGS = (("wings-k4", "oi-q3", 4), ("wings-k4", "all", 4), ("wings-k6", "a
 
 # Decimal places for both the printed difference and the moved flag.
 MOVED_DP = 6
-
-
-def domain_of(task):
-    return "tile" if str(task).startswith("tile-") else "cube"
 
 
 def baseline():
@@ -79,7 +75,7 @@ def tie_inflation():
             p = HERE / f"exact_k{j}{suf}.npy"
             if not p.exists():
                 continue
-            h = np.load(p)[indexer(j)(domain_project(task, st, j))].astype(np.float64)
+            h = np.load(p)[indexer(j)(task.project(st, j))].astype(np.float64)
             tied = float(kendalltau(h, d).statistic)
             free = float(kendalltau(h + rng.random(h.size) * 0.999, d).statistic)
             rows.append({"task": tname, "moves": mv, "pdb_k": j,
@@ -116,7 +112,7 @@ def corpus(dedup, min_shells=2, want_moments=False):
                 if key in seen:
                     continue
                 seen.add(key)
-            row = {"kind": kind, "domain": domain_of(d["task"]), "name": name}
+            row = {"kind": kind, "domain": domain_of_name(d["task"]), "name": name}
             if want_moments:
                 sd = np.array([r["sd_lo"] for r in prof], float)
                 dd = np.array([r["d"] for r in prof], float)

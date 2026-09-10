@@ -40,10 +40,6 @@ def kind_of(name):
     return "learned" if name == "learned" else ("random" if name == "random" else "PDB")
 
 
-def domain_of(task):
-    return "tile" if str(task).startswith("tile-") else "cube"
-
-
 def summarise(h):
     """Pooled strength, and how much ordering accuracy falls across the shells."""
     accs = [r["acc"] for r in h["profile"]]

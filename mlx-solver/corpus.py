@@ -44,6 +44,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from domains import domain_of_name
+
 HERE = Path(__file__).parent
 RESULTS = HERE.parent / "eval" / "results"
 
@@ -59,11 +61,6 @@ def kind_of(name):
     return "random" if name == "random" else "PDB"
 
 
-def domain_of(task):
-    """Which state space. The same rule `domains.make_task` dispatches on."""
-    return "tile" if str(task).startswith("tile-") else "cube"
-
-
 def _excluded_rung(task, k):
     """A cube rung below 3 has no proper abstraction, so it cannot be a baseline.
 
@@ -72,7 +69,7 @@ def _excluded_rung(task, k):
     that does not apply to them. Three of the four original copies did exactly
     that; it was inert only because no small board was in the corpus yet.
     """
-    return domain_of(task) == "cube" and k <= 2
+    return domain_of_name(task) == "cube" and k <= 2
 
 
 def load(domain, experiment="main", results_dir=None):
@@ -118,7 +115,7 @@ def _scan(domain, experiment, results_dir, dedup):
             continue
         d = json.load(open(f))
         task, moves, tag, k = d["task"], d["moves"], d["tag"], d["k"]
-        dom = domain_of(task)
+        dom = domain_of_name(task)
         if domain != "both" and dom != domain:
             continue
         if _excluded_rung(task, k):

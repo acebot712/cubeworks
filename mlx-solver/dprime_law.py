@@ -38,6 +38,7 @@ import numpy as np
 from scipy.stats import norm, pearsonr
 
 import corpus
+from domains import domain_of_name
 
 HERE = Path(__file__).parent
 RESULTS = HERE.parent / "eval" / "results"
@@ -133,7 +134,7 @@ def domain_of_result(d):
     field, so it is inferred from the task name, which is the same rule
     domains.make_task dispatches on. Every one of those is a cube run.
     """
-    return d.get("domain") or ("tile" if str(d["task"]).startswith("tile-") else "cube")
+    return d.get("domain") or domain_of_name(d["task"])
 
 
 def load_heldout():
